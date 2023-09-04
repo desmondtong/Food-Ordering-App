@@ -3,6 +3,15 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import v4 from "uuid";
 
+const Pool = require("pg").Pool;
+const pool = new Pool({
+  user: process.env.user,
+  host: process.env.host,
+  database: process.env.database,
+  password: process.env.password,
+  port: 5432,
+});
+
 // // To seed Data
 // const seedAuth = async (req, res) => {
 //   try {

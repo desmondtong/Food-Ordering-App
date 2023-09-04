@@ -5,9 +5,6 @@ import cors from "cors"; //enables anyone to use the api
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
-// const connectDB = require("./src/db/db"); //import database
-// connectDB();
-
 // const transactions = require("./src/routers/transactions");
 // const listings = require("./src/routers/listings");
 import auth from "./src/routers/auth";
