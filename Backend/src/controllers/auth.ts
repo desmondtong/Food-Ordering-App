@@ -1,16 +1,8 @@
 import { Request, Response } from "express";
+import pool from "../db/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import v4 from "uuid";
-
-const Pool = require("pg").Pool;
-const pool = new Pool({
-  user: process.env.user,
-  host: process.env.host,
-  database: process.env.database,
-  password: process.env.password,
-  port: 5432,
-});
 
 // // To seed Data
 // const seedAuth = async (req, res) => {
@@ -106,30 +98,25 @@ const pool = new Pool({
 // To Register
 export const register = async (req: Request, res: Response) => {
   try {
-    // const auth = await AuthModel.findOne({ email: req.body.email });
-    // if (auth) {
-    //   return res.status(400).json({ msg: "Duplicate email" });
-    // }
-    // const hash = await bcrypt.hash(req.body.password, 5);
+    const { role, email, password, contact } = req.body;
 
-    // const createdAuth = new AuthModel({
-    //   email: req.body.email,
-    //   hash,
-    //   display_name: req.body.email,
-    //   location: req.body.location,
-    //   mobile_number: req.body.mobile_number,
-    //   biography: req.body.biography,
-    //   help_count: 0,
-    //   rating: 0,
-    //   image_url: req.body.image_url,
-    // });
-    // await createdAuth.save();
+    const auth = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    if (auth.rowCount) {
+      return res.status(400).json({ msg: "Duplicate email" });
+    }
 
-    res.status(201).json({ msg: "User created", createdUser: "user" });
-    // res.status(201).json({ msg: "User created", createdUser: createdAuth });
-  } catch (error) {
-    // console.log(error.message);
-    // res.json({ status: "error", msg: "Server error" });
+    const hash = await bcrypt.hash(password, 5);
+    const createdAuth = await pool.query(
+      "INSERT INTO users (role, email, password, contact) VALUES ($1, $2, $3, $4)",
+      [role, email, hash, contact]
+    );
+
+    res.status(201).json({ msg: "User created", createdUser: createdAuth });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: error.message });
   }
 };
 
@@ -221,5 +208,3 @@ export const login = async (req: Request, res: Response) => {
 //   //   refresh,
 //   //   updateProfile,
 // };
-
-export default { register, login };
