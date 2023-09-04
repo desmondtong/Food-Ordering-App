@@ -98,8 +98,20 @@ import v4 from "uuid";
 // To Register
 export const register = async (req: Request, res: Response) => {
   try {
-    const { role, email, password, contact } = req.body;
+    const {
+      role,
+      email,
+      password,
+      contact,
+      first_name,
+      last_name,
+      category,
+      store_name,
+      address,
+      postal_code,
+    } = req.body;
 
+    // check if email used is already in db
     const auth = await pool.query("SELECT * FROM users WHERE email = $1", [
       email,
     ]);
@@ -107,13 +119,33 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ msg: "Duplicate email" });
     }
 
+    // proceed to hash password and register user if email does not exist
     const hash = await bcrypt.hash(password, 5);
-    const createdAuth = await pool.query(
-      "INSERT INTO users (role, email, password, contact) VALUES ($1, $2, $3, $4)",
+    const addAuth = await pool.query(
+      "INSERT INTO users (role, email, password, contact) VALUES ($1, $2, $3, $4) RETURNING uuid",
       [role, email, hash, contact]
     );
+    // store new user uuid in a variable
+    const newAuthId = addAuth.rows[0].uuid;
 
-    res.status(201).json({ msg: "User created", createdUser: createdAuth });
+    if (role === "USER") {
+      // add remaining user details to different table
+      await pool.query(
+        "INSERT INTO user_details (user_id, first_name, last_name) VALUES ($1, $2, $3)",
+        [newAuthId, first_name, last_name]
+      );
+    } else if (role === "VENDOR") {
+      await pool.query(
+        "INSERT INTO vendor_details (vendor_id, category, store_name) VALUES ($1, $2, $3)",
+        [newAuthId, category, store_name]
+      );
+      await pool.query(
+        "INSERT INTO addresses (id, address, postal_code) VALUES ($1, $2, $3)",
+        [newAuthId, address, postal_code]
+      );
+    } // reserve for ADMIN role
+
+    res.status(201).json({ msg: "User created", createdUser: addAuth });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: error.message });
