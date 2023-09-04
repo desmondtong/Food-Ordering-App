@@ -10,7 +10,14 @@ const router = express.Router();
 //   refresh,
 //   updateProfile,
 // } = require("../controllers/auth");
-import { register, login } from "../controllers/auth";
+import {
+  register,
+  login,
+  refresh,
+  updateProfile,
+  getAccountById,
+  getAllAccount,
+} from "../controllers/auth";
 
 // const { auth } = require("../middleware/auth");
 // const {
@@ -23,13 +30,15 @@ import { register, login } from "../controllers/auth";
 // const checkValid = require("../middleware/checkValid");
 
 // router.get("/seed", seedAuth);
-// router.get("/accounts", getAllAccount);
-// router.get("/accounts/:id", getAccountById);
+router.get("/accounts", getAllAccount);
+router.get("/accounts/:id", getAccountById);
 // router.put("/register", validateRegistrationData, checkValid, register);
 router.put("/register", register);
 // router.post("/login", validateLoginData, checkValid, login);
 router.post("/login", login);
+router.post("/refresh", refresh);
 // router.post("/refresh", validateRefreshToken, checkValid, refresh);
+router.patch("/update/:id", updateProfile);
 // router.patch("/update/:id", validateUpdateProfile, updateProfile);
 
 export default router;

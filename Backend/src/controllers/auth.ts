@@ -4,98 +4,46 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 
-// // To seed Data
-// const seedAuth = async (req, res) => {
-//   try {
-//     await AuthModel.deleteMany();
+// To get all RegisteredData
+export const getAllAccount = async (req: Request, res: Response) => {
+  try {
+    const allAcc = await pool.query("SELECT * FROM users");
 
-//     await AuthModel.create([
-//       {
-//         _id: "64e2c2fcdce21246ef81b8ed",
-//         email: "desmond@test.com",
-//         hash: "$2b$05$NJohi/xGECGnXCit27WdvOSjGrRyZlU1at0MCCIg/9h8T6R6uEvLW",
-//         display_name: "Desmond Tong Tong",
-//         biography: "Ayo, look mat 7?",
-//         help_count: 0,
-//         rating: 0,
-//         mobile_number: 12345678,
-//         location: [
-//           {
-//             district: "Queenstown",
-//             postal_code: 760758,
-//             latitude: 1.42602952702202,
-//             longitude: 103.834266086838,
-//           },
-//         ],
-//         image_url: "/avatars/8.png",
-//       },
-//       {
-//         _id: "64e2c2fcdce21246ef81b8ee",
-//         email: "hwee@test.com",
-//         hash: "$2b$05$NJohi/xGECGnXCit27WdvOSjGrRyZlU1at0MCCIg/9h8T6R6uEvLW",
-//         display_name: "Hwee",
-//         biography: "A then-laywer. So don't mess with me 💅🏻",
-//         help_count: 12,
-//         rating: 0,
-//         mobile_number: 23904825,
-//         location: [
-//           {
-//             district: "Yishun",
-//             postal_code: 760761,
-//             latitude: 1.4253984246908402,
-//             longitude: 103.83325903597616,
-//           },
-//         ],
-//         image_url: "/avatars/30.png",
-//       },
-//       {
-//         _id: "64e2c2ffdce21246ef81b8f4",
-//         email: "vinesh@test.com",
-//         hash: "$2b$05$NJohi/xGECGnXCit27WdvOSjGrRyZlU1at0MCCIg/9h8T6R6uEvLW",
-//         display_name: "Vinesh J",
-//         biography: "Imma cat lover 🐈",
-//         help_count: 0,
-//         rating: 0,
-//         mobile_number: 87654321,
-//         location: [
-//           {
-//             district: "Yishun",
-//             postal_code: 760753,
-//             latitude: 1.4269870421973032,
-//             longitude: 103.83462747028466,
-//           },
-//         ],
-//         image_url: "/avatars/1.png",
-//       },
-//     ]);
+    res.json(allAcc.rows);
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: error.message });
+  }
+};
 
-//     res.json({ status: "ok", msg: "seeding successful" });
-//   } catch (error) {
-//     console.log(error.message);
-//     res.status(400).json({ status: "error", msg: "seeding error" });
-//   }
-// };
-// // To get all RegisteredData
-// const getAllAccount = async (req, res) => {
-//   try {
-//     const allAcc = await AuthModel.find();
-//     res.json(allAcc);
-//   } catch (error) {
-//     console.log(error.message);
-//     res.json({ status: "error", msg: error.message });
-//   }
-// };
+export const getAccountById = async (req: Request, res: Response) => {
+  try {
+    // to get role of the id
+    const role = await pool.query("SELECT role FROM users WHERE uuid = $1", [
+      req.params.id,
+    ]);
 
-// const getAccountById = async (req, res) => {
-//   try {
-//     const userAcc = await AuthModel.findById(req.params.id);
-//     res.json(userAcc);
-//   } catch (error) {
-//     console.log(error.message);
-//     res.json({ status: "error", msg: error.message });
-//   }
-// };
-// To Register
+    // different query based on role to join different tables
+    let userAcc;
+    if (role.rows[0].role === "CUSTOMER") {
+      userAcc = await pool.query(
+        "SELECT * FROM users JOIN user_details ON uuid = user_id WHERE uuid = $1",
+        [req.params.id]
+      );
+    } else if (role.rows[0].role === "VENDOR") {
+      userAcc = await pool.query(
+        "SELECT * FROM users JOIN addresses ON uuid = id JOIN vendor_details ON uuid = vendor_id WHERE uuid = $1",
+        [req.params.id]
+      );
+    }
+
+    res.json(userAcc?.rows[0]);
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: error.message });
+  }
+};
+
 export const register = async (req: Request, res: Response) => {
   try {
     const {
@@ -128,7 +76,7 @@ export const register = async (req: Request, res: Response) => {
     // store new user uuid in a variable
     const newAuthId = addAuth.rows[0].uuid;
 
-    if (role === "USER") {
+    if (role === "CUSTOMER") {
       // add remaining user details to different table
       await pool.query(
         "INSERT INTO user_details (user_id, first_name, last_name) VALUES ($1, $2, $3)",
@@ -200,56 +148,104 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// const refresh = (req, res) => {
-//   try {
-//     const decoded = jwt.verify(req.body.refresh, process.env.REFRESH_SECRET);
-//     const claims = {
-//       email: decoded.email,
-//       id: decoded._id,
-//     };
-//     const access = jwt.sign(claims, process.env.ACCESS_SECRET, {
-//       expiresIn: "30d",
-//       jwtid: uuidv4(),
-//     });
-//     res.json({ access });
-//   } catch (error) {
-//     console.log(error.message);
-//     res.status(400).json({ status: "error", msg: "token refresh error" });
-//   }
-// };
+export const refresh = (req: Request, res: Response) => {
+  try {
+    // declar type for email and id as TS dont know about it
+    interface JwtPayLoad {
+      email: String;
+      id: String;
+    }
 
-// const updateProfile = async (req, res) => {
-//   try {
-//     const authDB = await AuthModel.findById(req.params.id);
+    const decoded = jwt.verify(
+      req.body.refresh,
+      String(process.env.REFRESH_SECRET)
+    ) as JwtPayLoad;
 
-//     if ("display_name" in req.body) authDB.display_name = req.body.display_name;
-//     if ("mobile_number" in req.body)
-//       authDB.mobile_number = req.body.mobile_number;
-//     if ("biography" in req.body) authDB.biography = req.body.biography;
-//     if ("help_count" in req.body) authDB.help_count = req.body.help_count;
-//     if ("rating" in req.body) authDB.rating = req.body.rating;
+    const claims = {
+      email: decoded.email,
+      id: decoded.id,
+    };
 
-//     if ("location" in req.body)
-//       authDB.location[0].district = req.body.location[0].district;
-//     if ("location" in req.body)
-//       authDB.location[0].postal_code = req.body.location[0].postal_code;
-//     if ("image_url" in req.body) authDB.image_url = req.body.image_url;
+    const access = jwt.sign(claims, String(process.env.ACCESS_SECRET), {
+      expiresIn: "30d",
+      jwtid: uuidv4(),
+    });
 
-//     await authDB.save();
+    res.json({ access });
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(400).json({ status: "error", msg: "Token refresh error" });
+  }
+};
 
-//     res.json({ status: "ok", msg: "Account updated", updatedUser: authDB });
-//   } catch (error) {
-//     console.log(error.message);
-//     res.json({ status: "error", msg: error.message });
-//   }
-// };
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    if ("contact" in req.body) {
+      await pool.query(
+        "UPDATE users SET contact = $1 WHERE uuid = $2 RETURNING contact",
+        [req.body.contact, req.params.id]
+      );
+    }
+    // for vendor only
+    if ("address" in req.body) {
+      await pool.query("UPDATE addresses SET address = $1 WHERE id = $2", [
+        req.body.address,
+        req.params.id,
+      ]);
+    }
+    if ("postal_code" in req.body) {
+      await pool.query("UPDATE addresses SET postal_code = $1 WHERE id = $2", [
+        req.body.postal_code,
+        req.params.id,
+      ]);
+    }
+    // customer-specfic details
+    if ("first_name" in req.body) {
+      await pool.query(
+        "UPDATE user_details SET first_name = $1 WHERE user_id = $2",
+        [req.body.first_name, req.params.id]
+      );
+    }
+    if ("last_name" in req.body) {
+      await pool.query(
+        "UPDATE user_details SET last_name = $1 WHERE user_id = $2",
+        [req.body.last_name, req.params.id]
+      );
+    }
+    // vendor-specific details
+    if ("category" in req.body) {
+      await pool.query(
+        "UPDATE vendor_details SET category = $1 WHERE vendor_id = $2",
+        [req.body.category, req.params.id]
+      );
+    }
+    if ("store_name" in req.body) {
+      await pool.query(
+        "UPDATE vendor_details SET store_name = $1 WHERE vendor_id = $2",
+        [req.body.store_name, req.params.id]
+      );
+    }
+    if ("description" in req.body) {
+      await pool.query(
+        "UPDATE vendor_details SET description = $1 WHERE vendor_id = $2",
+        [req.body.description, req.params.id]
+      );
+    }
+
+    res.json({
+      status: "ok",
+      msg: "Account updated",
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Update failed" });
+  }
+};
+
+// export const updateUserAddress (multiple address)
 
 // module.exports = {
-//   //   seedAuth,
-//   register,
 //   //   getAccountById,
 //   //   getAllAccount,
-//   login,
-//   //   refresh,
 //   //   updateProfile,
 // };
