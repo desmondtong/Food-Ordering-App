@@ -1,9 +1,10 @@
-require("dotenv").config();
-
+import dotenv from "dotenv";
 import express, { Express } from "express";
 import cors from "cors"; //enables anyone to use the api
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
+
+dotenv.config();
 
 // const transactions = require("./src/routers/transactions");
 // const listings = require("./src/routers/listings");

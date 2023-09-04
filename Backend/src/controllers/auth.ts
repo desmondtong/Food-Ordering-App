@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import pool from "../db/db";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import v4 from "uuid";
+import { v4 as uuidv4 } from "uuid";
 
 // // To seed Data
 // const seedAuth = async (req, res) => {
@@ -148,42 +148,55 @@ export const register = async (req: Request, res: Response) => {
     res.status(201).json({ msg: "User created", createdUser: addAuth });
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: error.message });
+    res.json({ status: "error", msg: "Server error" });
   }
 };
 
 export const login = async (req: Request, res: Response) => {
   try {
-    // const auth = await AuthModel.findOne({ email: req.body.email });
+    // check if account exist
+    const auth = await pool.query("SELECT * FROM users WHERE email = $1", [
+      req.body.email,
+    ]);
 
-    // if (!auth) {
-    //   return res.status(400).json({
-    //     status: "error",
-    //     msg: "You Do not have an account. Please register",
-    //   });
-    // }
-    // const result = await bcrypt.compare(req.body.password, auth.hash);
-    // if (!result) {
-    //   console.log("email or password error");
-    //   return res.status(401).json({ status: "error", msg: "login failed" });
-    // }
-    // const claims = {
-    //   email: auth.email,
-    //   id: auth._id,
-    // };
-    // const access = jwt.sign(claims, process.env.ACCESS_SECRET, {
-    //   expiresIn: "20m",
-    //   jwtid: uuidv4(),
-    // });
-    // const refresh = jwt.sign(claims, process.env.REFRESH_SECRET, {
-    //   expiresIn: "30d",
-    //   jwtid: uuidv4(),
-    // });
-    res.json({ msg: "access", msg2: "refresh" });
-    // res.json({ access, refresh });
-  } catch (error) {
-    // console.log(error.message);
-    // res.status(400).json({ status: "error", msg: "login failed" });
+    if (!auth.rowCount) {
+      return res.status(400).json({
+        status: "error",
+        msg: "You do not have an account. Please register",
+      });
+    }
+
+    // decrypt and compare password
+    const result = await bcrypt.compare(
+      req.body.password,
+      auth.rows[0].password
+    );
+
+    if (!result) {
+      console.log("email or password error");
+      return res.status(401).json({ status: "error", msg: "Login failed" });
+    }
+
+    // create claims
+    const claims = {
+      email: auth.rows[0].email,
+      id: auth.rows[0].uuid,
+      role: auth.rows[0].role,
+    };
+
+    const access = jwt.sign(claims, String(process.env.ACCESS_SECRET), {
+      expiresIn: "20m",
+      jwtid: uuidv4(),
+    });
+    const refresh = jwt.sign(claims, String(process.env.REFRESH_SECRET), {
+      expiresIn: "30d",
+      jwtid: uuidv4(),
+    });
+
+    res.json({ access, refresh });
+  } catch (error: any) {
+    console.log(error.message);
+    res.status(400).json({ status: "error", msg: "Login failed" });
   }
 };
 
