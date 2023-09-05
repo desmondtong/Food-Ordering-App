@@ -57,6 +57,17 @@ const register = async (req: Request, res: Response) => {
       store_name,
       address,
       postal_code,
+    }: {
+      role: String;
+      email: String;
+      password: Buffer; //String will throw an error at bcrypt.hash
+      contact: Number;
+      first_name: String;
+      last_name: String;
+      category: String;
+      store_name: String;
+      address: String;
+      postal_code: Number;
     } = req.body;
 
     // check if email used is already in db
@@ -103,10 +114,12 @@ const register = async (req: Request, res: Response) => {
 
 const login = async (req: Request, res: Response) => {
   try {
+    const { email, password }: { email: String; password: Buffer } = req.body;
+
     // check if account exist
     const auth = await pool.query(
       "SELECT * FROM users WHERE email = $1 and is_deleted = FALSE",
-      [req.body.email]
+      [email]
     );
 
     if (!auth.rowCount) {
@@ -117,10 +130,7 @@ const login = async (req: Request, res: Response) => {
     }
 
     // decrypt and compare password
-    const result = await bcrypt.compare(
-      req.body.password,
-      auth.rows[0].password
-    );
+    const result = await bcrypt.compare(password, auth.rows[0].password);
 
     if (!result) {
       console.log("email or password error");
@@ -128,7 +138,7 @@ const login = async (req: Request, res: Response) => {
     }
 
     // create claims
-    const claims = {
+    const claims: { email: String; id: Number; role: String } = {
       email: auth.rows[0].email,
       id: auth.rows[0].uuid,
       role: auth.rows[0].role,
@@ -182,22 +192,42 @@ const refresh = (req: Request, res: Response) => {
 
 const updateProfile = async (req: Request, res: Response) => {
   try {
+    const {
+      contact,
+      address,
+      postal_code,
+      first_name,
+      last_name,
+      category,
+      store_name,
+      description,
+    }: {
+      contact: Number;
+      address: String;
+      postal_code: Number;
+      first_name: String;
+      last_name: String;
+      category: String;
+      store_name: String;
+      description: String;
+    } = req.body;
+
     if ("contact" in req.body) {
       await pool.query(
         "UPDATE users SET contact = $1 WHERE uuid = $2 RETURNING contact",
-        [req.body.contact, req.params.id]
+        [contact, req.params.id]
       );
     }
     // for vendor only
     if ("address" in req.body) {
       await pool.query("UPDATE addresses SET address = $1 WHERE id = $2", [
-        req.body.address,
+        address,
         req.params.id,
       ]);
     }
     if ("postal_code" in req.body) {
       await pool.query("UPDATE addresses SET postal_code = $1 WHERE id = $2", [
-        req.body.postal_code,
+        postal_code,
         req.params.id,
       ]);
     }
@@ -205,32 +235,32 @@ const updateProfile = async (req: Request, res: Response) => {
     if ("first_name" in req.body) {
       await pool.query(
         "UPDATE user_details SET first_name = $1 WHERE user_id = $2",
-        [req.body.first_name, req.params.id]
+        [first_name, req.params.id]
       );
     }
     if ("last_name" in req.body) {
       await pool.query(
         "UPDATE user_details SET last_name = $1 WHERE user_id = $2",
-        [req.body.last_name, req.params.id]
+        [last_name, req.params.id]
       );
     }
     // vendor-specific details
     if ("category" in req.body) {
       await pool.query(
         "UPDATE vendor_details SET category = $1 WHERE vendor_id = $2",
-        [req.body.category, req.params.id]
+        [category, req.params.id]
       );
     }
     if ("store_name" in req.body) {
       await pool.query(
         "UPDATE vendor_details SET store_name = $1 WHERE vendor_id = $2",
-        [req.body.store_name, req.params.id]
+        [store_name, req.params.id]
       );
     }
     if ("description" in req.body) {
       await pool.query(
         "UPDATE vendor_details SET description = $1 WHERE vendor_id = $2",
-        [req.body.description, req.params.id]
+        [description, req.params.id]
       );
     }
 
@@ -264,25 +294,31 @@ const deleteAccount = async (req: Request, res: Response) => {
 
 const updateVendorOperatings = async (req: Request, res: Response) => {
   try {
-    const objArr = req.body;
+    interface OperatingDetails {
+      opening_day: String;
+      opening_time: Date;
+      closing_time: Date;
+    }
+
+    const objArr: OperatingDetails[] = req.body;
     // convert to an array of days checked by vendor at frontend
-    const selectedDays = objArr.reduce(
-      (acc: string[], item: { opening_day: string }) => {
-        acc.push(item.opening_day);
-        return acc;
-      },
-      []
-    );
+    const selectedDays = objArr.reduce((acc: String[], item) => {
+      acc.push(item.opening_day);
+      return acc;
+    }, []);
 
     const days = await pool.query(
       "SELECT opening_day FROM vendor_operatings WHERE vendor_id = $1 AND is_deleted = FALSE",
       [req.params.id]
     );
     // convert to an array of existing days within database
-    const existingDays = days.rows.reduce((acc, item) => {
-      acc.push(item.opening_day);
-      return acc;
-    }, []);
+    const existingDays: String[] = days.rows.reduce(
+      (acc: String[], item: OperatingDetails) => {
+        acc.push(item.opening_day);
+        return acc;
+      },
+      []
+    );
 
     // delete days unchecked by vendor from database
     for (const day of existingDays) {
