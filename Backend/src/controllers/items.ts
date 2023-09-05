@@ -23,18 +23,20 @@ const getCategoriesByVendor = async (req: Request, res: Response) => {
 
 const addCategory = async (req: Request, res: Response) => {
   try {
+    const { category }: { category: String } = req.body;
+
     // check category already exist
-    const category = await pool.query(
+    const checkCategory = await pool.query(
       "SELECT * FROM items JOIN item_categories ON items.uuid = item_categories.item_id WHERE uuid = $1",
       [req.params.item_id]
     );
 
     // only insert with does not exist
     let create;
-    if (!category.rowCount) {
+    if (!checkCategory.rowCount) {
       create = await pool.query(
         "INSERT INTO item_categories (item_id, category) VALUES ($1, $2)",
-        [req.params.item_id, req.body.category]
+        [req.params.item_id, category]
       );
     } else {
       return res.status(400).json({ msg: "Category already exist!" });
@@ -64,7 +66,17 @@ const getAllItemByVendor = async (req: Request, res: Response) => {
 
 const addItem = async (req: Request, res: Response) => {
   try {
-    const { name, item_price, image_url, description } = req.body;
+    const {
+      name,
+      item_price,
+      image_url,
+      description,
+    }: {
+      name: String;
+      item_price: Number;
+      image_url: String;
+      description: String;
+    } = req.body;
     const addedItem = await pool.query(
       "INSERT INTO items (vendor_id, name, item_price, image_url, description) VALUES ($1 ,$2, $3, $4, $5) RETURNING uuid",
       [req.params.vendor_id, name, item_price, image_url, description]
