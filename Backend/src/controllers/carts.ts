@@ -18,11 +18,11 @@ const createCart = async (req: Request, res: Response) => {
 const getCartById = async (req: Request, res: Response) => {
   try {
     const cart = await pool.query(
-      "SELECT * FROM carts JOIN carts_items ON uuid = cart_id WHERE user_id = $1",
+      "SELECT user_id, item_id, cart_id, vendor_id, name, carts_items.item_price, quantity_ordered, user_note FROM carts JOIN carts_items ON carts.uuid = cart_id JOIN items ON items.uuid = item_id WHERE user_id = $1 AND carts_items.is_deleted = FALSE",
       [req.params.user_id]
     );
 
-    res.status(201).json(cart);
+    res.status(201).json(cart.rows);
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Get cart failed" });
@@ -47,10 +47,31 @@ const addItemToCart = async (req: Request, res: Response) => {
       [req.params.item_id, cart_id, item_price, quantity_ordered, user_note]
     );
 
-    res.status(201).json({ msg: "Item added to cart", createdItem: addedItem.rows });
+    res
+      .status(201)
+      .json({ msg: "Item added to cart", createdItem: addedItem.rows });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Add item to cart failed" });
+  }
+};
+
+const delItemFromCart = async (req: Request, res: Response) => {
+  try {
+    const { cart_id }: { cart_id: String } = req.body;
+    const delItem = await pool.query(
+      "UPDATE carts_items SET is_deleted = TRUE WHERE item_id = $1 AND cart_id = $2 RETURNING *",
+      [req.params.item_id, cart_id]
+    );
+
+    res.json({
+      status: "ok",
+      msg: "Item deleted",
+      deleted: delItem.rows,
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Delete item from cart failed" });
   }
 };
 
@@ -64,4 +85,4 @@ const updateCart = async (req: Request, res: Response) => {
   }
 };
 
-export { createCart, getCartById, addItemToCart };
+export { createCart, getCartById, addItemToCart, delItemFromCart };
