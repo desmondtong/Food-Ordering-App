@@ -17,6 +17,7 @@ import {
   updateProfile,
   getAccountById,
   getAllAccount,
+  deleteAccount,
 } from "../controllers/auth";
 
 // const { auth } = require("../middleware/auth");
@@ -40,5 +41,6 @@ router.post("/refresh", refresh);
 // router.post("/refresh", validateRefreshToken, checkValid, refresh);
 router.patch("/update/:id", updateProfile);
 // router.patch("/update/:id", validateUpdateProfile, updateProfile);
+router.delete("/delete/:id", deleteAccount);
 
 export default router;

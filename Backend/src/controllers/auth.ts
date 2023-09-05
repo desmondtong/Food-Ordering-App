@@ -242,6 +242,24 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
+export const deleteAccount = async (req: Request, res: Response) => {
+  try {
+    const deleted = await pool.query(
+      "UPDATE users SET isDeleted = TRUE WHERE uuid = $1 RETURNING *",
+      [req.params.id]
+    );
+
+    res.json({
+      status: "ok",
+      msg: "Account deleted",
+      deletedAcc: deleted.rows[0],
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Delete failed" });
+  }
+};
+
 // export const updateUserAddress (multiple address)
 
 // module.exports = {
