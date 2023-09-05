@@ -60,7 +60,7 @@ export const register = async (req: Request, res: Response) => {
     } = req.body;
 
     // check if email used is already in db
-    const auth = await pool.query("SELECT * FROM users WHERE email = $1", [
+    const auth = await pool.query("SELECT * FROM users WHERE email = $1 and isDeleted != TRUE", [
       email,
     ]);
     if (auth.rowCount) {
@@ -103,7 +103,7 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     // check if account exist
-    const auth = await pool.query("SELECT * FROM users WHERE email = $1", [
+    const auth = await pool.query("SELECT * FROM users WHERE email = $1 and isDeleted != TRUE", [
       req.body.email,
     ]);
 
@@ -150,7 +150,7 @@ export const login = async (req: Request, res: Response) => {
 
 export const refresh = (req: Request, res: Response) => {
   try {
-    // declar type for email and id as TS dont know about it
+    // declare type for email and id as TS dont know about it
     interface JwtPayLoad {
       email: String;
       id: String;
