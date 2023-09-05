@@ -10,6 +10,7 @@ dotenv.config();
 // const listings = require("./src/routers/listings");
 import auth from "./src/routers/auth";
 import items from "./src/routers/items";
+import carts from "./src/routers/carts";
 
 //allows api to be called 100 times within 15min interval
 const limit = rateLimit({
@@ -28,7 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use("/auth", auth);
 app.use("/api", items);
-// app.use("/api", carts);
+app.use("/api", carts);
 // app.use("/api", images);
 
 const PORT = process.env.PORT || 5001;
