@@ -103,6 +103,42 @@ const getItemById = async (req: Request, res: Response) => {
   }
 };
 
+const updateItemById = async (req: Request, res: Response) => {
+  try {
+    const {
+      name,
+      item_price,
+      image_url,
+      description,
+      category,
+    }: {
+      name: String;
+      item_price: Number;
+      image_url: String;
+      description: String;
+      category: String;
+    } = req.body;
+    const updatedItem = await pool.query(
+      "UPDATE items SET name = $1, item_price = $2, image_url = $3, description = $4 WHERE uuid = $5 RETURNING *",
+      [name, item_price, image_url, description, req.params.item_id]
+    );
+
+    const updatedCategory = await pool.query(
+      "UPDATE item_categories SET category = $1 WHERE item_id = $2 RETURNING *",
+      [category, req.params.item_id]
+    );
+
+    res.status(201).json({
+      msg: "Item updated",
+      updatedItem: updatedItem.rows,
+      updatedCategory: updatedCategory.rows,
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Update item failed" });
+  }
+};
+
 const deleteItemById = async (req: Request, res: Response) => {
   try {
     const delItem = await pool.query(
@@ -127,5 +163,6 @@ export {
   getCategoriesByVendor,
   getAllItemByVendor,
   getItemById,
+  updateItemById,
   deleteItemById,
 };
