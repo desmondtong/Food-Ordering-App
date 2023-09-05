@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 
 // To get all RegisteredData
-export const getAllAccount = async (req: Request, res: Response) => {
+const getAllAccount = async (req: Request, res: Response) => {
   try {
     const allAcc = await pool.query("SELECT * FROM users");
 
@@ -16,7 +16,7 @@ export const getAllAccount = async (req: Request, res: Response) => {
   }
 };
 
-export const getAccountById = async (req: Request, res: Response) => {
+const getAccountById = async (req: Request, res: Response) => {
   try {
     // to get role of the id
     const role = await pool.query("SELECT role FROM users WHERE uuid = $1", [
@@ -44,7 +44,7 @@ export const getAccountById = async (req: Request, res: Response) => {
   }
 };
 
-export const register = async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response) => {
   try {
     const {
       role,
@@ -60,9 +60,10 @@ export const register = async (req: Request, res: Response) => {
     } = req.body;
 
     // check if email used is already in db
-    const auth = await pool.query("SELECT * FROM users WHERE email = $1 and isDeleted != TRUE", [
-      email,
-    ]);
+    const auth = await pool.query(
+      "SELECT * FROM users WHERE email = $1 and is_deleted = FALSE",
+      [email]
+    );
     if (auth.rowCount) {
       return res.status(400).json({ msg: "Duplicate email" });
     }
@@ -100,12 +101,13 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
   try {
     // check if account exist
-    const auth = await pool.query("SELECT * FROM users WHERE email = $1 and isDeleted != TRUE", [
-      req.body.email,
-    ]);
+    const auth = await pool.query(
+      "SELECT * FROM users WHERE email = $1 and is_deleted = FALSE",
+      [req.body.email]
+    );
 
     if (!auth.rowCount) {
       return res.status(400).json({
@@ -148,7 +150,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const refresh = (req: Request, res: Response) => {
+const refresh = (req: Request, res: Response) => {
   try {
     // declare type for email and id as TS dont know about it
     interface JwtPayLoad {
@@ -178,7 +180,7 @@ export const refresh = (req: Request, res: Response) => {
   }
 };
 
-export const updateProfile = async (req: Request, res: Response) => {
+const updateProfile = async (req: Request, res: Response) => {
   try {
     if ("contact" in req.body) {
       await pool.query(
@@ -242,10 +244,10 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteAccount = async (req: Request, res: Response) => {
+const deleteAccount = async (req: Request, res: Response) => {
   try {
     const deleted = await pool.query(
-      "UPDATE users SET isDeleted = TRUE WHERE uuid = $1 RETURNING *",
+      "UPDATE users SET is_deleted = TRUE WHERE uuid = $1 RETURNING *",
       [req.params.id]
     );
 
@@ -260,10 +262,83 @@ export const deleteAccount = async (req: Request, res: Response) => {
   }
 };
 
-// export const updateUserAddress (multiple address)
+const updateVendorOperatings = async (req: Request, res: Response) => {
+  try {
+    const objArr = req.body;
+    // convert to an array of days checked by vendor at frontend
+    const selectedDays = objArr.reduce(
+      (acc: string[], item: { opening_day: string }) => {
+        acc.push(item.opening_day);
+        return acc;
+      },
+      []
+    );
 
-// module.exports = {
-//   //   getAccountById,
-//   //   getAllAccount,
-//   //   updateProfile,
-// };
+    const days = await pool.query(
+      "SELECT opening_day FROM vendor_operatings WHERE vendor_id = $1 AND is_deleted = FALSE",
+      [req.params.id]
+    );
+    // convert to an array of existing days within database
+    const existingDays = days.rows.reduce((acc, item) => {
+      acc.push(item.opening_day);
+      return acc;
+    }, []);
+
+    // delete days unchecked by vendor from database
+    for (const day of existingDays) {
+      if (!selectedDays.includes(day)) {
+        await pool.query(
+          "UPDATE vendor_operatings SET is_deleted = TRUE WHERE vendor_id = $1 AND opening_day = $2",
+          [req.params.id, day]
+        );
+      }
+    }
+
+    // insert new opening_day
+    for (const obj of objArr) {
+      // check opening_day already exist
+      const day = await pool.query(
+        "SELECT opening_day FROM vendor_operatings WHERE vendor_id = $1 AND opening_day = $2 AND is_deleted = FALSE",
+        [req.params.id, obj.opening_day]
+      );
+
+      // only insert with does not exist
+      if (!day.rowCount) {
+        await pool.query(
+          "INSERT INTO vendor_operatings (opening_day, vendor_id, opening_time, closing_time) VALUES ($1, $2, $3, $4)",
+          [obj.opening_day, req.params.id, obj.opening_time, obj.closing_time]
+        );
+      }
+    }
+
+    // update time by vendor (whole array in)
+    let update;
+    for (const obj of objArr) {
+      update = await pool.query(
+        "UPDATE vendor_operatings SET opening_time = $3, closing_time = $4 WHERE vendor_id = $2 AND opening_day = $1",
+        [obj.opening_day, req.params.id, obj.opening_time, obj.closing_time]
+      );
+    }
+
+    res.json({
+      status: "ok",
+      msg: "Account updated",
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Update failed" });
+  }
+};
+
+// const updateUserAddress (multiple address)
+
+export {
+  register,
+  login,
+  refresh,
+  updateProfile,
+  getAccountById,
+  getAllAccount,
+  deleteAccount,
+  updateVendorOperatings,
+};
