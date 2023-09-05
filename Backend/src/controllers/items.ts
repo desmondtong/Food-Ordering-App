@@ -53,7 +53,7 @@ const addCategory = async (req: Request, res: Response) => {
 const getAllItemByVendor = async (req: Request, res: Response) => {
   try {
     const getAllItem = await pool.query(
-      "SELECT * FROM items JOIN item_categories ON uuid = item_id WHERE vendor_id = $1",
+      "SELECT * FROM items JOIN item_categories ON uuid = item_id WHERE vendor_id = $1 AND is_deleted = FALSE",
       [req.params.vendor_id]
     );
 
@@ -103,10 +103,29 @@ const getItemById = async (req: Request, res: Response) => {
   }
 };
 
+const deleteItemById = async (req: Request, res: Response) => {
+  try {
+    const delItem = await pool.query(
+      "UPDATE items SET is_deleted = TRUE WHERE uuid = $1 RETURNING *",
+      [req.params.item_id]
+    );
+
+    res.json({
+      status: "ok",
+      msg: "Item deleted",
+      deleted: delItem.rows,
+    });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Delete item failed" });
+  }
+};
+
 export {
   addItem,
   addCategory,
   getCategoriesByVendor,
   getAllItemByVendor,
   getItemById,
+  deleteItemById,
 };
