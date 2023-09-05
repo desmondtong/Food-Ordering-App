@@ -14,7 +14,7 @@ const getCategoriesByVendor = async (req: Request, res: Response) => {
       return acc;
     }, []);
 
-    res.status(201).json({ getCategory: categories });
+    res.status(201).json(categories);
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Get category failed" });
@@ -57,10 +57,10 @@ const getAllItemByVendor = async (req: Request, res: Response) => {
       [req.params.vendor_id]
     );
 
-    res.status(201).json({ createdItem: getAllItem.rows });
+    res.status(201).json(getAllItem.rows);
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: "Add item failed" });
+    res.json({ status: "error", msg: "Get item failed" });
   }
 };
 
@@ -89,4 +89,24 @@ const addItem = async (req: Request, res: Response) => {
   }
 };
 
-export { addItem, addCategory, getCategoriesByVendor, getAllItemByVendor };
+const getItemById = async (req: Request, res: Response) => {
+  try {
+    const getItem = await pool.query(
+      "SELECT * FROM items JOIN item_categories ON uuid = item_id WHERE uuid = $1",
+      [req.params.item_id]
+    );
+
+    res.status(201).json(getItem.rows);
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Get item failed" });
+  }
+};
+
+export {
+  addItem,
+  addCategory,
+  getCategoriesByVendor,
+  getAllItemByVendor,
+  getItemById,
+};
