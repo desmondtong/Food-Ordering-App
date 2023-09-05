@@ -10,7 +10,7 @@ CREATE TABLE roles (
 	role TEXT PRIMARY KEY
 );
 
-INSERT INTO roles VALUES('USER');
+INSERT INTO roles VALUES('CUSTOMER');
 INSERT INTO roles VALUES('VENDOR');
 INSERT INTO roles VALUES('ADMIN');
 
@@ -72,8 +72,10 @@ CREATE TABLE users (
 	email TEXT NOT NULL,
 	password TEXT NOT NULL,
 	contact CHAR(8) NOT NULL,
+	isDeleted BOOLEAN,
 	CONSTRAINT fk_role FOREIGN KEY(role) REFERENCES roles(role)
 );
+
 
 CREATE TABLE user_details (
 	user_id uuid DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
@@ -83,7 +85,8 @@ CREATE TABLE user_details (
 );
 
 CREATE TABLE addresses (
-	id uuid DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+	address_id SMALLSERIAL PRIMARY KEY NOT NULL, 
+	id uuid NOT NULL,
 	address TEXT NOT NULL,
 	postal_code CHAR(6) NOT NULL,
 	CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(uuid)
