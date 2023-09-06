@@ -142,13 +142,14 @@ CREATE TABLE items (
 
 
 CREATE TABLE carts_items (
+	id SMALLSERIAL NOT NULL,
 	item_id uuid NOT NULL,
 	cart_id uuid NOT NULL,
 	item_price DECIMAL(10,2) NOT NULL,
 	quantity_ordered SMALLINT NOT NULL DEFAULT 1,
 	user_note TEXT,
 	is_deleted BOOLEAN DEFAULT FALSE,
-	CONSTRAINT pk_carts_items PRIMARY KEY (item_id, cart_id), -- Composite primary key
+	CONSTRAINT pk_carts_items PRIMARY KEY (id, item_id, cart_id), -- Composite primary key
     CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES items (uuid),
     CONSTRAINT fk_cart_id FOREIGN KEY (cart_id) REFERENCES carts (uuid)
 );
@@ -158,16 +159,17 @@ CREATE TABLE orders (
 	uuid uuid DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
 	user_id uuid NOT NULL,
 	vendor_id uuid NOT NULL,
-	status TEXT NOT NULL,
+	status TEXT DEFAULT 'SENT',
 	rating DECIMAL(2,1),
 	total_price DECIMAL(10,2) NOT NULL,
 	review TEXT,
-	date DATE NOT NULL,
-	time TIME NOT NULL,
+	date DATE DEFAULT (current_timestamp AT TIME ZONE 'Asia/Singapore')::date,
+	time TIME DEFAULT (current_timestamp AT TIME ZONE 'Asia/Singapore')::time,
 	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (uuid),
 	CONSTRAINT fk_vendor_id FOREIGN KEY (vendor_id) REFERENCES users (uuid),
 	CONSTRAINT fk_status FOREIGN KEY (status) REFERENCES statuses (status)
 );
+
 
 CREATE TABLE items_orders (
 	item_id uuid NOT NULL,
