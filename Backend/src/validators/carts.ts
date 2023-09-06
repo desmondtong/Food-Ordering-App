@@ -16,7 +16,7 @@ const validateAddItem = [
   body("quantity_ordered", "quantity ordered is required and should be integer")
     .notEmpty()
     .isInt(),
-  body("user_note", "user_note is required").optional().notEmpty().isString(),
+  body("user_note", "user_note is required").optional().isString(),
 ];
 
 const validateDelItem = [
