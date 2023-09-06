@@ -15,8 +15,7 @@ const validateRegistrationData = [
     .isLength({ min: 8, max: 50 }),
   body("contact", "contact number is required")
     .notEmpty()
-    .isInt()
-    .isLength({ min: 6, max: 6 }),
+    .isLength({ min: 8, max: 8 }),
 
   //addresses table
   body("address", "address is required").optional().notEmpty().isString(),
@@ -56,8 +55,7 @@ const validateUpdateProfile = [
   body("contact", "contact number is required")
     .optional()
     .notEmpty()
-    .isInt()
-    .isLength({ min: 6, max: 6 }),
+    .isLength({ min: 8, max: 8 }),
 
   //addresses table
   body("address", "address is required").optional().notEmpty().isString(),
@@ -85,14 +83,18 @@ const validateUpdateProfile = [
 ];
 
 const validateUpdateOperatings = [
-  body("opening_day", "opening day is required")
+  body().isArray().withMessage("Input should be an array"),
+  body("*").isObject().withMessage("Each item should be an object"),
+  
+  // apply checking to each item within the array, *.
+  body("*.opening_day", "opening day is required")
     .notEmpty()
-    .isString()
-    .isUppercase(),
-  body("opening_time", "opening_time is required")
+    .isUppercase()
+    .isString(),
+  body("*.opening_time", "opening time is required")
     .notEmpty()
     .isTime({ hourFormat: "hour24" }),
-  body("opening_time", "opening_time is required")
+  body("*.closing_time", "closing time is required")
     .notEmpty()
     .isTime({ hourFormat: "hour24" }),
 ];
