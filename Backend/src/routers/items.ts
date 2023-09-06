@@ -10,6 +10,7 @@ import {
   updateItemById,
   deleteItemById,
 } from "../controllers/items";
+import { auth } from "../middleware/auth";
 
 router.get("/items/categories/:vendor_id", getCategoriesByVendor);
 router.put("/items/categories/:item_id", addCategory);

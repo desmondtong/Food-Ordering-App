@@ -8,6 +8,7 @@ import {
   delItemFromCart,
   updateItemInCart,
 } from "../controllers/carts";
+import { auth } from "../middleware/auth";
 
 router.put("/carts/:user_id", createCart);
 router.post("/carts/:user_id", getCartById);

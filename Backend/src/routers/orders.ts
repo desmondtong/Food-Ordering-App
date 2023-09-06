@@ -9,6 +9,7 @@ import {
   getItemsOrdersByVendorId,
   getItemsOrdersByUserId,
 } from "../controllers/orders";
+import { auth } from "../middleware/auth";
 
 router.put("/orders/:user_id", createOrder);
 router.patch("/orders/:order_id", updateOrder);
