@@ -1,7 +1,8 @@
 import { body, param } from "express-validator";
 
 const validateIdInParam = [
-  param("id", "invalid id").isLength({ min: 36, max: 36 }),
+  param("vendor_id", "invalid id").optional().isLength({ min: 36, max: 36 }),
+  param("item_id", "invalid id").optional().isLength({ min: 36, max: 36 }),
 ];
 
 const validateAddCategory = [
