@@ -29,6 +29,7 @@ const updateOrder = async (req: Request, res: Response) => {
       rating,
       review,
     }: { status: String; rating: Number; review: String } = req.body;
+    
     const order = await pool.query(
       "UPDATE orders SET status = $1, rating =$2, review = $3 WHERE uuid = $4 RETURNING *",
       [status, rating, review, req.params.order_id]
