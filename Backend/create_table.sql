@@ -68,11 +68,11 @@ CREATE TABLE ratings (
 -- main tables
 CREATE TABLE users (
 	uuid uuid DEFAULT uuid_generate_v4() PRIMARY KEY,
-	role TEXT,
+	role TEXT NOT NULL,
 	email TEXT NOT NULL,
 	password TEXT NOT NULL,
 	contact CHAR(8) NOT NULL,
-	isDeleted BOOLEAN,
+	is_deleted BOOLEAN DEFAULT FALSE NOT NULL,
 	CONSTRAINT fk_role FOREIGN KEY(role) REFERENCES roles(role)
 );
 
@@ -97,7 +97,7 @@ CREATE TABLE vendor_details (
 	category TEXT NOT NULL,
 	store_name VARCHAR(50) NOT NULL,
 	description TEXT,
-	CONSTRAINT fk_id FOREIGN KEY (vendor_id) REFERENCES users(uuid),
+	CONSTRAINT fk_vendor_id FOREIGN KEY (vendor_id) REFERENCES users(uuid),
 	CONSTRAINT fk_category FOREIGN KEY (category) REFERENCES categories(category)
 );
 
@@ -106,6 +106,7 @@ CREATE TABLE vendor_operatings (
     vendor_id uuid NOT NULL,
     opening_time TIME NOT NULL,
     closing_time TIME NOT NULL,
+    is_deleted BOOLEAN DEFAULT FALSE NOT NULL,
     CONSTRAINT pk_vendor_operatings PRIMARY KEY (opening_day, vendor_id), -- Composite primary key
     CONSTRAINT fk_opening_day FOREIGN KEY (opening_day) REFERENCES opening_days (opening_day),
     CONSTRAINT fk_vendor_id FOREIGN KEY (vendor_id) REFERENCES vendor_details (vendor_id)
@@ -119,18 +120,26 @@ CREATE TABLE carts (
 	CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(uuid)
 );
 
+CREATE TABLE item_categories (
+	item_id uuid PRIMARY KEY NOT NULL,
+	category TEXT NOT NULL,
+	CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES items(uuid)
+);
+
+
 CREATE TABLE items (
 	uuid uuid DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
-	availbility BOOLEAN NOT NULL,
-	category TEXT NOT NULL,
+	availability BOOLEAN DEFAULT TRUE,
 	vendor_id uuid NOT NULL,
 	name TEXT NOT NULL,
 	item_price DECIMAL(10,2) NOT NULL,
 	image_url TEXT,
 	description TEXT,
-	CONSTRAINT fk_category FOREIGN KEY (category) REFERENCES categories (category),
-	CONSTRAINT fk_vendor_id FOREIGN KEY (vendor_id) REFERENCES users (uuid)
+	is_deleted BOOLEAN DEFAULT FALSE,
+	CONSTRAINT fk_vendor_id FOREIGN KEY (vendor_id) REFERENCES users (uuid),
+	CONSTRAINT fk_availability FOREIGN KEY (availability) REFERENCES availabilities(availability)
 );
+
 
 CREATE TABLE carts_items (
 	item_id uuid NOT NULL,
@@ -138,6 +147,7 @@ CREATE TABLE carts_items (
 	item_price DECIMAL(10,2) NOT NULL,
 	quantity_ordered SMALLINT NOT NULL DEFAULT 1,
 	user_note TEXT,
+	is_deleted BOOLEAN DEFAULT FALSE,
 	CONSTRAINT pk_carts_items PRIMARY KEY (item_id, cart_id), -- Composite primary key
     CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES items (uuid),
     CONSTRAINT fk_cart_id FOREIGN KEY (cart_id) REFERENCES carts (uuid)

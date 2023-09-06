@@ -8,7 +8,7 @@ const createCart = async (req: Request, res: Response) => {
       [req.params.user_id]
     );
 
-    res.status(201).json({ msg: "Cart created", createdItem: cart.rows });
+    res.status(201).json({ msg: "Cart created", cart_id: cart.rows[0].uuid });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Create cart failed" });
@@ -35,11 +35,10 @@ const getCartById = async (req: Request, res: Response) => {
       "UPDATE carts SET total_price = $1 WHERE user_id = $2 RETURNING total_price",
       [total_price, req.params.user_id]
     );
-    console.log(updateCart);
 
     res
       .status(201)
-      .json({ orders: cart.rows, total_price: updateCart.rows[0].total_price });
+      .json({ orders: cart.rows, total_price: updateCart.rows[0].total_price, vendor_id: cart.rows[0].vendor_id });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Get cart failed" });

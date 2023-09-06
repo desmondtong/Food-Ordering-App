@@ -82,7 +82,7 @@ const addItem = async (req: Request, res: Response) => {
       [req.params.vendor_id, name, item_price, image_url, description]
     );
 
-    res.status(201).json({ msg: "Item created", createdItem: addedItem.rows });
+    res.status(201).json({ msg: "Item created", item_id: addedItem.rows[0].uuid });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Add item failed" });
