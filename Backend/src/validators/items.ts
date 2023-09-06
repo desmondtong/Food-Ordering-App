@@ -17,7 +17,6 @@ const validateAddItem = [
   body("image_url", "image url is required").optional().notEmpty().isString(),
   body("description", "description is required")
     .optional()
-    .notEmpty()
     .isString(),
 ];
 
@@ -29,7 +28,6 @@ const validateUpdateItem = [
   body("image_url", "image url is required").optional().notEmpty().isString(),
   body("description", "description is required")
     .optional()
-    .notEmpty()
     .isString(),
   body("category", "category is required").notEmpty().isString(),
 ];
