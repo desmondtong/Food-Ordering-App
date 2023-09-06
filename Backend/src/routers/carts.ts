@@ -6,6 +6,7 @@ import {
   getCartById,
   addItemToCart,
   delItemFromCart,
+  updateItemInCart,
 } from "../controllers/carts";
 
 router.put("/carts/:user_id", createCart);
@@ -13,5 +14,6 @@ router.post("/carts/:user_id", getCartById);
 
 router.put("/carts/items/:item_id", addItemToCart);
 router.delete("/carts/items/:item_id", delItemFromCart);
+router.patch("/carts/items/:item_id", updateItemInCart);
 
 export default router;
