@@ -38,9 +38,9 @@ router.patch(
 router.delete("/delete/:id", auth, deleteAccount);
 router.patch(
   "/update/vendor/:id",
+  auth,
   validateUpdateOperatings,
   checkValid,
-  auth,
   updateVendorOperatings
 );
 
