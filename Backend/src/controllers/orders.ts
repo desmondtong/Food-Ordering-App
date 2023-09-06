@@ -45,9 +45,10 @@ const updateOrder = async (req: Request, res: Response) => {
 const createItemsOrders = async (req: Request, res: Response) => {
   try {
     // copy item_id, item_price, quantity_ordered and user_note from carts_items; insert order_id
+    const cart_id: String = req.body.cart_id;
     const order = await pool.query(
-      "INSERT INTO items_orders (item_id, order_id, item_price, quantity_ordered, user_note) SELECT item_id, $1, item_price, quantity_ordered, user_note FROM carts_items RETURNING *",
-      [req.params.order_id]
+      "INSERT INTO items_orders (item_id, order_id, item_price, quantity_ordered, user_note) SELECT item_id, $1, item_price, quantity_ordered, user_note FROM carts_items WHERE cart_id = $2 RETURNING *",
+      [req.params.order_id, cart_id]
     );
 
     const items_id = order.rows.reduce((acc, item) => {
@@ -55,17 +56,77 @@ const createItemsOrders = async (req: Request, res: Response) => {
       return acc;
     }, []);
 
-    res
-      .status(201)
-      .json({
-        msg: "Items_orders created",
-        items_orders: order.rows,
-        items_id,
-      });
+    res.status(201).json({
+      msg: "Items_orders created",
+      items_orders: order.rows,
+      items_id,
+    });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Create items_orders failed" });
   }
 };
 
-export { createOrder, updateOrder, createItemsOrders };
+const getItemsOrdersByOrderId = async (req: Request, res: Response) => {
+  try {
+    const order_id: String = req.body.order_id;
+    const getByOrderId = await pool.query(
+      "SELECT user_id, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note FROM orders JOIN items_orders ON orders.uuid = order_id JOIN items ON item_id = items.uuid WHERE orders.uuid = $1",
+      [order_id]
+    );
+
+    res.status(201).json(getByOrderId.rows);
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Get items_orders failed" });
+  }
+};
+
+const getItemsOrdersByVendorId = async (req: Request, res: Response) => {
+  try {
+    const vendor_id: String = req.body.vendor_id;
+    const getByVendorId = await pool.query(
+      "SELECT uuid FROM orders WHERE vendor_id = $1",
+      [vendor_id]
+    );
+
+    const order_id = getByVendorId.rows.reduce((acc, item) => {
+      acc.push(item.uuid);
+      return acc;
+    }, []);
+
+    res.status(201).json({ order_id });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Get items_orders failed" });
+  }
+};
+
+const getItemsOrdersByUserId = async (req: Request, res: Response) => {
+  try {
+    const user_id: String = req.body.user_id;
+    const getByUserId = await pool.query(
+      "SELECT * FROM orders WHERE user_id = $1",
+      [user_id]
+    );
+
+    const order_id = getByUserId.rows.reduce((acc, item) => {
+      acc.push(item.uuid);
+      return acc;
+    }, []);
+
+    res.status(201).json({ order_id });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Get items_orders failed" });
+  }
+};
+
+export {
+  createOrder,
+  updateOrder,
+  createItemsOrders,
+  getItemsOrdersByOrderId,
+  getItemsOrdersByVendorId,
+  getItemsOrdersByUserId,
+};
