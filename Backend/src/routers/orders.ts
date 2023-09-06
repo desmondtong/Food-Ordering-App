@@ -1,8 +1,11 @@
 import express from "express";
 const router = express.Router();
 
-import { createOrder } from "../controllers/orders";
+import { createOrder, updateOrder, createItemsOrders } from "../controllers/orders";
 
-router.get("/orders/:user_id", createOrder);
+router.put("/orders/:user_id", createOrder);
+router.patch("/orders/:order_id", updateOrder);
+
+router.put("/orders/items/:order_id", createItemsOrders);
 
 export default router;

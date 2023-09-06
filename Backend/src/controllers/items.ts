@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import pool from "../db/db";
 
-// item categories
+// item_categories
 const getCategoriesByVendor = async (req: Request, res: Response) => {
   try {
     const getAll = await pool.query(

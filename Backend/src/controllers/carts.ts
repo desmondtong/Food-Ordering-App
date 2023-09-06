@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import pool from "../db/db";
 
+// carts
 const createCart = async (req: Request, res: Response) => {
   try {
     const cart = await pool.query(
@@ -45,6 +46,7 @@ const getCartById = async (req: Request, res: Response) => {
   }
 };
 
+// carts_items
 const addItemToCart = async (req: Request, res: Response) => {
   try {
     const {
