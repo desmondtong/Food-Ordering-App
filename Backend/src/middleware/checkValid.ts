@@ -11,4 +11,4 @@ const validation = (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-module.exports = validation;
+export { validation };
