@@ -4,6 +4,7 @@ const router = express.Router();
 import { auth } from "../middleware/auth";
 import { validation as checkValid } from "../middleware/checkValid";
 import {
+  validateIdInParam,
   validateAddItem,
   validateDelItem,
   validateUpdateItem,
@@ -16,12 +17,19 @@ import {
   updateItemInCart,
 } from "../controllers/carts";
 
-router.put("/carts/:user_id", auth, createCart);
-router.post("/carts/:user_id", auth, getCartById);
+router.put("/carts/:user_id", auth, validateIdInParam, checkValid, createCart);
+router.post(
+  "/carts/:user_id",
+  auth,
+  validateIdInParam,
+  checkValid,
+  getCartById
+);
 
 router.put(
   "/carts/items/:item_id",
   auth,
+  validateIdInParam,
   validateAddItem,
   checkValid,
   addItemToCart
@@ -29,6 +37,7 @@ router.put(
 router.delete(
   "/carts/items/:item_id",
   auth,
+  validateIdInParam,
   validateDelItem,
   checkValid,
   delItemFromCart
@@ -36,6 +45,7 @@ router.delete(
 router.patch(
   "/carts/items/:item_id",
   auth,
+  validateIdInParam,
   validateUpdateItem,
   checkValid,
   updateItemInCart

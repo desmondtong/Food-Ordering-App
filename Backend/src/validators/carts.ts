@@ -1,4 +1,8 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
+
+const validateIdInParam = [
+  param("id", "invalid id").isLength({ min: 36, max: 36 }),
+];
 
 const validateAddItem = [
   body("cart_id", "cart id is required").notEmpty().isString(),
@@ -22,4 +26,9 @@ const validateUpdateItem = [
   body("cart_id", "cart id is required").notEmpty().isString(),
 ];
 
-export { validateAddItem, validateDelItem, validateUpdateItem };
+export {
+  validateIdInParam,
+  validateAddItem,
+  validateDelItem,
+  validateUpdateItem,
+};

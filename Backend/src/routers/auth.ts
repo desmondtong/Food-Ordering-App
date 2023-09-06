@@ -2,6 +2,7 @@ import express from "express";
 const router = express.Router();
 
 import {
+  validateIdInParam,
   validateLoginData,
   validateRefreshToken,
   validateRegistrationData,
@@ -22,7 +23,13 @@ import {
 } from "../controllers/auth";
 
 router.get("/accounts", auth, getAllAccount);
-router.get("/accounts/:id", auth, getAccountById);
+router.get(
+  "/accounts/:id",
+  auth,
+  validateIdInParam,
+  checkValid,
+  getAccountById
+);
 
 router.put("/register", validateRegistrationData, checkValid, register);
 router.post("/login", validateLoginData, checkValid, login);
@@ -30,15 +37,23 @@ router.post("/refresh", validateRefreshToken, checkValid, refresh);
 
 router.patch(
   "/update/profile/:id",
+  auth,
+  validateIdInParam,
   validateUpdateProfile,
   checkValid,
-  auth,
   updateProfile
 );
-router.delete("/delete/:id", auth, deleteAccount);
+router.delete(
+  "/delete/:id",
+  auth,
+  validateIdInParam,
+  checkValid,
+  deleteAccount
+);
 router.patch(
   "/update/vendor/:id",
   auth,
+  validateIdInParam,
   validateUpdateOperatings,
   checkValid,
   updateVendorOperatings

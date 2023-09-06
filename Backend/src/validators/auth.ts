@@ -1,4 +1,8 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
+
+const validateIdInParam = [
+  param("id", "invalid id").isLength({ min: 36, max: 36 }),
+];
 
 const validateRegistrationData = [
   //users table
@@ -94,6 +98,7 @@ const validateUpdateOperatings = [
 ];
 
 export {
+  validateIdInParam,
   validateRegistrationData,
   validateLoginData,
   validateRefreshToken,
