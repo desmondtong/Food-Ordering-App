@@ -48,7 +48,7 @@ const createItemsOrders = async (req: Request, res: Response) => {
     // copy item_id, item_price, quantity_ordered and user_note from carts_items; insert order_id
     const cart_id: String = req.body.cart_id;
     const order = await pool.query(
-      "INSERT INTO items_orders (item_id, order_id, item_price, quantity_ordered, user_note) SELECT item_id, $1, item_price, quantity_ordered, user_note FROM carts_items WHERE cart_id = $2 RETURNING *",
+      "INSERT INTO items_orders (item_id, order_id, item_price, quantity_ordered, user_note) SELECT item_id, $1, item_price, quantity_ordered, user_note FROM carts_items WHERE cart_id = $2 AND is_deleted = FALSE RETURNING *",
       [req.params.order_id, cart_id]
     );
 

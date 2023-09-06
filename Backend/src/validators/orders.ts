@@ -16,7 +16,7 @@ const validateCreateOrder = [
 const validateUpdateOrder = [
   body("status", "status is required").notEmpty().isString().isUppercase(),
   body("rating", "rating is required").optional().notEmpty().isFloat(),
-  body("review", "review is required").optional().notEmpty().isString(),
+  body("review", "review is required").optional().isString(),
 ];
 
 const validateCreateItemsOrders = [
