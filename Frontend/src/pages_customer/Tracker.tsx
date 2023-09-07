@@ -1,6 +1,6 @@
 import React from "react";
 
-const Tracker = () => {
+const Tracker: React.FC= () => {
   return <>Tracker</>;
 };
 

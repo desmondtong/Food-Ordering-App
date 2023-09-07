@@ -1,7 +1,22 @@
 import React from "react";
+import NavBar from "../components/NavBar";
 
-const Dashboard = () => {
-  return <>Dashboard</>;
+import { Typography, Box } from "@mui/material";
+
+const Dashboard: React.FC = () => {
+  return (
+    <>
+      <Box sx={{ display: "flex" }}>
+        <NavBar></NavBar>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        >
+          <Typography>Dashboard</Typography>
+        </Box>
+      </Box>
+    </>
+  );
 };
 
 export default Dashboard;

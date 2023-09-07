@@ -1,6 +1,6 @@
 import React from "react";
 
-const HistoryDetail = () => {
+const HistoryDetail: React.FC = () => {
   return <>Historydetail</>;
 };
 

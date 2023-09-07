@@ -1,7 +1,22 @@
 import React from "react";
+import NavBar from "../components/NavBar";
 
-const Alert = () => {
-  return <>Alert</>;
+import { Typography, Box } from "@mui/material";
+
+const Alert: React.FC = () => {
+  return (
+    <>
+      <Box sx={{ display: "flex" }}>
+        <NavBar></NavBar>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        >
+          <Typography>Alert</Typography>
+        </Box>
+      </Box>
+    </>
+  );
 };
 
 export default Alert;

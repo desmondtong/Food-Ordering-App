@@ -1,7 +1,22 @@
 import React from "react";
+import NavBar from "../components/NavBar";
 
-const Homepage = () => {
-  return <>Homepage</>;
+import { Typography, Box } from "@mui/material";
+
+const Homepage: React.FC = () => {
+  return (
+    <>
+      <Box sx={{ display: "flex" }}>
+        <NavBar></NavBar>
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        >
+          <Typography>Homepage</Typography>
+        </Box>
+      </Box>
+    </>
+  );
 };
 
 export default Homepage;
