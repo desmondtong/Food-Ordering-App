@@ -1,7 +1,7 @@
 import React from "react";
 
 const HistoryDetail = () => {
-  return <></>;
+  return <>Historydetail</>;
 };
 
 export default HistoryDetail;

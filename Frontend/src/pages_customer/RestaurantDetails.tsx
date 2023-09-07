@@ -1,7 +1,7 @@
 import React from "react";
 
 const RestaurantDetails = () => {
-  return <></>;
+  return <>RestaurantDetails</>;
 };
 
 export default RestaurantDetails;
