@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -8,6 +11,10 @@ import Box from "@mui/material/Box";
 import { MenuItem, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import UserContext from "../context/user";
+import useFetch from "../hooks/useFetch";
+import { data, registerBody } from "../interfaces";
 
 const Copyright = (props: any) => {
   return (
@@ -31,8 +38,89 @@ const Copyright = (props: any) => {
 const defaultTheme = createTheme();
 
 const Registration: React.FC = () => {
+  const fetchData = useFetch();
+  const navigate = useNavigate();
+  const userCtx = useContext(UserContext);
+
+  const [categories, setCategories] = useState<string[]>([]);
+  const [firstName, setFirstName] = useState<String>("");
+  const [lastName, setLastName] = useState<String>("");
+  const [storeName, setStoreName] = useState<String>("");
+  const [category, setCategory] = useState<String>("");
+  const [address, setAddress] = useState<String>("");
+  const [postalCode, setPostalCode] = useState<String>("");
+  const [email, setEmail] = useState<String>("");
+  const [contact, setContact] = useState<String>("");
+  const [password, setPassword] = useState<String>("");
+  const [confirmPassword, setConfirmPassword] = useState<String>("");
+  const [wrongPassword, setWrongPassword] = useState<boolean>(false);
+
   const pathName = window.location.pathname;
 
+  // function
+  const getCategories = async () => {
+    const res: data = await fetchData("/api/categories", "GET");
+    setCategories(res.data);
+  };
+
+  const handleRegister = async () => {
+    if (password != confirmPassword) {
+      return setWrongPassword(true);
+    } else {
+      setWrongPassword(false);
+    }
+
+    // construct body for endpoint for different role
+    const body: registerBody = {
+      role: pathName === "/registration/vendor" ? "VENDOR" : "CUSTOMER",
+      email,
+      password,
+      contact,
+      first_name: firstName,
+      last_name: lastName,
+    };
+    if (pathName === "/registration/vendor") {
+      body["category"] = category;
+      body["store_name"] = storeName;
+      body["address"] = address;
+      body["postal_code"] = postalCode;
+    }
+
+    const res: data = await fetchData("/auth/register", "PUT", body);
+
+    if (res.ok) {
+      // Login user after register successful
+      const resLogin: data = await fetchData("/auth/login", "POST", {
+        email,
+        password,
+      });
+      if (resLogin.ok) {
+        const decoded: any = jwtDecode(resLogin.data?.access);
+
+        userCtx?.setAccessToken(resLogin.data?.access);
+        localStorage.setItem(
+          "accessToken",
+          JSON.stringify(resLogin.data?.access)
+        );
+
+        userCtx?.setUserId(decoded.id);
+        localStorage.setItem("userId", JSON.stringify(decoded.id));
+
+        userCtx?.setRole(decoded.role);
+        localStorage.setItem("role", JSON.stringify(decoded.role));
+
+        navigate(`/`);
+      } else {
+        alert(JSON.stringify(resLogin.data));
+      }
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main">
@@ -94,7 +182,7 @@ const Registration: React.FC = () => {
                   name="first name"
                   autoComplete="first name"
                   autoFocus
-                  // onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setFirstName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -107,7 +195,7 @@ const Registration: React.FC = () => {
                   type="text"
                   id="lastName"
                   autoComplete="last name"
-                  // onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setLastName(e.target.value)}
                 />
               </Grid>
 
@@ -123,7 +211,7 @@ const Registration: React.FC = () => {
                       label="Store Name"
                       type="text"
                       id="storeName"
-                      // onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => setStoreName(e.target.value)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -136,12 +224,14 @@ const Registration: React.FC = () => {
                       label="Category"
                       type="category"
                       id="category"
-                      // onChange={(e) => setPassword(e.target.value)}
+                      defaultValue=""
+                      onChange={(e) => setCategory(e.target.value)}
                     >
-                      <MenuItem>1</MenuItem>
-                      <MenuItem>1</MenuItem>
-                      <MenuItem>1</MenuItem>
-                      <MenuItem>1</MenuItem>
+                      {categories.map((item, idx) => (
+                        <MenuItem key={idx} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   </Grid>
                   <Grid item xs={6}>
@@ -153,7 +243,7 @@ const Registration: React.FC = () => {
                       label="Store Address"
                       type="text"
                       id="address"
-                      // onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => setAddress(e.target.value)}
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -164,7 +254,7 @@ const Registration: React.FC = () => {
                       name="postal code"
                       label="Postal Code"
                       id="postalCode"
-                      // onChange={(e) => setPassword(e.target.value)}
+                      onChange={(e) => setPostalCode(e.target.value)}
                     />
                   </Grid>
                 </>
@@ -180,7 +270,7 @@ const Registration: React.FC = () => {
                   type="email"
                   id="email"
                   autoComplete="email"
-                  // onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -192,7 +282,7 @@ const Registration: React.FC = () => {
                   label="Phone Number"
                   id="phoneNumber"
                   autoComplete="phone number"
-                  // onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setContact(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -204,11 +294,12 @@ const Registration: React.FC = () => {
                   label="Password"
                   type="password"
                   id="password"
-                  // onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={wrongPassword}
                   margin="dense"
                   required
                   fullWidth
@@ -216,7 +307,8 @@ const Registration: React.FC = () => {
                   label="Confirm Password"
                   type="password"
                   id="confirmPassword"
-                  // onChange={(e) => setPassword(e.target.value)}
+                  helperText={wrongPassword && "Password does not match!"}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -224,7 +316,7 @@ const Registration: React.FC = () => {
               fullWidth
               variant="contained"
               sx={{ mt: "3rem", mb: "1rem" }}
-              // onClick={handleLogin}
+              onClick={handleRegister}
             >
               CREATE ACCOUNT
             </Button>
@@ -241,7 +333,7 @@ const Registration: React.FC = () => {
                     href={
                       pathName === "/registration/vendor"
                         ? "/login/vendor"
-                        : "/login"
+                        : "/"
                     }
                     variant="body2"
                     ml="0.3rem"

@@ -15,10 +15,7 @@ export interface data {
   message?: String;
   msg?: String;
   ok?: Boolean;
-  data?: {
-    access?: any;
-    refresh?: any;
-  };
+  data?: any;
 }
 
 export interface returnValue {
@@ -51,4 +48,17 @@ export interface navBarType {
   item: String;
   link: To;
   icon: JSX.Element;
+}
+
+export interface registerBody {
+  role: string;
+  email: String;
+  password: String;
+  contact: String;
+  first_name: String;
+  last_name: String;
+  category?: String;
+  store_name?: String;
+  address?: String;
+  postal_code?: String;
 }

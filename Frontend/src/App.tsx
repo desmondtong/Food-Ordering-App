@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserContext from "./context/user";
 
 import Login from "./pages_customer/Login";
@@ -20,11 +20,13 @@ import Alert from "./pages_vendor/Alert";
 import RatingReview from "./pages_vendor/RatingReview";
 
 function App() {
-  const [accessToken, setAccessToken] = useState<String>("");
-  const [role, setRole] = useState<String>("VENDOR");
-  const [userId, setUserId] = useState<String>(
-    "df652550-a839-413e-b6ba-197d0f57b0a5"
-  );
+  const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
+  const initRole = JSON.parse(localStorage.getItem("role")!);
+  const initUserId = JSON.parse(localStorage.getItem("userId")!);
+
+  const [accessToken, setAccessToken] = useState<String>(initAccessToken);
+  const [role, setRole] = useState<String>(initRole);
+  const [userId, setUserId] = useState<String>(initUserId);
 
   return (
     <div>
@@ -40,7 +42,7 @@ function App() {
       >
         <Routes>
           {/* customer pages */}
-          <Route path="/login" element={<Login />}></Route>
+          {!accessToken && <Route path="/" element={<Login />}></Route>}
           <Route path="/registration" element={<Registration />}></Route>
 
           {role === "CUSTOMER" && (
@@ -75,7 +77,7 @@ function App() {
           {/* vendor pages */}
           <Route path="/login/vendor" element={<Login />}></Route>
           <Route path="/registration/vendor" element={<Registration />}></Route>
-          
+
           {role === "VENDOR" && (
             <>
               <Route path="/" element={<Dashboard />}></Route>

@@ -61,7 +61,7 @@ const Login: React.FC = () => {
 
       // check if user login using the correct login portal
       if (
-        (role === "CUSTOMER" && (pathName === "/login" || pathName === "/")) ||
+        (role === "CUSTOMER" && pathName === "/") ||
         ((role === "VENDOR" || role === "ADMIN") &&
           pathName === "/login/vendor")
       ) {
@@ -72,6 +72,7 @@ const Login: React.FC = () => {
         localStorage.setItem("userId", JSON.stringify(decoded.id));
 
         userCtx?.setRole(decoded.role);
+        localStorage.setItem("role", JSON.stringify(decoded.role));
 
         navigate(`/`);
       } else {
