@@ -1,9 +1,9 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Props } from "../interfaces";
-import { Checkbox } from "@mui/material";
-import { orange } from "@mui/material/colors";
+// import { Checkbox } from "@mui/material";
+// import { orange } from "@mui/material/colors";
 
 declare module "@mui/material/styles" {
   interface Theme {
