@@ -1,9 +1,11 @@
+import { useFetchType } from "../interfaces";
+
 const useFetch = () => {
-  const fetchData = async (
-    endpoint: String,
-    method: string,
-    body: Object,
-    token: String,
+  const fetchData: useFetchType = async (
+    endpoint,
+    method,
+    body,
+    token,
     isExtAPI = false
   ) => {
     const path = isExtAPI ? endpoint : import.meta.env.VITE_SERVER + endpoint;

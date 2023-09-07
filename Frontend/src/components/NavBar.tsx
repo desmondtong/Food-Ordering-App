@@ -133,7 +133,7 @@ const NavBar = () => {
           ))}
         </List>
       )}
-
+      
       <List>
         <ListItem key={"Logout"}>
           <ListItemButton>

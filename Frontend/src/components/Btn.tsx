@@ -45,7 +45,8 @@ const Btn: React.FC<Props> = (props) => {
     <>
       <ThemeProvider theme={btnTheme}>
         <Button
-          variant="contained"
+          variant={props.variant}
+          fullWidth={props.fullWidth}
           onClick={props.onClick}
           style={{ width: `${props.width}rem`, margin: "0.25rem" }}
           startIcon={props.startIcon}
