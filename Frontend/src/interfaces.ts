@@ -1,3 +1,5 @@
+import { To } from "react-router-dom";
+
 export interface Props {
   //btn component
   onClick?: any;
@@ -9,6 +11,6 @@ export interface Props {
 
 export interface navBarType {
   item: String;
-  link: String;
+  link: To;
   icon: JSX.Element;
-};
+}

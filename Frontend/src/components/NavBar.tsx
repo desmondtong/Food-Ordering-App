@@ -99,17 +99,14 @@ const NavBar = () => {
       {userCtx?.role === "CUSTOMER" && (
         <List sx={{ flexGrow: 1 }}>
           {navBarCustomer.map((item, idx) => (
-            <ListItem
-              key={idx}
-              style={{ textDecoration: "none" }}
-              component={NavLink}
-              to={item.link}
-            >
-              <ListItemButton>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.item} />
-              </ListItemButton>
-            </ListItem>
+            <NavLink to={item.link} style={{ textDecoration: "none" }}>
+              <ListItem key={idx} style={{ textDecoration: "none" }}>
+                <ListItemButton>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.item} />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           ))}
         </List>
       )}
@@ -117,17 +114,14 @@ const NavBar = () => {
       {userCtx?.role === "VENDOR" && (
         <List sx={{ flexGrow: 1 }}>
           {navBarVendor.map((item, idx) => (
-            <ListItem
-              key={idx}
-              style={{ textDecoration: "none" }}
-              component={NavLink}
-              to={item.link}
-            >
-              <ListItemButton>
-                <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.item} />
-              </ListItemButton>
-            </ListItem>
+            <NavLink to={item.link} style={{ textDecoration: "none" }}>
+              <ListItem key={idx}>
+                <ListItemButton>
+                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemText primary={item.item} />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           ))}
         </List>
       )}
