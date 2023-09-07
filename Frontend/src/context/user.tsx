@@ -1,11 +1,5 @@
 import React from "react";
-
-interface UserContextType {
-  accessToken: String;
-  setAccessToken: React.Dispatch<React.SetStateAction<String>>;
-  role: String;
-  setRole: React.Dispatch<React.SetStateAction<String>>;
-}
+import { UserContextType } from "../interfaces";
 
 const UserContext = React.createContext<UserContextType | undefined>(undefined);
 

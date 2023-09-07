@@ -1,5 +1,6 @@
-import React, { useContext, useRef } from "react";
-import { useNavigate, useNavigate } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,6 +14,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
+import { data } from "../interfaces";
 
 const Copyright = (props: any) => {
   return (
@@ -40,26 +42,39 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const userCtx = useContext(UserContext);
 
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-
-  // const handleLogin = () => {
-  //   console.log(emailRef.current?.value);
-  //   console.log(passwordRef.current?.value);
-  // };
+  const [email, setEmail] = useState<String>("");
+  const [password, setPassword] = useState<String>("");
 
   const handleLogin = async () => {
-    const res = await fetchData("/auth/login", "POST", { email, password });
+    const res: data = await fetchData("/auth/login", "POST", {
+      email,
+      password,
+    });
+
     if (res.ok) {
-      userCtx.setAccessToken(res.data.access);
-      localStorage.setItem("accessToken", JSON.stringify(res.data.access));
+      const decoded: any = jwtDecode(res.data?.access);
 
-      const decoded = jwtDecode(res.data.access);
+      const pathName = window.location.pathname;
+      const role = decoded.role;
 
-      userCtx.setUserId(decoded.id);
-      localStorage.setItem("userId", JSON.stringify(decoded.id));
+      // check if user login using the correct login portal
+      if (
+        (role === "CUSTOMER" && (pathName === "/login" || pathName === "/")) ||
+        ((role === "VENDOR" || role === "ADMIN") &&
+          pathName === "/login/vendor")
+      ) {
+        userCtx?.setAccessToken(res.data?.access);
+        localStorage.setItem("accessToken", JSON.stringify(res.data?.access));
 
-      navigate(`/profile/${decoded.id}`);
+        userCtx?.setUserId(decoded.id);
+        localStorage.setItem("userId", JSON.stringify(decoded.id));
+
+        userCtx?.setRole(decoded.role);
+
+        navigate(`/`);
+      } else {
+        alert("Please login with the correct portal!");
+      }
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -67,7 +82,7 @@ const Login: React.FC = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: "100vh" }}>
+      <Grid container component="main">
         <CssBaseline />
         <Grid
           item
@@ -84,21 +99,24 @@ const Login: React.FC = () => {
                 : t.palette.grey[900],
             backgroundSize: "cover",
             backgroundPosition: "center",
-            // borderStyle: "solid",
           }}
         />
 
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={0} square>
-          <Box
-            sx={{
-              my: "7rem",
-              mx: "4rem",
-              display: "flex",
-              flexDirection: "column",
-              // alignItems: "center",
-              // borderStyle: "solid",
-            }}
-          >
+        <Grid
+          item
+          container
+          xs={12}
+          sm={8}
+          md={5}
+          component={Paper}
+          elevation={0}
+          square
+          direction="column"
+          display="flex"
+          justifyContent="center"
+          height="100vh"
+        >
+          <Box mx="5rem">
             <Typography variant="h4" align="left" fontWeight="bold">
               {userCtx?.role === "CUSTOMER"
                 ? "Welcome Back!"
@@ -107,68 +125,62 @@ const Login: React.FC = () => {
             <Typography variant="body1" mb="2rem">
               Please enter your details
             </Typography>
-            <Box
-              component="form"
-              noValidate
-              // onSubmit={handleSubmit}
-              sx={{ mt: 1 }}
+
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={handleLogin}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                autoFocus
-                inputRef={emailRef}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                inputRef={passwordRef}
-              />
-              <Button
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={handleLogin}
-              >
-                LOG IN
-              </Button>
+              LOG IN
+            </Button>
 
-              <Grid item>
-                <Box>
-                  <Typography
-                    variant="body1"
-                    fontSize="0.8rem"
-                    textAlign="center"
+            <Grid item>
+              <Box>
+                <Typography
+                  variant="body1"
+                  fontSize="0.8rem"
+                  textAlign="center"
+                >
+                  Don't have an account?
+                  <Link
+                    href={
+                      window.location.pathname === "/login/vendor"
+                        ? "/registration/vendor"
+                        : "/registration"
+                    }
+                    variant="body2"
+                    ml="0.3rem"
                   >
-                    Don't have an account?
-                    <Link
-                      href={
-                        userCtx?.role === "CUSTOMER"
-                          ? "/registration/vendor"
-                          : "/registration"
-                      }
-                      variant="body2"
-                      ml="0.3rem"
-                    >
-                      Sign Up
-                    </Link>
-                  </Typography>
-                </Box>
-              </Grid>
+                    Sign Up
+                  </Link>
+                </Typography>
+              </Box>
+            </Grid>
 
-              <Copyright sx={{ mt: 5 }} />
-            </Box>
+            <Copyright sx={{ mt: 5 }} />
           </Box>
         </Grid>
       </Grid>

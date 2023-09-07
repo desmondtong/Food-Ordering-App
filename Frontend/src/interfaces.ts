@@ -1,5 +1,31 @@
 import { To } from "react-router-dom";
 
+export interface UserContextType {
+  accessToken: String;
+  setAccessToken: React.Dispatch<React.SetStateAction<String>>;
+  role: String;
+  setRole: React.Dispatch<React.SetStateAction<String>>;
+  userId: String;
+  setUserId: React.Dispatch<React.SetStateAction<String>>;
+}
+
+export interface data {
+  status?: String;
+  errors?: String;
+  message?: String;
+  msg?: String;
+  ok?: Boolean;
+  data?: {
+    access?: any;
+    refresh?: any;
+  };
+}
+
+export interface returnValue {
+  ok: Boolean;
+  data: data | any;
+}
+
 export interface useFetchType {
   (
     endpoint: String,

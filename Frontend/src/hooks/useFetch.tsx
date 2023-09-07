@@ -1,4 +1,4 @@
-import { useFetchType } from "../interfaces";
+import { useFetchType, data, returnValue } from "../interfaces";
 
 const useFetch = () => {
   const fetchData: useFetchType = async (
@@ -18,14 +18,10 @@ const useFetch = () => {
       },
       body: JSON.stringify(body),
     });
-    const data: {
-      status: String;
-      errors: String;
-      message: String;
-      msg: String;
-    } = await res.json();
 
-    let returnValue = {};
+    const data: data = await res.json();
+
+    let returnValue: returnValue;
     if (res.ok) {
       if (data.status === "error") {
         returnValue = { ok: false, data: data.msg };
@@ -46,7 +42,6 @@ const useFetch = () => {
 
     return returnValue;
   };
-
   return fetchData;
 };
 

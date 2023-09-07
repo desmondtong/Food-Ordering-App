@@ -22,19 +22,29 @@ import RatingReview from "./pages_vendor/RatingReview";
 function App() {
   const [accessToken, setAccessToken] = useState<String>("");
   const [role, setRole] = useState<String>("VENDOR");
+  const [userId, setUserId] = useState<String>(
+    "df652550-a839-413e-b6ba-197d0f57b0a5"
+  );
 
   return (
     <div>
       <UserContext.Provider
-        value={{ accessToken, setAccessToken, role, setRole }}
+        value={{
+          accessToken,
+          setAccessToken,
+          role,
+          setRole,
+          userId,
+          setUserId,
+        }}
       >
         <Routes>
           {/* customer pages */}
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/registration" element={<Registration />}></Route>
+
           {role === "CUSTOMER" && (
             <>
-              <Route path="/login" element={<Login />}></Route>
-              <Route path="/registration" element={<Registration />}></Route>
-
               <Route path="/" element={<Homepage />}></Route>
               <Route path="/searchresults" element={<SearchResults />}></Route>
               <Route
@@ -63,14 +73,11 @@ function App() {
           )}
 
           {/* vendor pages */}
+          <Route path="/login/vendor" element={<Login />}></Route>
+          <Route path="/registration/vendor" element={<Registration />}></Route>
+          
           {role === "VENDOR" && (
             <>
-              <Route path="/login/vendor" element={<Login />}></Route>
-              <Route
-                path="/registration/vendor"
-                element={<Registration />}
-              ></Route>
-
               <Route path="/" element={<Dashboard />}></Route>
 
               <Route path="/menu" element={<Menu />}></Route>
