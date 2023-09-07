@@ -1,4 +1,7 @@
 import { Route, Routes } from "react-router-dom";
+import { useState } from "react";
+import UserContext from "./context/user";
+
 import Login from "./pages_customer/Login";
 import Registration from "./pages_customer/Registration";
 import Homepage from "./pages_customer/Homepage";
@@ -17,40 +20,50 @@ import Alert from "./pages_vendor/Alert";
 import RatingReview from "./pages_vendor/RatingReview";
 
 function App() {
+  const [accessToken, setAccessToken] = useState<String>("");
+  const [role, setRole] = useState<String>("");
+
   return (
     <div>
-      <Routes>
-        {/* customer pages */}
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/registration" element={<Registration />}></Route>
+      <UserContext.Provider
+        value={{ accessToken, setAccessToken, role, setRole }}
+      >
+        <Routes>
+          {/* customer pages */}
+          <Route path="/login" element={<Login />}></Route>
+          <Route path="/registration" element={<Registration />}></Route>
 
-        <Route path="/" element={<Homepage />}></Route>
-        <Route path="/searchresults" element={<SearchResults />}></Route>
-        <Route path="/details/:item" element={<RestaurantDetails />}></Route>
+          <Route path="/" element={<Homepage />}></Route>
+          <Route path="/searchresults" element={<SearchResults />}></Route>
+          <Route path="/details/:item" element={<RestaurantDetails />}></Route>
 
-        <Route path="/cart/:item" element={<Cart />}>
-          <Route path="/checkout" element={<CheckOut />}></Route>
-        </Route>
+          <Route path="/cart/:item" element={<Cart />}>
+            <Route path="/cart/:item/checkout" element={<CheckOut />}></Route>
+          </Route>
 
-        <Route path="/history/:item" element={<History />}>
-          <Route path="/details/:item" element={<HistoryDetail />}></Route>
-        </Route>
+          <Route path="/history" element={<History />}>
+            <Route
+              path="history/details/:item"
+              element={<HistoryDetail />}
+            ></Route>
+          </Route>
 
-        <Route path="/favourite/:item" element={<Favourite />}></Route>
+          <Route path="/favourite/:item" element={<Favourite />}></Route>
 
-        <Route path="/tracker/:item" element={<Tracker />}></Route>
+          <Route path="/tracker/:item" element={<Tracker />}></Route>
 
-        {/* vendor pages */}
-        <Route path="/" element={<Dashboard />}></Route>
+          {/* vendor pages */}
+          <Route path="/dashboard" element={<Dashboard />}></Route>
 
-        <Route path="/menu" element={<Menu />}></Route>
+          <Route path="/menu" element={<Menu />}></Route>
 
-        <Route path="/historyvendor" element={<HistoryVendor />}></Route>
+          <Route path="/historyvendor" element={<HistoryVendor />}></Route>
 
-        <Route path="/alert" element={<Alert />}></Route>
+          <Route path="/alert" element={<Alert />}></Route>
 
-        <Route path="/ratingreview" element={<RatingReview />}></Route>
-      </Routes>
+          <Route path="/ratingreview" element={<RatingReview />}></Route>
+        </Routes>
+      </UserContext.Provider>
     </div>
   );
 }
