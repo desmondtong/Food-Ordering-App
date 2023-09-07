@@ -45,6 +45,9 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState<String>("");
   const [password, setPassword] = useState<String>("");
 
+  const pathName = window.location.pathname;
+
+  // function
   const handleLogin = async () => {
     const res: data = await fetchData("/auth/login", "POST", {
       email,
@@ -54,7 +57,6 @@ const Login: React.FC = () => {
     if (res.ok) {
       const decoded: any = jwtDecode(res.data?.access);
 
-      const pathName = window.location.pathname;
       const role = decoded.role;
 
       // check if user login using the correct login portal
@@ -116,11 +118,11 @@ const Login: React.FC = () => {
           justifyContent="center"
           height="100vh"
         >
-          <Box mx="5rem">
-            <Typography variant="h4" align="left" fontWeight="bold">
-              {userCtx?.role === "CUSTOMER"
-                ? "Welcome Back!"
-                : "Welcome Back to Vendor Portal"}
+          <Box mx="6rem">
+            <Typography variant="h3" align="left" fontWeight="bold">
+              {pathName === "/login/vendor"
+                ? `Welcome Back to Vendor Portal!`
+                : "Welcome Back!"}
             </Typography>
             <Typography variant="body1" mb="2rem">
               Please enter your details
@@ -151,7 +153,7 @@ const Login: React.FC = () => {
             <Button
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: "3rem", mb: "1rem" }}
               onClick={handleLogin}
             >
               LOG IN
@@ -167,7 +169,7 @@ const Login: React.FC = () => {
                   Don't have an account?
                   <Link
                     href={
-                      window.location.pathname === "/login/vendor"
+                      pathName === "/login/vendor"
                         ? "/registration/vendor"
                         : "/registration"
                     }

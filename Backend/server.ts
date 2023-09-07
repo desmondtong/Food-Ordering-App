@@ -13,6 +13,7 @@ import auth from "./src/routers/auth";
 import items from "./src/routers/items";
 import carts from "./src/routers/carts";
 import orders from "./src/routers/orders";
+import constraint from "./src/routers/constraint";
 
 //allows api to be called 100 times within 15min interval
 const limit = rateLimit({
@@ -39,6 +40,7 @@ app.use("/auth", auth);
 app.use("/api", items);
 app.use("/api", carts);
 app.use("/api", orders);
+app.use("/api", constraint);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
