@@ -41,6 +41,8 @@ const Menu: React.FC = () => {
   const [openCat, setOpenCat] = useState<boolean>(false); // model
   const [addCat, setAddCat] = useState<boolean>(false);
 
+  const [update, setUpdate] = useState<boolean>(false); //
+
   const nameRef = useRef<HTMLInputElement>();
   const priceRef = useRef<HTMLInputElement>();
   const descriptionRef = useRef<HTMLInputElement>();
@@ -156,7 +158,7 @@ const Menu: React.FC = () => {
     getCategories();
     getItems();
     console.log("menu UE");
-  }, []);
+  }, [update]);
 
   return (
     <>
@@ -209,6 +211,12 @@ const Menu: React.FC = () => {
                   name={item.name}
                   description={item.description}
                   item_price={item.item_price}
+                  uuid={item.uuid}
+                  availability={item.availability}
+                  category={item.category}
+                  categories={categories}
+                  update={update}
+                  setUpdate={setUpdate}
                 ></ItemCard>
               </Grid>
             ))}

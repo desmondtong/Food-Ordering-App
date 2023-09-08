@@ -82,7 +82,9 @@ const addItem = async (req: Request, res: Response) => {
       [req.params.vendor_id, name, item_price, image_url, description]
     );
 
-    res.status(201).json({ msg: "Item created", item_id: addedItem.rows[0].uuid });
+    res
+      .status(201)
+      .json({ msg: "Item created", item_id: addedItem.rows[0].uuid });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Add item failed" });
@@ -111,16 +113,25 @@ const updateItemById = async (req: Request, res: Response) => {
       image_url,
       description,
       category,
+      availability,
     }: {
       name: String;
       item_price: Number;
       image_url: String;
       description: String;
       category: String;
+      availability: String;
     } = req.body;
     const updatedItem = await pool.query(
-      "UPDATE items SET name = $1, item_price = $2, image_url = $3, description = $4 WHERE uuid = $5 RETURNING *",
-      [name, item_price, image_url, description, req.params.item_id]
+      "UPDATE items SET name = $1, item_price = $2, image_url = $3, description = $4, availability = $6 WHERE uuid = $5 RETURNING *",
+      [
+        name,
+        item_price,
+        image_url,
+        description,
+        req.params.item_id,
+        availability,
+      ]
     );
 
     const updatedCategory = await pool.query(

@@ -54,7 +54,17 @@ export interface Props {
   name?: String;
   description?: String;
   item_price?: String;
-  category?: String;
+  category?: any;
+  uuid?: string;
+  availability?: any;
+  vendor_id?: string;
+  image_url?: string;
+  is_deleted?: boolean;
+  item_id?: string;
+  categories?: string[];
+
+  update?: boolean;
+  setUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface navBarType {

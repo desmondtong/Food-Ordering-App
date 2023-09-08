@@ -1,17 +1,81 @@
-import React from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Tooltip } from "@mui/material";
+import {
+  Tooltip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  Grid,
+  Button,
+  InputAdornment,
+  Divider,
+  MenuItem,
+} from "@mui/material";
+
+import useFetch from "../hooks/useFetch";
+import UserContext from "../context/user";
 
 import IconButton from "@mui/material/IconButton";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
-import { Props } from "../interfaces";
+import { Props, data } from "../interfaces";
 
 const ItemCard: React.FC<Props> = (props) => {
+  const fetchData = useFetch();
+  const userCtx = useContext(UserContext);
+
+  const [openUpdate, setOpenUpdate] = useState<boolean>(false); // model
+  const [category, setCategory] = useState<string>("");
+  const [availability, setAvailability] = useState<string>("");
+
+  const nameRef = useRef<HTMLInputElement>();
+  const priceRef = useRef<HTMLInputElement>();
+  const descriptionRef = useRef<HTMLInputElement>();
+
+  // endpoint
+  const handleUpdate = async () => {
+    const res: data = await fetchData(
+      "/api/items/" + props.uuid,
+      "PATCH",
+      {
+        name: nameRef.current?.value,
+        item_price: priceRef.current?.value,
+        image_url: "./sample-image.webp",
+        description: descriptionRef.current?.value,
+        category: category,
+        availability: availability,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setOpenUpdate(false);
+
+      props.setUpdate?.(!props.update);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const handleDelete = async () => {
+    console.log(props.uuid);
+  };
+
+  useEffect(() => {
+    setCategory(props.category);
+    setAvailability(props.availability);
+  }, []);
+
   return (
     <>
       <Card
@@ -50,6 +114,7 @@ const ItemCard: React.FC<Props> = (props) => {
             size="small"
             sx={{ m: "0.4rem" }}
             style={{ backgroundColor: "var(--orange)" }}
+            onClick={() => setOpenUpdate(true)}
           >
             <BorderColorOutlinedIcon
               fontSize="small"
@@ -58,6 +123,110 @@ const ItemCard: React.FC<Props> = (props) => {
           </IconButton>
         </Tooltip>
       </Card>
+
+      {/* add item modal */}
+      <Dialog open={openUpdate} onClose={() => setOpenUpdate(false)}>
+        <DialogTitle>SHOW EXTG PICTURE</DialogTitle>
+        <DialogContent>
+          <Divider sx={{ borderStyle: "solid" }} />
+          <DialogContentText my="1rem">Item Details</DialogContentText>
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="name"
+            label="Name"
+            type="text"
+            fullWidth
+            defaultValue={props.name}
+            inputRef={nameRef}
+          />
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="price"
+            label="Price"
+            type="number"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">S$</InputAdornment>
+              ),
+            }}
+            defaultValue={props.item_price}
+            inputRef={priceRef}
+          />
+          <TextField
+            required
+            select
+            margin="normal"
+            id="category"
+            label="Category"
+            type="text"
+            fullWidth
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            {props.categories?.map((item, idx) => (
+              <MenuItem key={idx} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            required
+            select
+            margin="normal"
+            id="availability"
+            label="Availability"
+            type="text"
+            fullWidth
+            value={availability ? "Yes" : "No"}
+            onChange={(e) => setAvailability(e.target.value)}
+          >
+            <MenuItem value="Yes">Yes</MenuItem>
+            <MenuItem value="No">No</MenuItem>
+          </TextField>
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="description"
+            label="Description"
+            multiline
+            rows={2}
+            type="text"
+            fullWidth
+            defaultValue={props.description}
+            inputRef={descriptionRef}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Button fullWidth variant="contained" onClick={handleUpdate}>
+                Save Changes
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => setOpenUpdate(false)}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item xs={12} height="2rem"></Grid>
+            <Grid item xs={12}>
+              <Button fullWidth variant="contained" onClick={handleDelete}>
+                Delete Item
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
