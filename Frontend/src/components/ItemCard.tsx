@@ -68,7 +68,23 @@ const ItemCard: React.FC<Props> = (props) => {
   };
 
   const handleDelete = async () => {
-    console.log(props.uuid);
+    const res: data = await fetchData(
+      "/api/items/" + props.uuid,
+      "DELETE",
+      undefined,
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setOpenUpdate(false);
+
+      props.setUpdate?.(!props.update);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      alert(JSON.stringify(res.data));
+    }
   };
 
   useEffect(() => {
