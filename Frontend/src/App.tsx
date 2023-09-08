@@ -24,12 +24,12 @@ import useFetch from "./hooks/useFetch";
 import { data, userInfoType } from "./interfaces";
 
 function App() {
-  // const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
+  const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
   const initRefreshToken = JSON.parse(localStorage.getItem("refreshToken")!);
   const initRole = JSON.parse(localStorage.getItem("role")!);
   const initUserId = JSON.parse(localStorage.getItem("userId")!);
 
-  const [accessToken, setAccessToken] = useState<String>("");
+  const [accessToken, setAccessToken] = useState<String>(initAccessToken);
   const [refreshToken, setRefreshToken] = useState<String>(initRefreshToken);
   const [role, setRole] = useState<String>(initRole);
   const [userId, setUserId] = useState<String>(initUserId);
@@ -47,13 +47,17 @@ function App() {
       accessToken
     );
 
-    // Store userInfo to localStorage and set as initial state
-    localStorage.setItem("userInfo", JSON.stringify(res.data));
+    if (res.ok) {
+      // Store userInfo to localStorage and set as initial state
+      localStorage.setItem("userInfo", JSON.stringify(res.data));
 
-    // Set initial userInfo from localStorage after component mounts
-    const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
-    if (initUserInfo) {
-      setUserInfo(initUserInfo);
+      // Set initial userInfo from localStorage after component mounts
+      const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
+      if (initUserInfo) {
+        setUserInfo(initUserInfo);
+      }
+    } else {
+      // alert(JSON.stringify(res.data));
     }
   };
 
@@ -61,9 +65,10 @@ function App() {
     const res: data = await fetchData("/auth/refresh/", "POST", {
       refresh: refreshToken,
     });
+    console.log("refreshing");
 
     if (res.ok) {
-      setAccessToken(res.data);
+      setAccessToken(res.data.access);
       return;
     } else {
       alert(JSON.stringify(res.data));
@@ -72,7 +77,7 @@ function App() {
 
   // function
   const handleLogout = () => {
-    // localStorage.removeItem("accessToken");
+    localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
@@ -91,7 +96,7 @@ function App() {
     }
   };
 
-  //when user logs in, userId is updated and app gets user info
+  // when user logs in, userId is updated and app gets user info
   useEffect(() => {
     getUserInfo();
   }, [userId]);
@@ -112,6 +117,7 @@ function App() {
           setUserInfo,
           handleLogout,
           refresh,
+          getUserInfo,
         }}
       >
         <Routes>

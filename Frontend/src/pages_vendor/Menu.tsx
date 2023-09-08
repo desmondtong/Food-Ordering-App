@@ -1,8 +1,24 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import NavBar from "../components/NavBar";
 
-import { Box, Grid, Chip, Button } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Chip,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  MenuItem,
+  Divider,
+  InputAdornment,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import TopBar from "../components/TopBar";
 
 import useFetch from "../hooks/useFetch";
@@ -10,13 +26,26 @@ import UserContext from "../context/user";
 import { Props, data } from "../interfaces";
 import ItemCard from "../components/ItemCard";
 
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+
 const Menu: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
 
-  const [categories, setCategories] = useState<String[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [items, setItems] = useState<Props[]>([]);
   const [displayItem, setDisplayItem] = useState<Props[]>([]);
+  const [itemId, setItemId] = useState<String>("");
+  const [openAdd, setOpenAdd] = useState<boolean>(false); // model
+  const [openCat, setOpenCat] = useState<boolean>(false); // model
+  const [addCat, setAddCat] = useState<boolean>(false);
+
+  const nameRef = useRef<HTMLInputElement>();
+  const priceRef = useRef<HTMLInputElement>();
+  const descriptionRef = useRef<HTMLInputElement>();
+  const newCatRef = useRef<HTMLInputElement>();
+  const extgCatRef = useRef<HTMLInputElement>();
 
   // function
   const handleFilter = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -45,7 +74,7 @@ const Menu: React.FC = () => {
       setCategories(res.data);
     } else {
       //attempt to refresh to get new access token
-      userCtx?.refresh;
+      // userCtx?.refresh();
 
       // if failed to refresh
       alert(JSON.stringify(res.data));
@@ -65,8 +94,60 @@ const Menu: React.FC = () => {
       setDisplayItem(res.data);
     } else {
       //attempt to refresh to get new access token
-      userCtx?.refresh;
-      
+      // userCtx?.refresh();
+
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const handleAddItem = async () => {
+    const res: data = await fetchData(
+      "/api/items/" + userCtx?.userId,
+      "PUT",
+      {
+        name: nameRef.current?.value,
+        item_price: priceRef.current?.value,
+        image_url: "./sample-image.webp",
+        description: descriptionRef.current?.value,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setOpenAdd(false);
+      setItemId(res.data.item_id);
+
+      setOpenCat(true);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const handleAddCat = async () => {
+    // getting final category (extg or new category key in by vendor)
+    const finalCat = addCat
+      ? newCatRef.current?.value
+      : extgCatRef.current?.value;
+
+    const res: data = await fetchData(
+      "/api/items/categories/" + itemId,
+      "PUT",
+      {
+        category: finalCat,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setOpenCat(false);
+
+      getCategories();
+      getItems();
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
       alert(JSON.stringify(res.data));
     }
   };
@@ -74,6 +155,7 @@ const Menu: React.FC = () => {
   useEffect(() => {
     getCategories();
     getItems();
+    console.log("menu UE");
   }, []);
 
   return (
@@ -109,7 +191,11 @@ const Menu: React.FC = () => {
               direction="row"
               justifyContent="flex-end"
             >
-              <Button variant="contained" size="small">
+              <Button
+                variant="contained"
+                size="small"
+                onClick={() => setOpenAdd(true)}
+              >
                 + Add Item
               </Button>
             </Grid>
@@ -129,6 +215,157 @@ const Menu: React.FC = () => {
           </Grid>
         </Box>
       </Box>
+
+      {/* add item modal */}
+      <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
+        <DialogTitle>UPLOAD PICTURE</DialogTitle>
+        <DialogContent>
+          <Divider sx={{ borderStyle: "solid" }} />
+          <DialogContentText my="1rem">Item Details</DialogContentText>
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="name"
+            label="Name"
+            type="text"
+            fullWidth
+            inputRef={nameRef}
+          />
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="price"
+            label="Price"
+            type="number"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">S$</InputAdornment>
+              ),
+            }}
+            inputRef={priceRef}
+          />
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="description"
+            label="Description"
+            multiline
+            rows={2}
+            type="text"
+            fullWidth
+            inputRef={descriptionRef}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Button fullWidth variant="contained" onClick={handleAddItem}>
+                Add Item
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => setOpenAdd(false)}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
+
+      {/* select category for item added */}
+      <Dialog open={openCat} onClose={() => setOpenCat(false)}>
+        <DialogTitle>Select a category for your item</DialogTitle>
+        <DialogContent>
+          <Divider sx={{ borderStyle: "solid" }} />
+
+          {addCat ? (
+            <Grid container alignItems="center">
+              <Grid item xs={10}>
+                <TextField
+                  required
+                  margin="normal"
+                  id="new category"
+                  label="Add New Category"
+                  type="text"
+                  fullWidth
+                  inputRef={newCatRef}
+                />
+              </Grid>
+              <Grid
+                item
+                container
+                xs={2}
+                direction="row"
+                justifyContent="flex-end"
+              >
+                <Tooltip title="Cancel Add New Category">
+                  <IconButton size="medium" onClick={() => setAddCat(false)}>
+                    <RemoveCircleOutlineIcon
+                      fontSize="medium"
+                      style={{ color: "var(--orange)" }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+          ) : (
+            <Grid container alignItems="center">
+              <Grid item xs={10}>
+                <TextField
+                  select
+                  required
+                  margin="normal"
+                  id="category"
+                  label="Categories"
+                  type="text"
+                  fullWidth
+                  defaultValue=""
+                  inputRef={extgCatRef}
+                >
+                  {categories.map((item, idx) => (
+                    <MenuItem key={idx} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+              <Grid
+                item
+                container
+                xs={2}
+                direction="row"
+                justifyContent="flex-end"
+              >
+                <Tooltip title="Add New Category">
+                  <IconButton size="medium" onClick={() => setAddCat(true)}>
+                    <AddCircleOutlineIcon
+                      fontSize="medium"
+                      style={{ color: "var(--orange)" }}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
+            </Grid>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Button fullWidth variant="contained" onClick={handleAddCat}>
+                Add Item
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

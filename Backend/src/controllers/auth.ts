@@ -145,7 +145,7 @@ const login = async (req: Request, res: Response) => {
     };
 
     const access = jwt.sign(claims, String(process.env.ACCESS_SECRET), {
-      expiresIn: "20m",
+      expiresIn: "30d",
       jwtid: uuidv4(),
     });
     const refresh = jwt.sign(claims, String(process.env.REFRESH_SECRET), {

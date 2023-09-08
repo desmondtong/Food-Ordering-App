@@ -13,6 +13,7 @@ export interface UserContextType {
   setUserInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
   handleLogout: () => void;
   refresh: () => Promise<void>;
+  getUserInfo: () => Promise<void>;
 }
 
 export interface data {

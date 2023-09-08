@@ -66,7 +66,7 @@ const Login: React.FC = () => {
           pathName === "/login/vendor")
       ) {
         userCtx?.setAccessToken(res.data?.access);
-        // localStorage.setItem("accessToken", JSON.stringify(res.data?.access));
+        localStorage.setItem("accessToken", JSON.stringify(res.data?.access));
 
         userCtx?.setRefreshToken(res.data?.refresh);
         localStorage.setItem("refreshToken", JSON.stringify(res.data?.refresh));
@@ -76,6 +76,8 @@ const Login: React.FC = () => {
 
         userCtx?.setRole(decoded.role);
         localStorage.setItem("role", JSON.stringify(decoded.role));
+
+        // userCtx?.getUserInfo();
 
         navigate(`/`);
       } else {
