@@ -94,7 +94,7 @@ const NavBar = () => {
     >
       <Toolbar>
         {/* APP ICON */}
-        <Typography>App Name</Typography>
+        <Typography fontWeight="600">App Name</Typography>
       </Toolbar>
 
       {userCtx?.role === "CUSTOMER" && (

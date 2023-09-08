@@ -31,7 +31,9 @@ const TopBar = () => {
       <Grid container alignItems="center">
         <Grid item sx={{ flexGrow: 1 }}>
           <Typography variant="h5">{userCtx?.userInfo.store_name}</Typography>
-          <Typography variant="body2">{todayDate}</Typography>
+          <Typography variant="body2" fontWeight="300">
+            {todayDate}
+          </Typography>
         </Grid>
         <Grid item xs={1} container direction="row" justifyContent="flex-end">
           <Tooltip title="Profile">
@@ -41,7 +43,7 @@ const TopBar = () => {
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleMenu}
-              color="inherit"
+              style={{ color: "var(--orange)" }}
             >
               <ManageAccountsOutlinedIcon />
             </IconButton>
