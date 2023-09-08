@@ -24,11 +24,13 @@ import useFetch from "./hooks/useFetch";
 import { data, userInfoType } from "./interfaces";
 
 function App() {
-  const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
+  // const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
+  const initRefreshToken = JSON.parse(localStorage.getItem("refreshToken")!);
   const initRole = JSON.parse(localStorage.getItem("role")!);
   const initUserId = JSON.parse(localStorage.getItem("userId")!);
 
-  const [accessToken, setAccessToken] = useState<String>(initAccessToken);
+  const [accessToken, setAccessToken] = useState<String>("");
+  const [refreshToken, setRefreshToken] = useState<String>(initRefreshToken);
   const [role, setRole] = useState<String>(initRole);
   const [userId, setUserId] = useState<String>(initUserId);
   const [userInfo, setUserInfo] = useState<userInfoType>({});
@@ -36,7 +38,7 @@ function App() {
   const fetchData = useFetch();
   const navigate = useNavigate();
 
-  // function
+  // endpoint
   const getUserInfo = async () => {
     const res: data = await fetchData(
       "/auth/accounts/" + userId,
@@ -55,14 +57,32 @@ function App() {
     }
   };
 
+  const refresh = async () => {
+    const res: data = await fetchData("/auth/refresh/", "POST", {
+      refresh: refreshToken,
+    });
+
+    if (res.ok) {
+      setAccessToken(res.data);
+      return;
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  // function
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    // localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
+    localStorage.removeItem("userInfo");
 
     setAccessToken("");
+    setRefreshToken("");
     setRole("");
     setUserId("");
+    setUserInfo({});
 
     if (role === "CUSTOMER") {
       navigate("/");
@@ -82,6 +102,8 @@ function App() {
         value={{
           accessToken,
           setAccessToken,
+          refreshToken,
+          setRefreshToken,
           role,
           setRole,
           userId,
@@ -89,6 +111,7 @@ function App() {
           userInfo,
           setUserInfo,
           handleLogout,
+          refresh,
         }}
       >
         <Routes>

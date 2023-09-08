@@ -66,7 +66,10 @@ const Login: React.FC = () => {
           pathName === "/login/vendor")
       ) {
         userCtx?.setAccessToken(res.data?.access);
-        localStorage.setItem("accessToken", JSON.stringify(res.data?.access));
+        // localStorage.setItem("accessToken", JSON.stringify(res.data?.access));
+
+        userCtx?.setRefreshToken(res.data?.refresh);
+        localStorage.setItem("refreshToken", JSON.stringify(res.data?.refresh));
 
         userCtx?.setUserId(decoded.id);
         localStorage.setItem("userId", JSON.stringify(decoded.id));

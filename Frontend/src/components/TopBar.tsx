@@ -12,7 +12,7 @@ import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlin
 
 import UserContext from "../context/user";
 
-const TopBar = () => {
+const TopBar: React.FC = () => {
   const userCtx = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -31,7 +31,7 @@ const TopBar = () => {
       <Grid container alignItems="center">
         <Grid item sx={{ flexGrow: 1 }}>
           <Typography variant="h5">{userCtx?.userInfo.store_name}</Typography>
-          <Typography variant="body2" fontWeight="300">
+          <Typography variant="body2" fontWeight="light">
             {todayDate}
           </Typography>
         </Grid>

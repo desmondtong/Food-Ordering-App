@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import React, { useContext } from "react";
 import UserContext from "../context/user";
 
 import {
@@ -76,7 +76,7 @@ const navBarVendor: navBarType[] = [
   },
 ];
 
-const NavBar = () => {
+const NavBar: React.FC = () => {
   const userCtx = useContext(UserContext);
 
   return (

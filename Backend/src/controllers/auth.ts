@@ -179,7 +179,7 @@ const refresh = (req: Request, res: Response) => {
     };
 
     const access = jwt.sign(claims, String(process.env.ACCESS_SECRET), {
-      expiresIn: "30d",
+      expiresIn: "20m",
       jwtid: uuidv4(),
     });
 

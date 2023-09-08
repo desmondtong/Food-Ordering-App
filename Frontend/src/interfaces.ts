@@ -3,6 +3,8 @@ import { To } from "react-router-dom";
 export interface UserContextType {
   accessToken: String;
   setAccessToken: React.Dispatch<React.SetStateAction<String>>;
+  refreshToken: String;
+  setRefreshToken: React.Dispatch<React.SetStateAction<String>>;
   role: String;
   setRole: React.Dispatch<React.SetStateAction<String>>;
   userId: String;
@@ -10,6 +12,7 @@ export interface UserContextType {
   userInfo: userInfoType;
   setUserInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
   handleLogout: () => void;
+  refresh: () => Promise<void>;
 }
 
 export interface data {
@@ -45,6 +48,12 @@ export interface Props {
   children?: any;
   fullWidth?: boolean;
   variant?: "text" | "outlined" | "contained";
+
+  //item card component
+  name?: String;
+  description?: String;
+  item_price?: String;
+  category?: String;
 }
 
 export interface navBarType {
