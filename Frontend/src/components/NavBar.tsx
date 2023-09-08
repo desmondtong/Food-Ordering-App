@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import UserContext from "../context/user";
-import { useNavigate } from "react-router-dom";
 
 import {
   Drawer,
@@ -79,24 +78,6 @@ const navBarVendor: navBarType[] = [
 
 const NavBar = () => {
   const userCtx = useContext(UserContext);
-  const navigate = useNavigate();
-
-  // function
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("userId");
-    localStorage.removeItem("role");
-
-    userCtx?.setAccessToken("");
-    userCtx?.setRole("");
-    userCtx?.setUserId("");
-
-    if (userCtx?.role === "CUSTOMER") {
-      navigate("/");
-    } else {
-      navigate("/login/vendor");
-    }
-  };
 
   return (
     <Drawer
@@ -155,7 +136,7 @@ const NavBar = () => {
       )}
 
       <List>
-        <ListItem key={"Logout"} onClick={handleLogout}>
+        <ListItem key={"Logout"} onClick={userCtx?.handleLogout}>
           <ListItemButton>
             <ListItemIcon>
               <LogoutIcon />

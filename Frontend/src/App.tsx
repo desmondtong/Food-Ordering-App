@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "./context/user";
 
 import Login from "./pages_customer/Login";
@@ -19,6 +20,9 @@ import HistoryVendor from "./pages_vendor/HistoryVendor";
 import Alert from "./pages_vendor/Alert";
 import RatingReview from "./pages_vendor/RatingReview";
 
+import useFetch from "./hooks/useFetch";
+import { data, userInfoType } from "./interfaces";
+
 function App() {
   const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
   const initRole = JSON.parse(localStorage.getItem("role")!);
@@ -27,6 +31,50 @@ function App() {
   const [accessToken, setAccessToken] = useState<String>(initAccessToken);
   const [role, setRole] = useState<String>(initRole);
   const [userId, setUserId] = useState<String>(initUserId);
+  const [userInfo, setUserInfo] = useState<userInfoType>({});
+
+  const fetchData = useFetch();
+  const navigate = useNavigate();
+
+  // function
+  const getUserInfo = async () => {
+    const res: data = await fetchData(
+      "/auth/accounts/" + userId,
+      undefined,
+      undefined,
+      accessToken
+    );
+
+    // Store userInfo to localStorage and set as initial state
+    localStorage.setItem("userInfo", JSON.stringify(res.data));
+
+    // Set initial userInfo from localStorage after component mounts
+    const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
+    if (initUserInfo) {
+      setUserInfo(initUserInfo);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("role");
+
+    setAccessToken("");
+    setRole("");
+    setUserId("");
+
+    if (role === "CUSTOMER") {
+      navigate("/");
+    } else {
+      navigate("/login/vendor");
+    }
+  };
+
+  //when user logs in, userId is updated and app gets user info
+  useEffect(() => {
+    getUserInfo();
+  }, [userId]);
 
   return (
     <div>
@@ -38,6 +86,9 @@ function App() {
           setRole,
           userId,
           setUserId,
+          userInfo,
+          setUserInfo,
+          handleLogout,
         }}
       >
         <Routes>

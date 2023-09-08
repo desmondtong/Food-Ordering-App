@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 
 :root {
-  ---orange: #f56416;
+  --orange: #f56416;
   --brown: #4f3130;
   --blue: #9fbbcc;
   --darkgrey-text: #333333;
@@ -17,4 +17,5 @@
 * {
   box-sizing: border-box;
   font-family: var(--font) !important;
+  color: var(--darkgrey-text);
 }

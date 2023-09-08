@@ -7,6 +7,9 @@ export interface UserContextType {
   setRole: React.Dispatch<React.SetStateAction<String>>;
   userId: String;
   setUserId: React.Dispatch<React.SetStateAction<String>>;
+  userInfo: userInfoType;
+  setUserInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
+  handleLogout: () => void;
 }
 
 export interface data {
@@ -26,7 +29,7 @@ export interface returnValue {
 export interface useFetchType {
   (
     endpoint: String,
-    method: string,
+    method?: string,
     body?: Object,
     token?: String,
     isExtAPI?: boolean
@@ -61,4 +64,25 @@ export interface registerBody {
   store_name?: String;
   address?: String;
   postal_code?: String;
+}
+
+export interface userInfoType {
+  uuid?: String;
+  role?: String;
+  email?: String;
+  password?: String;
+  contact?: String;
+  is_deleted?: Boolean;
+  user_id?: String;
+  first_name?: String;
+  last_name?: String;
+
+  address_id?: Number;
+  id?: String;
+  address?: String;
+  postal_code?: String;
+  vendor_id?: String;
+  category?: String;
+  store_name?: String;
+  description?: any;
 }

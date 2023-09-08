@@ -171,33 +171,38 @@ const Registration: React.FC = () => {
             </Typography>
 
             <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  type="text"
-                  name="first name"
-                  autoComplete="first name"
-                  autoFocus
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  name="last name"
-                  label="Last Name"
-                  type="text"
-                  id="lastName"
-                  autoComplete="last name"
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </Grid>
+              {/* only for customer registration */}
+              {pathName === "/registration/vendor" || (
+                <>
+                  <Grid item xs={6}>
+                    <TextField
+                      margin="dense"
+                      required
+                      fullWidth
+                      id="firstName"
+                      label="First Name"
+                      type="text"
+                      name="first name"
+                      autoComplete="first name"
+                      autoFocus
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      margin="dense"
+                      required
+                      fullWidth
+                      name="last name"
+                      label="Last Name"
+                      type="text"
+                      id="lastName"
+                      autoComplete="last name"
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </Grid>
+                </>
+              )}
 
               {/* only for vendor registration */}
               {pathName === "/registration/vendor" && (
