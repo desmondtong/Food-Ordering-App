@@ -65,6 +65,10 @@ export interface Props {
 
   update?: boolean;
   setUpdate?: React.Dispatch<React.SetStateAction<boolean>>;
+
+  // restaurant card component
+  address?: String;
+  store_name?: String;
 }
 
 export interface navBarType {

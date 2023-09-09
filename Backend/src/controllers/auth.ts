@@ -16,6 +16,19 @@ const getAllAccount = async (req: Request, res: Response) => {
   }
 };
 
+const getAllVendor = async (req: Request, res: Response) => {
+  try {
+    const allAcc = await pool.query(
+      "SELECT * FROM users JOIN addresses ON uuid = id JOIN vendor_details ON uuid = vendor_id"
+    );
+
+    res.json(allAcc.rows);
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: error.message });
+  }
+};
+
 const getAccountById = async (req: Request, res: Response) => {
   try {
     // to get role of the id
@@ -377,4 +390,5 @@ export {
   getAllAccount,
   deleteAccount,
   updateVendorOperatings,
+  getAllVendor,
 };

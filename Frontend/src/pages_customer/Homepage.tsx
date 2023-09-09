@@ -7,13 +7,15 @@ import Cuisine from "../components/Cuisine";
 
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
-import { data } from "../interfaces";
+import { Props, data } from "../interfaces";
+import Restaurant from "../components/Restaurant";
 
 const Homepage: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
 
   const [categories, setCategories] = useState<String[]>([]);
+  const [vendors, setVendors] = useState<Props[]>([]);
 
   // endpoint
   const getCategories = async () => {
@@ -35,8 +37,28 @@ const Homepage: React.FC = () => {
     }
   };
 
+  const getAllVendors = async () => {
+    const res: data = await fetchData(
+      "/auth/accounts/vendor",
+      undefined,
+      undefined,
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setVendors(res.data);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   useEffect(() => {
     getCategories();
+    getAllVendors();
   }, []);
   return (
     <>
@@ -55,6 +77,7 @@ const Homepage: React.FC = () => {
               BANNER 2
             </Grid>
 
+            {/* cuisines cards */}
             <Grid item xs={12}>
               <Typography variant="h4" gutterBottom>
                 Cuisines
@@ -66,11 +89,21 @@ const Homepage: React.FC = () => {
               </Grid>
             ))}
 
+            {/* restaurant cards */}
             <Grid item xs={12}>
               <Typography variant="h4" gutterBottom>
                 Restaurants
               </Typography>
             </Grid>
+            {vendors.map((item, idx) => (
+              <Grid item xs={3} key={idx}>
+                <Restaurant
+                  name={item.store_name}
+                  address={item.address}
+                  // postal_code={item.postal_code}
+                ></Restaurant>
+              </Grid>
+            ))}
           </Grid>
         </Box>
       </Box>

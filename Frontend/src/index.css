@@ -29,3 +29,20 @@
   bottom: 0 !important;
   right: 0 !important;
 }
+
+.restaurant-card {
+  position: relative !important;
+}
+
+.love-icon {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
+.time-ETA {
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+}
+

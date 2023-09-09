@@ -33,11 +33,18 @@ const ItemCard: React.FC<Props> = (props) => {
 
   const [openUpdate, setOpenUpdate] = useState<boolean>(false); // model
   const [category, setCategory] = useState<string>("");
-  const [availability, setAvailability] = useState<string>("");
+  const [availability, setAvailability] = useState<boolean>();
 
   const nameRef = useRef<HTMLInputElement>();
   const priceRef = useRef<HTMLInputElement>();
   const descriptionRef = useRef<HTMLInputElement>();
+
+  // function
+  const handleOpenUpdate = () => {
+    setOpenUpdate(true);
+    setCategory(props.category);
+    setAvailability(props.availability);
+  };
 
   // endpoint
   const handleUpdate = async () => {
@@ -87,15 +94,14 @@ const ItemCard: React.FC<Props> = (props) => {
     }
   };
 
-  useEffect(() => {
-    setCategory(props.category);
-    setAvailability(props.availability);
-  }, []);
-
   return (
     <>
       <Card
-        sx={{ display: "flex", borderRadius: "1rem" }}
+        sx={{
+          display: "flex",
+          borderRadius: "1rem",
+          bgcolor: props.availability ? undefined : "var(--lightgrey)",
+        }}
         elevation={4}
         className="item-card"
       >
@@ -130,7 +136,7 @@ const ItemCard: React.FC<Props> = (props) => {
             size="small"
             sx={{ m: "0.4rem" }}
             style={{ backgroundColor: "var(--orange)" }}
-            onClick={() => setOpenUpdate(true)}
+            onClick={handleOpenUpdate}
           >
             <BorderColorOutlinedIcon
               fontSize="small"
@@ -199,7 +205,9 @@ const ItemCard: React.FC<Props> = (props) => {
             type="text"
             fullWidth
             value={availability ? "Yes" : "No"}
-            onChange={(e) => setAvailability(e.target.value)}
+            onChange={(e) =>
+              setAvailability(e.target.value === "Yes" ? true : false)
+            }
           >
             <MenuItem value="Yes">Yes</MenuItem>
             <MenuItem value="No">No</MenuItem>
