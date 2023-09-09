@@ -18,6 +18,8 @@ import {
   InputAdornment,
   Divider,
   MenuItem,
+  Paper,
+  Stack,
 } from "@mui/material";
 
 import useFetch from "../hooks/useFetch";
@@ -152,8 +154,12 @@ const ItemCard: React.FC<Props> = (props) => {
               className="edit-btn"
               size="small"
               sx={{ m: "0.4rem", boxShadow: 3 }}
-              style={{ backgroundColor: "var(--white)" }}
-              // elevation={10}
+              style={{
+                backgroundColor: props.availability
+                  ? "var(--white)"
+                  : "var(--lightgrey)",
+              }}
+              disabled={!props.availability}
               // onClick={handleOpenUpdate}
             >
               <AddIcon
@@ -162,6 +168,19 @@ const ItemCard: React.FC<Props> = (props) => {
               />
             </IconButton>
           </Tooltip>
+        )}
+        {!props.availability && (
+          <Paper
+            component={Stack}
+            sx={{ width: "20%", height: "30%", bgcolor: "var(--orange)" }}
+            className="sold-out"
+            direction="column"
+            justifyContent="center"
+          >
+            <Typography textAlign="center" color="var(--white)">
+              Sold Out
+            </Typography>
+          </Paper>
         )}
       </Card>
 

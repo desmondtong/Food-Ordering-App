@@ -20,6 +20,7 @@
   /* color: var(--darkgrey-text); */
 }
 
+/* item card */
 .item-card {
   position: relative !important;
 }
@@ -30,6 +31,14 @@
   right: 0 !important;
 }
 
+.sold-out {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%);
+}
+
+/* restaurant card */
 .restaurant-card {
   position: relative !important;
 }
@@ -45,4 +54,3 @@
   top: 0 !important;
   right: 0 !important;
 }
-
