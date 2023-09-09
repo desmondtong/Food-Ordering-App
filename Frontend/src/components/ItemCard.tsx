@@ -25,6 +25,7 @@ import UserContext from "../context/user";
 
 import IconButton from "@mui/material/IconButton";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
+import AddIcon from "@mui/icons-material/Add";
 import { Props, data } from "../interfaces";
 
 const ItemCard: React.FC<Props> = (props) => {
@@ -127,23 +128,41 @@ const ItemCard: React.FC<Props> = (props) => {
         <CardMedia
           component="img"
           sx={{ width: "8rem", height: "8rem", p: "1rem" }}
-          image="./sample-image.webp"
+          image={props.image_url}
         />
 
-        <Tooltip title="Edit Item">
-          <IconButton
-            className="edit-btn"
-            size="small"
-            sx={{ m: "0.4rem" }}
-            style={{ backgroundColor: "var(--orange)" }}
-            onClick={handleOpenUpdate}
-          >
-            <BorderColorOutlinedIcon
-              fontSize="small"
-              sx={{ p: "0.1rem", color: "white" }}
-            />
-          </IconButton>
-        </Tooltip>
+        {userCtx?.role === "VENDOR" ? (
+          <Tooltip title="Edit Item">
+            <IconButton
+              className="edit-btn"
+              size="small"
+              sx={{ m: "0.4rem" }}
+              style={{ backgroundColor: "var(--orange)" }}
+              onClick={handleOpenUpdate}
+            >
+              <BorderColorOutlinedIcon
+                fontSize="small"
+                sx={{ p: "0.1rem", color: "white" }}
+              />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="Add To Cart">
+            <IconButton
+              className="edit-btn"
+              size="small"
+              sx={{ m: "0.4rem", boxShadow: 3 }}
+              style={{ backgroundColor: "var(--white)" }}
+              // elevation={10}
+              // onClick={handleOpenUpdate}
+            >
+              <AddIcon
+                fontSize="small"
+                sx={{ p: "0.1rem", color: "var(--orange)" }}
+              />
+            </IconButton>
+          </Tooltip>
+        )}
       </Card>
 
       {/* add item modal */}

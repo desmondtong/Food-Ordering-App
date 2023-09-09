@@ -127,7 +127,6 @@ function App() {
           {role === "CUSTOMER" && (
             <>
               <Route path="/" element={<Homepage />}></Route>
-              {/* <Route path="/searchresults" element={<SearchResults />}></Route> */}
               <Route
                 path="/details/:item"
                 element={<RestaurantDetails />}

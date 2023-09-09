@@ -4,11 +4,11 @@ import NavBar from "../components/NavBar";
 import { Grid, Box, Typography, IconButton } from "@mui/material";
 import TopBar from "../components/TopBar";
 import Cuisine from "../components/Cuisine";
+import Restaurant from "../components/Restaurant";
 
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import { Props, data } from "../interfaces";
-import Restaurant from "../components/Restaurant";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
@@ -169,6 +169,7 @@ const Homepage: React.FC = () => {
                   name={item.store_name}
                   address={item.address}
                   // postal_code={item.postal_code}
+                  uuid={item.uuid}
                 ></Restaurant>
               </Grid>
             ))}

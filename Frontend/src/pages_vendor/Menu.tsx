@@ -214,6 +214,7 @@ const Menu: React.FC = () => {
                   uuid={item.uuid}
                   availability={item.availability}
                   category={item.category}
+                  image_url={item.image_url}
                   categories={categories}
                   update={update}
                   setUpdate={setUpdate}

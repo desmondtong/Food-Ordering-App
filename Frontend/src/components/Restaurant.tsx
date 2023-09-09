@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -14,6 +15,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const Restaurant: React.FC<Props> = (props) => {
+  const navigate = useNavigate();
+
   const [favorite, setFavorite] = useState<Boolean>(false);
 
   return (
@@ -21,7 +24,7 @@ const Restaurant: React.FC<Props> = (props) => {
       <Grid container className="restaurant-card">
         <CardMedia
           component="img"
-          alt="image titel"
+          alt="image title"
           sx={{
             aspectRatio: 1.5,
             backgroundSize: "cover",
@@ -102,7 +105,11 @@ const Restaurant: React.FC<Props> = (props) => {
                 {props.address}
               </Typography>
             </Grid>
-            <Typography variant="body2" color="text.secondary" fontWeight="light">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              fontWeight="light"
+            >
               <span style={{ color: "var(--orange)" }}>$1.00</span> Delivery Fee
             </Typography>
           </Grid>
@@ -119,6 +126,7 @@ const Restaurant: React.FC<Props> = (props) => {
               variant="contained"
               fullWidth
               sx={{ height: "2rem" }}
+              onClick={() => navigate(`/details/${props.uuid}`)}
             >
               Visit
             </Button>
