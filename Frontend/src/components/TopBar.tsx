@@ -19,8 +19,9 @@ import FaceIcon from "@mui/icons-material/Face";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 import UserContext from "../context/user";
+import { Props } from "../interfaces";
 
-const TopBar: React.FC = () => {
+const TopBar: React.FC<Props> = (props) => {
   const userCtx = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [locationEl, setLocationEl] = useState<null | HTMLElement>(null);
@@ -59,7 +60,7 @@ const TopBar: React.FC = () => {
               fullWidth
               variant="outlined"
               size="small"
-              // onChange={handleSearch}
+              onChange={props.handleSearch}
             >
               <InputLabel htmlFor="outlined-adornment" sx={{ ml: "0.5rem" }}>
                 <Typography>Search</Typography>

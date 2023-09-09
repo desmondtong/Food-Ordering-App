@@ -6,7 +6,6 @@ import UserContext from "./context/user";
 import Login from "./pages_customer/Login";
 import Registration from "./pages_customer/Registration";
 import Homepage from "./pages_customer/Homepage";
-import SearchResults from "./pages_customer/SearchResults";
 import RestaurantDetails from "./pages_customer/RestaurantDetails";
 import Cart from "./pages_customer/Cart";
 import CheckOut from "./pages_customer/CheckOut";
@@ -128,7 +127,7 @@ function App() {
           {role === "CUSTOMER" && (
             <>
               <Route path="/" element={<Homepage />}></Route>
-              <Route path="/searchresults" element={<SearchResults />}></Route>
+              {/* <Route path="/searchresults" element={<SearchResults />}></Route> */}
               <Route
                 path="/details/:item"
                 element={<RestaurantDetails />}

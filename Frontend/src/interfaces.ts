@@ -69,6 +69,12 @@ export interface Props {
   // restaurant card component
   address?: String;
   store_name?: String;
+  displayVendors?: Props[];
+
+  // top bar component
+  handleSearch?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  setDisplayeVendors?: React.Dispatch<React.SetStateAction<Props[]>>;
+  vendors?: Props[];
 }
 
 export interface navBarType {

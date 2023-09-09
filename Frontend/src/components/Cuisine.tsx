@@ -10,7 +10,11 @@ const Cuisine: React.FC<Props> = (props) => {
   return (
     <>
       {/* add card media action */}
-      <Card sx={{ display: "flex", borderRadius: "0.5rem" }} elevation={0}>
+      <Card
+        sx={{ display: "flex", borderRadius: "0.5rem" }}
+        elevation={0}
+        // onClick={props.handleSearch}
+      >
         <CardActionArea>
           <CardMedia
             component="img"
@@ -20,6 +24,7 @@ const Cuisine: React.FC<Props> = (props) => {
               backgroundPosition: "center",
             }}
             image={`./${props.category}.jpg`}
+            id={props.category}
           />
         </CardActionArea>
       </Card>

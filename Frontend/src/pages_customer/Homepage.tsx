@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import NavBar from "../components/NavBar";
 
-import { Grid, Box, Typography } from "@mui/material";
+import { Grid, Box, Typography, IconButton } from "@mui/material";
 import TopBar from "../components/TopBar";
 import Cuisine from "../components/Cuisine";
 
@@ -10,12 +10,52 @@ import UserContext from "../context/user";
 import { Props, data } from "../interfaces";
 import Restaurant from "../components/Restaurant";
 
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
 const Homepage: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
 
   const [categories, setCategories] = useState<String[]>([]);
   const [vendors, setVendors] = useState<Props[]>([]);
+  const [displayVendors, setDisplayVendors] = useState<Props[]>([]);
+  const [isSearching, setIsSearching] = useState<Boolean>(false);
+
+  // function
+  const handleSearch = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    searchBar = true
+  ) => {
+    let filtered, input: HTMLInputElement;
+    input = e.target as HTMLInputElement;
+
+    if (searchBar) {
+      setIsSearching(input.value ? true : false);
+
+      filtered = vendors.filter((item) => {
+        const lowerCaseTitle = item.store_name?.toLowerCase();
+        const lowerCaseInput = input.value.toLowerCase();
+        return lowerCaseTitle?.includes(lowerCaseInput);
+      });
+
+      setDisplayVendors(filtered);
+    } else {
+      setIsSearching(input.id ? true : false);
+
+      filtered = vendors.filter((item) => {
+        const lowerCaseTitle = item.category;
+        const lowerCaseInput = input.id;
+        return lowerCaseTitle?.includes(lowerCaseInput);
+      });
+
+      setDisplayVendors(filtered);
+    }
+  };
+
+  const handleClearSearch = () => {
+    setIsSearching(false);
+    setDisplayVendors(vendors);
+  };
 
   // endpoint
   const getCategories = async () => {
@@ -47,6 +87,7 @@ const Homepage: React.FC = () => {
 
     if (res.ok) {
       setVendors(res.data);
+      setDisplayVendors(res.data);
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -68,26 +109,50 @@ const Homepage: React.FC = () => {
           component="main"
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
-          <TopBar></TopBar>
+          <TopBar handleSearch={handleSearch}></TopBar>
           <Grid container mt="1.5rem" alignItems="center" spacing={4}>
-            <Grid item xs={8} sx={{ borderStyle: "solid" }}>
-              BANNER 1
-            </Grid>
-            <Grid item xs={4} sx={{ borderStyle: "solid" }}>
-              BANNER 2
-            </Grid>
+            {/* to hide banner and cuisines card when using search bar */}
+            {!isSearching && (
+              <>
+                <Grid item xs={8} sx={{ borderStyle: "solid" }}>
+                  BANNER 1
+                </Grid>
+                <Grid item xs={4} sx={{ borderStyle: "solid" }}>
+                  BANNER 2
+                </Grid>
 
-            {/* cuisines cards */}
-            <Grid item xs={12}>
-              <Typography variant="h4" gutterBottom>
-                Cuisines
-              </Typography>
-            </Grid>
-            {categories.map((category, idx) => (
-              <Grid item xs={1.5} key={idx}>
-                <Cuisine category={category}></Cuisine>
+                {/* cuisines cards */}
+                <Grid item xs={12}>
+                  <Typography variant="h4" gutterBottom>
+                    Cuisines
+                  </Typography>
+                </Grid>
+                {categories.map((category, idx) => (
+                  <Grid
+                    item
+                    xs={1.5}
+                    key={idx}
+                    onClick={(e) => handleSearch(e, false)}
+                  >
+                    <Cuisine
+                      category={category}
+                      // handleSearch={handleSearch}
+                    ></Cuisine>
+                  </Grid>
+                ))}
+              </>
+            )}
+
+            {isSearching && (
+              <Grid item xs={12}>
+                <IconButton
+                  sx={{ bgcolor: "var(--orange)" }}
+                  onClick={handleClearSearch}
+                >
+                  <ArrowBackIcon sx={{ color: "var(--white)" }}></ArrowBackIcon>
+                </IconButton>
               </Grid>
-            ))}
+            )}
 
             {/* restaurant cards */}
             <Grid item xs={12}>
@@ -95,7 +160,7 @@ const Homepage: React.FC = () => {
                 Restaurants
               </Typography>
             </Grid>
-            {vendors.map((item, idx) => (
+            {displayVendors.map((item, idx) => (
               <Grid item xs={3} key={idx}>
                 <Restaurant
                   name={item.store_name}
