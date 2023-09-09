@@ -123,9 +123,7 @@ const Homepage: React.FC = () => {
 
                 {/* cuisines cards */}
                 <Grid item xs={12}>
-                  <Typography variant="h4" gutterBottom>
-                    Cuisines
-                  </Typography>
+                  <Typography variant="h4">Cuisines</Typography>
                 </Grid>
                 {categories.map((category, idx) => (
                   <Grid
@@ -156,10 +154,15 @@ const Homepage: React.FC = () => {
 
             {/* restaurant cards */}
             <Grid item xs={12}>
-              <Typography variant="h4" gutterBottom>
-                Restaurants
-              </Typography>
+              <Typography variant="h4">Restaurants</Typography>
             </Grid>
+            {isSearching && (
+              <Grid item xs={12}>
+                <Typography variant="body1" fontWeight="light">
+                  {`${displayVendors.length} restaurants found`}
+                </Typography>
+              </Grid>
+            )}
             {displayVendors.map((item, idx) => (
               <Grid item xs={3} key={idx}>
                 <Restaurant
