@@ -8,7 +8,6 @@ import Typography from "@mui/material/Typography";
 import {
   Tooltip,
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogContentText,
   TextField,
@@ -28,6 +27,7 @@ import UserContext from "../context/user";
 import IconButton from "@mui/material/IconButton";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 import { Props, data } from "../interfaces";
 
 const ItemCard: React.FC<Props> = (props) => {
@@ -35,8 +35,10 @@ const ItemCard: React.FC<Props> = (props) => {
   const userCtx = useContext(UserContext);
 
   const [openUpdate, setOpenUpdate] = useState<boolean>(false); // model
+  const [openAddCart, setOpenAddCart] = useState<boolean>(false); // model
   const [category, setCategory] = useState<string>("");
   const [availability, setAvailability] = useState<boolean>();
+  const [counter, setCounter] = useState<any>(1);
 
   const nameRef = useRef<HTMLInputElement>();
   const priceRef = useRef<HTMLInputElement>();
@@ -47,6 +49,11 @@ const ItemCard: React.FC<Props> = (props) => {
     setOpenUpdate(true);
     setCategory(props.category);
     setAvailability(props.availability);
+  };
+
+  const handleOpenAdd = () => {
+    setOpenAddCart(true);
+    setCounter(1);
   };
 
   // endpoint
@@ -149,7 +156,7 @@ const ItemCard: React.FC<Props> = (props) => {
             </IconButton>
           </Tooltip>
         ) : (
-          <Tooltip title="Add To Cart">
+          <Tooltip title={props.availability ? "Add To Cart" : ""}>
             <IconButton
               className="edit-btn"
               size="small"
@@ -159,12 +166,12 @@ const ItemCard: React.FC<Props> = (props) => {
                   ? "var(--white)"
                   : "var(--lightgrey)",
               }}
-              disabled={!props.availability}
-              // onClick={handleOpenUpdate}
+              onClick={props.availability ? handleOpenAdd : undefined}
             >
               <AddIcon
                 fontSize="small"
-                sx={{ p: "0.1rem", color: "var(--orange)" }}
+                sx={{ p: "0.1rem"}}
+                className="icon-orange"
               />
             </IconButton>
           </Tooltip>
@@ -184,9 +191,22 @@ const ItemCard: React.FC<Props> = (props) => {
         )}
       </Card>
 
-      {/* add item modal */}
-      <Dialog open={openUpdate} onClose={() => setOpenUpdate(false)}>
-        <DialogTitle>SHOW EXTG PICTURE</DialogTitle>
+      {/* update item modal */}
+      <Dialog
+        open={openUpdate}
+        onClose={() => setOpenUpdate(false)}
+        scroll="body"
+      >
+        <CardMedia
+          component="img"
+          sx={{
+            aspectRatio: 1.5,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          image={`./${props.image_url}`}
+          id={props.category}
+        />
         <DialogContent>
           <Divider sx={{ borderStyle: "solid" }} />
           <DialogContentText my="1rem">Item Details</DialogContentText>
@@ -284,6 +304,101 @@ const ItemCard: React.FC<Props> = (props) => {
             <Grid item xs={12}>
               <Button fullWidth variant="contained" onClick={handleDelete}>
                 Delete Item
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
+
+      {/* add to cart modal */}
+      <Dialog
+        open={openAddCart}
+        onClose={() => setOpenAddCart(false)}
+        scroll="body"
+        fullWidth
+      >
+        <CardMedia
+          component="img"
+          sx={{
+            aspectRatio: 1.5,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+          image={`./${props.image_url}`}
+          id={props.category}
+        />
+        <DialogContent>
+          <DialogContentText>
+            <Grid container alignItems="center">
+              <Grid item xs={9}>
+                <Typography variant="body1">{props.name}</Typography>
+              </Grid>
+              <Grid item xs={3} container justifyContent="flex-end">
+                <Typography
+                  fontWeight="light"
+                  variant="body1"
+                >{`S$ ${props.item_price}`}</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body2" fontWeight="light">
+                  {props.description}
+                </Typography>
+              </Grid>
+            </Grid>
+
+            <Divider sx={{ borderStyle: "solid", my: "1rem" }} />
+
+            <Grid container alignItems="center">
+              <Grid item xs={12}>
+                <Typography variant="body1">Special Request</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography variant="body2" fontWeight="light" mb="1rem">
+                  Any specific preferences?
+                </Typography>
+              </Grid>
+              <TextField
+                fullWidth
+                multiline
+                rows={2}
+                placeholder="e.g No chili"
+              ></TextField>
+            </Grid>
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions>
+          <Grid container alignItems="center">
+            <Grid
+              item
+              xs={3}
+              container
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <IconButton
+                onClick={
+                  counter == 0 ? undefined : () => setCounter(counter - 1)
+                }
+              >
+                <RemoveIcon
+                  fontSize="small"
+                  className="icon-orange"
+                ></RemoveIcon>
+              </IconButton>
+              <Typography mx="1rem">{counter < 0 ? 0 : counter}</Typography>
+              <IconButton
+                onClick={
+                  counter == 50 ? undefined : () => setCounter(counter + 1)
+                }
+              >
+                <AddIcon fontSize="small" className="icon-orange"></AddIcon>
+              </IconButton>
+            </Grid>
+            <Grid item xs={9}>
+              <Button fullWidth variant="contained">
+                Add To Cart
               </Button>
             </Grid>
           </Grid>

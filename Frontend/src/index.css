@@ -54,3 +54,8 @@
   top: 0 !important;
   right: 0 !important;
 }
+
+/* icon styling */
+.icon-orange {
+  color: var(--orange);
+}
