@@ -40,7 +40,7 @@ const getAccountById = async (req: Request, res: Response) => {
     let userAcc;
     if (role.rows[0].role === "CUSTOMER") {
       userAcc = await pool.query(
-        "SELECT * FROM users JOIN user_details ON uuid = user_id WHERE uuid = $1",
+        "SELECT *, carts.uuid AS cart_id FROM users JOIN user_details ON users.uuid = user_details.user_id JOIN carts ON users.uuid = carts.user_id WHERE users.uuid = $1",
         [req.params.id]
       );
     } else if (role.rows[0].role === "VENDOR") {

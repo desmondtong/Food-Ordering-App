@@ -26,59 +26,59 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 
 const drawerWidth = 280;
-const navBarCustomer: navBarType[] = [
-  {
-    item: "Food",
-    link: "/",
-    icon: <LocalDiningOutlinedIcon />,
-  },
-  {
-    item: "Cart",
-    link: "/cart",
-    icon: <ShoppingCartOutlinedIcon />,
-  },
-  {
-    item: "History",
-    link: "/history",
-    icon: <RestoreIcon />,
-  },
-  {
-    item: "Favourite",
-    link: "/favourite",
-    icon: <FavoriteBorderIcon />,
-  },
-];
-const navBarVendor: navBarType[] = [
-  {
-    item: "Dashboard",
-    link: "/",
-    icon: <DashboardOutlinedIcon />,
-  },
-  {
-    item: "Menu",
-    link: "/menu",
-    icon: <MenuIcon />,
-  },
-  {
-    item: "History",
-    link: "/history",
-    icon: <RestoreIcon />,
-  },
-  {
-    item: "Alert",
-    link: "/alert",
-    icon: <NotificationsNoneIcon />,
-  },
-  {
-    item: "Rating & Reviews",
-    link: "/ratingreview",
-    icon: <ThumbUpOffAltIcon />,
-  },
-];
 
 const NavBar: React.FC = () => {
   const userCtx = useContext(UserContext);
 
+  const navBarCustomer: navBarType[] = [
+    {
+      item: "Food",
+      link: "/",
+      icon: <LocalDiningOutlinedIcon />,
+    },
+    {
+      item: "Cart",
+      link: `/cart/${userCtx?.userInfo.cart_id}`,
+      icon: <ShoppingCartOutlinedIcon />,
+    },
+    {
+      item: "History",
+      link: "/history",
+      icon: <RestoreIcon />,
+    },
+    {
+      item: "Favourite",
+      link: "/favourite",
+      icon: <FavoriteBorderIcon />,
+    },
+  ];
+  const navBarVendor: navBarType[] = [
+    {
+      item: "Dashboard",
+      link: "/",
+      icon: <DashboardOutlinedIcon />,
+    },
+    {
+      item: "Menu",
+      link: "/menu",
+      icon: <MenuIcon />,
+    },
+    {
+      item: "History",
+      link: "/history",
+      icon: <RestoreIcon />,
+    },
+    {
+      item: "Alert",
+      link: "/alert",
+      icon: <NotificationsNoneIcon />,
+    },
+    {
+      item: "Rating & Reviews",
+      link: "/ratingreview",
+      icon: <ThumbUpOffAltIcon />,
+    },
+  ];
   return (
     <Drawer
       sx={{

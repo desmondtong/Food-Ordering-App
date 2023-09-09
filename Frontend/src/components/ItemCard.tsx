@@ -38,11 +38,12 @@ const ItemCard: React.FC<Props> = (props) => {
   const [openAddCart, setOpenAddCart] = useState<boolean>(false); // model
   const [category, setCategory] = useState<string>("");
   const [availability, setAvailability] = useState<boolean>();
-  const [counter, setCounter] = useState<any>(1);
+  const [quantity, setQuantity] = useState<any>(1);
 
   const nameRef = useRef<HTMLInputElement>();
   const priceRef = useRef<HTMLInputElement>();
   const descriptionRef = useRef<HTMLInputElement>();
+  const userNoteRef = useRef<HTMLInputElement>();
 
   // function
   const handleOpenUpdate = () => {
@@ -53,7 +54,7 @@ const ItemCard: React.FC<Props> = (props) => {
 
   const handleOpenAdd = () => {
     setOpenAddCart(true);
-    setCounter(1);
+    setQuantity(1);
   };
 
   // endpoint
@@ -96,6 +97,29 @@ const ItemCard: React.FC<Props> = (props) => {
       setOpenUpdate(false);
 
       props.setUpdate?.(!props.update);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const handleAddToCart = async () => {
+    const res: data = await fetchData(
+      "/api/carts/items/" + props.uuid,
+      "PUT",
+      {
+        cart_id: userCtx?.userInfo.cart_id,
+        item_price: props.item_price,
+        quantity_ordered: quantity,
+        user_note: userNoteRef.current?.value,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setOpenAddCart(false);
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -170,7 +194,7 @@ const ItemCard: React.FC<Props> = (props) => {
             >
               <AddIcon
                 fontSize="small"
-                sx={{ p: "0.1rem"}}
+                sx={{ p: "0.1rem" }}
                 className="icon-orange"
               />
             </IconButton>
@@ -328,43 +352,42 @@ const ItemCard: React.FC<Props> = (props) => {
           id={props.category}
         />
         <DialogContent>
-          <DialogContentText>
-            <Grid container alignItems="center">
-              <Grid item xs={9}>
-                <Typography variant="body1">{props.name}</Typography>
-              </Grid>
-              <Grid item xs={3} container justifyContent="flex-end">
-                <Typography
-                  fontWeight="light"
-                  variant="body1"
-                >{`S$ ${props.item_price}`}</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body2" fontWeight="light">
-                  {props.description}
-                </Typography>
-              </Grid>
+          <Grid container alignItems="center">
+            <Grid item xs={9}>
+              <Typography variant="body1">{props.name}</Typography>
             </Grid>
-
-            <Divider sx={{ borderStyle: "solid", my: "1rem" }} />
-
-            <Grid container alignItems="center">
-              <Grid item xs={12}>
-                <Typography variant="body1">Special Request</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body2" fontWeight="light" mb="1rem">
-                  Any specific preferences?
-                </Typography>
-              </Grid>
-              <TextField
-                fullWidth
-                multiline
-                rows={2}
-                placeholder="e.g No chili"
-              ></TextField>
+            <Grid item xs={3} container justifyContent="flex-end">
+              <Typography
+                fontWeight="light"
+                variant="body1"
+              >{`S$ ${props.item_price}`}</Typography>
             </Grid>
-          </DialogContentText>
+            <Grid item xs={12}>
+              <Typography variant="body2" fontWeight="light">
+                {props.description}
+              </Typography>
+            </Grid>
+          </Grid>
+
+          <Divider sx={{ borderStyle: "solid", my: "1rem" }} />
+
+          <Grid container alignItems="center">
+            <Grid item xs={12}>
+              <Typography variant="body1">Special Request</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body2" fontWeight="light" mb="1rem">
+                Any specific preferences?
+              </Typography>
+            </Grid>
+            <TextField
+              fullWidth
+              multiline
+              rows={2}
+              placeholder="e.g No chili"
+              inputRef={userNoteRef}
+            ></TextField>
+          </Grid>
         </DialogContent>
 
         <DialogActions>
@@ -379,7 +402,7 @@ const ItemCard: React.FC<Props> = (props) => {
             >
               <IconButton
                 onClick={
-                  counter == 0 ? undefined : () => setCounter(counter - 1)
+                  quantity == 0 ? undefined : () => setQuantity(quantity - 1)
                 }
               >
                 <RemoveIcon
@@ -387,17 +410,17 @@ const ItemCard: React.FC<Props> = (props) => {
                   className="icon-orange"
                 ></RemoveIcon>
               </IconButton>
-              <Typography mx="1rem">{counter < 0 ? 0 : counter}</Typography>
+              <Typography mx="1rem">{quantity < 0 ? 0 : quantity}</Typography>
               <IconButton
                 onClick={
-                  counter == 50 ? undefined : () => setCounter(counter + 1)
+                  quantity == 50 ? undefined : () => setQuantity(quantity + 1)
                 }
               >
                 <AddIcon fontSize="small" className="icon-orange"></AddIcon>
               </IconButton>
             </Grid>
             <Grid item xs={9}>
-              <Button fullWidth variant="contained">
+              <Button fullWidth variant="contained" onClick={handleAddToCart}>
                 Add To Cart
               </Button>
             </Grid>

@@ -57,10 +57,15 @@ const Registration: React.FC = () => {
 
   const pathName = window.location.pathname;
 
-  // function
+  // endpoint
   const getCategories = async () => {
     const res: data = await fetchData("/api/categories", "GET");
-    setCategories(res.data);
+
+    if (res.ok) {
+      setCategories(res.data);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
   };
 
   const handleRegister = async () => {
@@ -109,11 +114,27 @@ const Registration: React.FC = () => {
         userCtx?.setRole(decoded.role);
         localStorage.setItem("role", JSON.stringify(decoded.role));
 
+        createUserCart(decoded.id, resLogin.data.access);
+
         navigate(`/`);
       } else {
         alert(JSON.stringify(resLogin.data));
       }
     } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const createUserCart = async (userId: String, accessToken: String) => {
+    console.log(userId, accessToken);
+    const res: data = await fetchData(
+      "/api/carts/" + userId,
+      "PUT",
+      undefined,
+      accessToken
+    );
+
+    if (!res.ok) {
       alert(JSON.stringify(res.data));
     }
   };

@@ -106,6 +106,7 @@ export interface userInfoType {
   user_id?: String;
   first_name?: String;
   last_name?: String;
+  cart_id?: String;
 
   address_id?: Number;
   id?: String;
