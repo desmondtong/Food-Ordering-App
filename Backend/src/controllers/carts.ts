@@ -37,13 +37,11 @@ const getCartById = async (req: Request, res: Response) => {
       [total_price, req.params.user_id]
     );
 
-    res
-      .status(201)
-      .json({
-        orders: cart.rows,
-        total_price: updateCart.rows[0].total_price || 0,
-        vendor_id: cart.rows[0]?.vendor_id,
-      });
+    res.status(201).json({
+      orders: cart.rows,
+      total_price: updateCart.rows[0].total_price || 0,
+      vendor_id: cart.rows[0]?.vendor_id,
+    });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Get cart failed" });
@@ -102,10 +100,11 @@ const updateItemInCart = async (req: Request, res: Response) => {
     const {
       quantity_ordered,
       cart_id,
-    }: { quantity_ordered: Number; cart_id: String } = req.body;
+      id,
+    }: { quantity_ordered: Number; cart_id: String; id: String } = req.body;
     const updatedItem = await pool.query(
-      "UPDATE carts_items SET quantity_ordered = $1 WHERE item_id = $2 AND cart_id = $3 AND is_deleted = FALSE RETURNING *",
-      [quantity_ordered, req.params.item_id, cart_id]
+      "UPDATE carts_items SET quantity_ordered = $1 WHERE item_id = $2 AND cart_id = $3 AND id = $4 AND is_deleted = FALSE RETURNING *",
+      [quantity_ordered, req.params.item_id, cart_id, id]
     );
 
     res.status(201).json({

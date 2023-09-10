@@ -34,6 +34,7 @@ const validateUpdateItem = [
     .notEmpty()
     .isString()
     .isLength({ min: 36, max: 36 }),
+  body("id", "id is required").notEmpty().isString(),
 ];
 
 export {
