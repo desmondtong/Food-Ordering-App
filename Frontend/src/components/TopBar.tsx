@@ -61,6 +61,12 @@ const TopBar: React.FC<Props> = (props) => {
               variant="outlined"
               size="small"
               onChange={props.handleSearch}
+              sx={{
+                boxShadow: 3,
+                borderRadius: "2rem",
+                bgcolor: "var(--lightgrey)",
+              }}
+              className="search-bar"
             >
               <InputLabel htmlFor="outlined-adornment" sx={{ ml: "0.5rem" }}>
                 <Typography>Search</Typography>
@@ -71,11 +77,12 @@ const TopBar: React.FC<Props> = (props) => {
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton edge="end" disabled sx={{ mr: "0.1rem" }}>
-                      <SearchOutlinedIcon />
+                      <SearchOutlinedIcon className="icon-orange" />
                     </IconButton>
                   </InputAdornment>
                 }
                 label="Search"
+                sx={{ borderRadius: "2rem" }}
               />
             </FormControl>
           </Grid>

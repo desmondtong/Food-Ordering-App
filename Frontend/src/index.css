@@ -31,6 +31,12 @@
   right: 0 !important;
 }
 
+.delete-btn {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
 .sold-out {
   position: absolute !important;
   top: 50% !important;
@@ -58,4 +64,8 @@
 /* icon styling */
 .icon-orange {
   color: var(--orange);
+}
+
+.disabled-btn {
+  color: var(--darkgrey-text) !important;
 }

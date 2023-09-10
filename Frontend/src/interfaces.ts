@@ -75,6 +75,14 @@ export interface Props {
   handleSearch?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
   setDisplayeVendors?: React.Dispatch<React.SetStateAction<Props[]>>;
   vendors?: Props[];
+
+  // cart item component
+  orders?: Props[];
+  total_price?: String;
+  cart_id?: String;
+  getCartItems?: () => Promise<void>;
+  user_note?: String;
+  quantity_ordered?: String;
 }
 
 export interface navBarType {
