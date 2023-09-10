@@ -3,7 +3,14 @@ import UserContext from "../context/user";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import { Paper, Grid, Typography, Divider, Button } from "@mui/material";
+import {
+  Paper,
+  Grid,
+  Typography,
+  Divider,
+  Button,
+  Tooltip,
+} from "@mui/material";
 import { Props } from "../interfaces";
 
 const OrderSummary: React.FC<Props> = (props) => {
@@ -96,15 +103,22 @@ const OrderSummary: React.FC<Props> = (props) => {
           </Grid>
 
           {!isCheckOut && (
-            <Grid item xs={12} mt="2rem">
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={() => navigate(`/cart/${params.item}/checkout`)}
-              >
-                Checkout
-              </Button>
-            </Grid>
+            <Tooltip
+              title={
+                userCtx?.haveActiveOrder ? "You Have An Active Order!" : ""
+              }
+            >
+              <Grid item xs={12} mt="2rem">
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={() => navigate(`/cart/${params.item}/checkout`)}
+                  disabled={userCtx?.haveActiveOrder}
+                >
+                  Checkout
+                </Button>
+              </Grid>
+            </Tooltip>
           )}
         </Grid>
       </Paper>
