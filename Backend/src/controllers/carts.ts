@@ -29,7 +29,9 @@ const getCartById = async (req: Request, res: Response) => {
       "SELECT SUM(carts_items.item_price*quantity_ordered) FROM carts JOIN carts_items ON carts.uuid = cart_id JOIN items ON items.uuid = item_id WHERE user_id = $1 AND carts_items.is_deleted = FALSE",
       [req.params.user_id]
     );
-    const total_price: Number = calcPrice.rows[0].sum;
+    
+    const delivery_fee = 1; // hardcoded
+    const total_price: Number = Number(calcPrice.rows[0].sum) + delivery_fee;
 
     // to update total_price in carts
     const updateCart = await pool.query(
@@ -78,10 +80,10 @@ const addItemToCart = async (req: Request, res: Response) => {
 
 const delItemFromCart = async (req: Request, res: Response) => {
   try {
-    const { cart_id }: { cart_id: String } = req.body;
+    const { cart_id, id }: { cart_id: String; id: String } = req.body;
     const delItem = await pool.query(
-      "UPDATE carts_items SET is_deleted = TRUE WHERE item_id = $1 AND cart_id = $2 RETURNING *",
-      [req.params.item_id, cart_id]
+      "UPDATE carts_items SET is_deleted = TRUE WHERE item_id = $1 AND cart_id = $2 AND id = $3 RETURNING *",
+      [req.params.item_id, cart_id, id]
     );
 
     res.json({

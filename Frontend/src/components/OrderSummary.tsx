@@ -21,7 +21,7 @@ const OrderSummary: React.FC<Props> = (props) => {
           </Grid>
           <Grid item xs={3} container justifyContent="flex-end">
             <Typography variant="body2" fontWeight="bold">
-              {`S$ ${props.total_price}`}
+              {`S$ ${(Number(props.total_price) - 1).toFixed(2)}`}
             </Typography>
           </Grid>
           <Grid item xs={9}>
@@ -46,7 +46,7 @@ const OrderSummary: React.FC<Props> = (props) => {
           </Grid>
           <Grid item xs={3} container justifyContent="flex-end">
             <Typography variant="body2" fontWeight="bold">
-              {`S$ ${(Number(props.total_price) + 1).toFixed(2)}`}
+              {`S$ ${props.total_price}`}
             </Typography>
           </Grid>
           <Grid item xs={12} mt="2rem">

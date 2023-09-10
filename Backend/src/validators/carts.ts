@@ -24,6 +24,7 @@ const validateDelItem = [
     .notEmpty()
     .isString()
     .isLength({ min: 36, max: 36 }),
+  body("id", "id is required").notEmpty().isInt(),
 ];
 
 const validateUpdateItem = [
@@ -34,7 +35,7 @@ const validateUpdateItem = [
     .notEmpty()
     .isString()
     .isLength({ min: 36, max: 36 }),
-  body("id", "id is required").notEmpty().isString(),
+  body("id", "id is required").notEmpty().isInt(),
 ];
 
 export {

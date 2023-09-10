@@ -65,6 +65,7 @@ const Cart: React.FC = () => {
                     image_url={"." + item.image_url}
                     cart_id={params.item}
                     item_id={item.item_id}
+                    id={item.id}
                     getCartItems={getCartItems}
                     key={idx}
                   ></CartItem>

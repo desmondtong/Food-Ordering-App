@@ -123,10 +123,6 @@ const ItemCard: React.FC<Props> = (props) => {
         );
       }
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(resGet.data));
     }
 

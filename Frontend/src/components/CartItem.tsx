@@ -28,12 +28,13 @@ const CartItem: React.FC<Props> = (props) => {
       // add quantity; cap at 50
       quantity == 50 ? undefined : setQuantity(quantity + 1);
     } else {
-      // reduce quantity; cap at 0
-      quantity == 0 ? undefined : setQuantity(quantity - 1);
+      // reduce quantity; cap at 1
+      quantity == 1 ? undefined : setQuantity(quantity - 1);
     }
 
     updateItemsQuantity(isAdd ? quantity + 1 : quantity - 1);
   };
+
   // endpoint
   const deleteCartItem = async () => {
     const res: data = await fetchData(
@@ -41,6 +42,7 @@ const CartItem: React.FC<Props> = (props) => {
       "DELETE",
       {
         cart_id: props.cart_id,
+        id: props.id,
       },
       userCtx?.accessToken
     );
@@ -57,12 +59,15 @@ const CartItem: React.FC<Props> = (props) => {
   };
 
   const updateItemsQuantity = async (finalQuantity: any) => {
+    console.log(finalQuantity);
+    console.log(props.id);
     const res: data = await fetchData(
       "/api/carts/items/" + props.item_id,
       "PATCH",
       {
         quantity_ordered: finalQuantity,
         cart_id: props.cart_id,
+        id: props.id,
       },
       userCtx?.accessToken
     );
