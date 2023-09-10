@@ -1,8 +1,9 @@
 import React from "react";
 import NavBar from "../components/NavBar";
 
-import { Typography, Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import TopBar from "../components/TopBar";
+import OrderAccordian from "../components/OrderAccordian";
 
 const Alert: React.FC = () => {
   return (
@@ -14,7 +15,9 @@ const Alert: React.FC = () => {
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
           <TopBar></TopBar>
-          <Typography>Alert</Typography>
+          <Stack my="2rem">
+            <OrderAccordian></OrderAccordian>
+          </Stack>
         </Box>
       </Box>
     </>

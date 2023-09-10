@@ -130,11 +130,31 @@ const getActiveOrderByUserId = async (req: Request, res: Response) => {
       "SELECT * FROM orders WHERE user_id = $1 AND status != $2",
       [user_id, "COMPLETED"]
     );
-    
+
     res.status(201).json({ active_order: getByUserId.rows });
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: "Get items_orders failed" });
+    res.json({ status: "error", msg: "Get active order failed" });
+  }
+};
+
+const getActiveOrdersByVendorId = async (req: Request, res: Response) => {
+  try {
+    const vendor_id: String = req.body.vendor_id;
+    const getByVendorId = await pool.query(
+      "SELECT uuid FROM orders WHERE vendor_id = $1 AND status != $2",
+      [vendor_id, "COMPLETED"]
+    );
+
+    const order_id = getByVendorId.rows.reduce((acc, item) => {
+      acc.push(item.uuid);
+      return acc;
+    }, []);
+
+    res.status(201).json({ order_id });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Get active orders failed" });
   }
 };
 
@@ -146,4 +166,5 @@ export {
   getItemsOrdersByVendorId,
   getItemsOrdersByUserId,
   getActiveOrderByUserId,
+  getActiveOrdersByVendorId,
 };
