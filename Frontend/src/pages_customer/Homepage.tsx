@@ -110,6 +110,9 @@ const Homepage: React.FC = () => {
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
           <TopBar handleSearch={handleSearch}></TopBar>
+          {userCtx?.haveActiveOrder && (
+            <Typography variant="h3">GOT ACTIVE ORDER!!!!</Typography>
+          )}
           <Grid container mt="1.5rem" alignItems="center" spacing={4}>
             {/* to hide banner and cuisines card when using search bar */}
             {!isSearching && (

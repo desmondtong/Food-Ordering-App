@@ -11,12 +11,20 @@ export interface UserContextType {
   setUserId: React.Dispatch<React.SetStateAction<String>>;
   userInfo: userInfoType;
   setUserInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
+
   handleLogout: () => void;
   refresh: () => Promise<void>;
   getUserInfo: () => Promise<void>;
+
+  vendorId: String;
   setVendorId: React.Dispatch<React.SetStateAction<String>>;
-  setVendorInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
   vendorInfo: userInfoType;
+  setVendorInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
+
+  haveActiveOrder: boolean;
+  setHaveActiveOrder: React.Dispatch<React.SetStateAction<boolean>>;
+  activeOrderId: String;
+  setActiveOrderId: React.Dispatch<React.SetStateAction<String>>;
 }
 
 export interface data {

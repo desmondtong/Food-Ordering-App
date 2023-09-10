@@ -23,6 +23,9 @@ import useFetch from "./hooks/useFetch";
 import { data, userInfoType } from "./interfaces";
 
 function App() {
+  const fetchData = useFetch();
+  const navigate = useNavigate();
+
   const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
   const initRefreshToken = JSON.parse(localStorage.getItem("refreshToken")!);
   const initRole = JSON.parse(localStorage.getItem("role")!);
@@ -37,13 +40,13 @@ function App() {
   const [vendorId, setVendorId] = useState<String>("");
   const [vendorInfo, setVendorInfo] = useState<userInfoType>({});
 
-  const fetchData = useFetch();
-  const navigate = useNavigate();
+  const [haveActiveOrder, setHaveActiveOrder] = useState<boolean>(false);
+  const [activeOrderId, setActiveOrderId] = useState<String>("");
 
   // endpoint
   const getUserInfo = async (isVendor = false) => {
     const id = isVendor ? vendorId : userId;
-    
+
     const res: data = await fetchData(
       "/auth/accounts/" + id,
       undefined,
@@ -66,6 +69,26 @@ function App() {
       }
     } else {
       // alert(JSON.stringify(res.data));
+    }
+  };
+
+  const getCustomerActiveOrder = async () => {
+    const res: data = await fetchData(
+      "/api/orders/items/active/user_id",
+      "POST",
+      {
+        user_id: userId,
+      },
+      accessToken
+    );
+
+    if (res.ok) {
+      if (res.data.active_order.length) {
+        setHaveActiveOrder(true);
+        setActiveOrderId(res.data.uuid);
+      }
+    } else {
+      alert(JSON.stringify(res.data));
     }
   };
 
@@ -106,11 +129,12 @@ function App() {
 
   // when user logs in, userId is updated and app gets user info
   useEffect(() => {
-    getUserInfo();
+    userId && getUserInfo();
+    userId && getCustomerActiveOrder();
   }, [userId]);
 
+  // set vendorId state whenever user visit Cart page; vendorId is used in Checkout page
   useEffect(() => {
-    console.log(vendorId);
     if (vendorId) getUserInfo(true);
   }, [vendorId]);
 
@@ -131,9 +155,14 @@ function App() {
           handleLogout,
           refresh,
           getUserInfo,
+          vendorId,
           setVendorId,
           setVendorInfo,
           vendorInfo,
+          haveActiveOrder,
+          setHaveActiveOrder,
+          activeOrderId,
+          setActiveOrderId,
         }}
       >
         <Routes>

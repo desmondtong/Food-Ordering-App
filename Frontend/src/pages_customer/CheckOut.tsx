@@ -29,7 +29,7 @@ const CheckOut: React.FC = () => {
   const [cartItemInfo, setCartItemInfo] = useState<Props>({});
 
   // endpoint
-  const getCartItems = async () => {
+  const getCartItems = async (clearCart = false) => {
     const res: data = await fetchData(
       "/api/carts/" + userCtx?.userId,
       "POST",
@@ -39,6 +39,89 @@ const CheckOut: React.FC = () => {
 
     if (res.ok) {
       setCartItemInfo(res.data);
+
+      // clearCart after createOrder
+      if (clearCart) {
+        // get itemId and Id of all items within cart
+        const items = res.data.orders.reduce((acc: Props[], item: any) => {
+          acc.push({ item_id: item.item_id, id: item.id });
+          return acc;
+        }, []);
+
+        // for-of loop to remove items from cart one by one
+        for (const item of items) {
+          deleteCartItem(item.item_id, item.id);
+        }
+      }
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const createOrder = async () => {
+    const res: data = await fetchData(
+      "/api/orders/" + userCtx?.userId,
+      "PUT",
+      {
+        vendor_id: userCtx?.vendorId,
+        total_price: cartItemInfo.total_price,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      userCtx?.setHaveActiveOrder(true);
+      userCtx?.setActiveOrderId(res.data.order_id);
+
+      createItemsOrders(res.data.order_id);
+      getCartItems(true);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const deleteCartItem = async (itemId: String, id: String) => {
+    const res: data = await fetchData(
+      "/api/carts/items/" + itemId,
+      "DELETE",
+      {
+        cart_id: params.item,
+        id: id,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      getCartItems();
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const createItemsOrders = async (orderId: String) => {
+    const res: data = await fetchData(
+      "/api/orders/items/" + orderId,
+      "PUT",
+      {
+        cart_id: userCtx?.userInfo.cart_id,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      userCtx?.setActiveOrderId(res.data.order_id);
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -105,7 +188,12 @@ const CheckOut: React.FC = () => {
                 </Paper>
               </Paper>
 
-              <Button variant="contained" fullWidth>
+              <Button
+                variant="contained"
+                fullWidth
+                onClick={createOrder}
+                disabled={userCtx?.haveActiveOrder}
+              >
                 Place Order
               </Button>
             </Grid>

@@ -29,7 +29,7 @@ const updateOrder = async (req: Request, res: Response) => {
       rating,
       review,
     }: { status: String; rating: Number; review: String } = req.body;
-    
+
     const order = await pool.query(
       "UPDATE orders SET status = $1, rating =$2, review = $3 WHERE uuid = $4 RETURNING *",
       [status, rating, review, req.params.order_id]
@@ -123,6 +123,21 @@ const getItemsOrdersByUserId = async (req: Request, res: Response) => {
   }
 };
 
+const getActiveOrderByUserId = async (req: Request, res: Response) => {
+  try {
+    const user_id: String = req.body.user_id;
+    const getByUserId = await pool.query(
+      "SELECT * FROM orders WHERE user_id = $1 AND status != $2",
+      [user_id, "COMPLETED"]
+    );
+    
+    res.status(201).json({ active_order: getByUserId.rows });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: "Get items_orders failed" });
+  }
+};
+
 export {
   createOrder,
   updateOrder,
@@ -130,4 +145,5 @@ export {
   getItemsOrdersByOrderId,
   getItemsOrdersByVendorId,
   getItemsOrdersByUserId,
+  getActiveOrderByUserId,
 };

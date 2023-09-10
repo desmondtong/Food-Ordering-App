@@ -17,6 +17,7 @@ import {
   getItemsOrdersByOrderId,
   getItemsOrdersByVendorId,
   getItemsOrdersByUserId,
+  getActiveOrderByUserId,
 } from "../controllers/orders";
 
 router.put(
@@ -64,6 +65,13 @@ router.post(
   validateGetItemById,
   checkValid,
   getItemsOrdersByUserId
+);
+router.post(
+  "/orders/items/active/user_id",
+  auth,
+  validateGetItemById,
+  checkValid,
+  getActiveOrderByUserId
 );
 
 export default router;
