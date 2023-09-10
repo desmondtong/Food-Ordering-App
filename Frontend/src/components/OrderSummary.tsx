@@ -1,18 +1,65 @@
-import React from "react";
+import React, { useEffect, useContext, useState } from "react";
+import UserContext from "../context/user";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useFetch from "../hooks/useFetch";
 
 import { Paper, Grid, Typography, Divider, Button } from "@mui/material";
-import { Props } from "../interfaces";
+import { Props, data, userInfoType } from "../interfaces";
 
 const OrderSummary: React.FC<Props> = (props) => {
+  const fetchData = useFetch();
+  const navigate = useNavigate();
+  const params = useParams();
+  const userCtx = useContext(UserContext);
+
+  const isCheckOut = window.location.pathname.includes("checkout");
+
   return (
     <>
       <Paper sx={{ borderRadius: "1rem" }} elevation={4}>
         <Grid container alignItems="center" p="1rem">
           <Grid item xs={12}>
-            <Typography variant="h6" gutterBottom>
-              Order Summary
+            <Typography variant="h6">
+              {isCheckOut ? "Your Order From" : "Order Summary"}
             </Typography>
+            {isCheckOut && (
+              <Typography fontWeight="light" gutterBottom color="var(--orange)">
+                {userCtx?.vendorInfo.store_name}
+              </Typography>
+            )}
           </Grid>
+          
+          {isCheckOut && (
+            <>
+              {props.orders?.map((item, idx) => (
+                <Grid item container xs={12} my="1rem">
+                  <Grid item xs={1.2}>
+                    <Typography variant="body1">{`${item.quantity_ordered} x`}</Typography>
+                  </Grid>
+                  <Grid item flexGrow="1">
+                    <Typography variant="body1" fontWeight="light">
+                      {item.name}
+                    </Typography>
+                    <Typography variant="body2" fontWeight="light">
+                      {item.user_note}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={2} container justifyContent="flex-end">
+                    <Typography
+                      variant="body2"
+                      fontWeight="light"
+                    >{`S$ ${item.item_price}`}</Typography>
+                  </Grid>
+                </Grid>
+              ))}
+            </>
+          )}
+        </Grid>
+
+        {isCheckOut && <Divider sx={{ mx: "0.5rem", mb: "1rem" }}></Divider>}
+
+        <Grid container alignItems="center" p="1rem">
           <Grid item xs={9}>
             <Typography
               variant="body2"
@@ -24,19 +71,19 @@ const OrderSummary: React.FC<Props> = (props) => {
               {`S$ ${(Number(props.total_price) - 1).toFixed(2)}`}
             </Typography>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={9} mt="1rem">
             <Typography variant="body2" fontWeight="light">
               Delivery Fee
             </Typography>
           </Grid>
-          <Grid item xs={3} container justifyContent="flex-end">
+          <Grid item xs={3} container justifyContent="flex-end" mt="1rem">
             <Typography variant="body2" fontWeight="bold">
               S$ 1.00
             </Typography>
           </Grid>
         </Grid>
 
-        <Divider sx={{ m: "0.5rem" }}></Divider>
+        {!isCheckOut && <Divider sx={{ m: "0.5rem" }}></Divider>}
 
         <Grid container alignItems="center" p="1rem">
           <Grid item xs={9}>
@@ -49,11 +96,18 @@ const OrderSummary: React.FC<Props> = (props) => {
               {`S$ ${props.total_price}`}
             </Typography>
           </Grid>
-          <Grid item xs={12} mt="2rem">
-            <Button fullWidth variant="contained">
-              Checkout
-            </Button>
-          </Grid>
+
+          {!isCheckOut && (
+            <Grid item xs={12} mt="2rem">
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => navigate(`/cart/${params.item}/checkout`)}
+              >
+                Checkout
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Paper>
     </>

@@ -28,6 +28,7 @@ const Cart: React.FC = () => {
 
     if (res.ok) {
       setCartItemInfo(res.data);
+      userCtx?.setVendorId(res.data.vendor_id);
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -54,7 +55,7 @@ const Cart: React.FC = () => {
               <Typography variant="h4">Cart</Typography>
             </Grid>
 
-            <Grid item xs={8}>
+            <Grid item xs={9}>
               <Stack spacing={3}>
                 {cartItemInfo.orders?.map((item, idx) => (
                   <CartItem
@@ -73,7 +74,7 @@ const Cart: React.FC = () => {
               </Stack>
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item xs={3}>
               <OrderSummary
                 total_price={cartItemInfo.total_price}
                 orders={cartItemInfo.orders}

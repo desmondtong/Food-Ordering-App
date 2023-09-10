@@ -14,6 +14,9 @@ export interface UserContextType {
   handleLogout: () => void;
   refresh: () => Promise<void>;
   getUserInfo: () => Promise<void>;
+  setVendorId: React.Dispatch<React.SetStateAction<String>>;
+  setVendorInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
+  vendorInfo: userInfoType;
 }
 
 export interface data {

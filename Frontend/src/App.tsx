@@ -34,26 +34,35 @@ function App() {
   const [userId, setUserId] = useState<String>(initUserId);
   const [userInfo, setUserInfo] = useState<userInfoType>({});
 
+  const [vendorId, setVendorId] = useState<String>("");
+  const [vendorInfo, setVendorInfo] = useState<userInfoType>({});
+
   const fetchData = useFetch();
   const navigate = useNavigate();
 
   // endpoint
-  const getUserInfo = async () => {
+  const getUserInfo = async (isVendor = false) => {
+    const id = isVendor ? vendorId : userId;
+    
     const res: data = await fetchData(
-      "/auth/accounts/" + userId,
+      "/auth/accounts/" + id,
       undefined,
       undefined,
       accessToken
     );
 
     if (res.ok) {
-      // Store userInfo to localStorage and set as initial state
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
+      if (!isVendor) {
+        // Store userInfo to localStorage and set as initial state
+        localStorage.setItem("userInfo", JSON.stringify(res.data));
 
-      // Set initial userInfo from localStorage after component mounts
-      const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
-      if (initUserInfo) {
-        setUserInfo(initUserInfo);
+        // Set initial userInfo from localStorage after component mounts
+        const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
+        if (initUserInfo) {
+          setUserInfo(initUserInfo);
+        }
+      } else {
+        setVendorInfo(res.data);
       }
     } else {
       // alert(JSON.stringify(res.data));
@@ -100,6 +109,11 @@ function App() {
     getUserInfo();
   }, [userId]);
 
+  useEffect(() => {
+    console.log(vendorId);
+    if (vendorId) getUserInfo(true);
+  }, [vendorId]);
+
   return (
     <div>
       <UserContext.Provider
@@ -117,6 +131,9 @@ function App() {
           handleLogout,
           refresh,
           getUserInfo,
+          setVendorId,
+          setVendorInfo,
+          vendorInfo,
         }}
       >
         <Routes>
@@ -132,19 +149,14 @@ function App() {
                 element={<RestaurantDetails />}
               ></Route>
 
-              <Route path="/cart/:item" element={<Cart />}>
-                <Route
-                  path="/cart/:item/checkout"
-                  element={<CheckOut />}
-                ></Route>
-              </Route>
+              <Route path="/cart/:item" element={<Cart />}></Route>
+              <Route path="/cart/:item/checkout" element={<CheckOut />}></Route>
 
-              <Route path="/history" element={<History />}>
-                <Route
-                  path="history/details/:item"
-                  element={<HistoryDetail />}
-                ></Route>
-              </Route>
+              <Route path="/history" element={<History />}></Route>
+              <Route
+                path="history/details/:item"
+                element={<HistoryDetail />}
+              ></Route>
 
               <Route path="/favourite/:item" element={<Favourite />}></Route>
 
