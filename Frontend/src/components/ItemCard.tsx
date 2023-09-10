@@ -106,6 +106,31 @@ const ItemCard: React.FC<Props> = (props) => {
   };
 
   const handleAddToCart = async () => {
+    // check extg cart items' vendor
+    const resGet: data = await fetchData(
+      "/api/carts/" + userCtx?.userId,
+      "POST",
+      undefined,
+      userCtx?.accessToken
+    );
+
+    if (resGet.ok) {
+      if (resGet.data.vendor_id && props.vendor_id !== resGet.data.vendor_id) {
+        return alert(
+          JSON.stringify(
+            "Sorry, you can only add items from the same vendor to your cart at a time."
+          )
+        );
+      }
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
+      alert(JSON.stringify(resGet.data));
+    }
+
+    // if empty or same vendor, add to cart
     const res: data = await fetchData(
       "/api/carts/items/" + props.uuid,
       "PUT",
@@ -119,6 +144,7 @@ const ItemCard: React.FC<Props> = (props) => {
     );
 
     if (res.ok) {
+      console.log("added to cart");
       setOpenAddCart(false);
     } else {
       //attempt to refresh to get new access token

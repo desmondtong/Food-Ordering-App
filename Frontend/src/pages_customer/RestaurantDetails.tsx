@@ -171,6 +171,7 @@ const RestaurantDetails: React.FC = () => {
                       uuid={item.uuid}
                       availability={item.availability}
                       category={item.category}
+                      vendor_id={params.item}
                       image_url={"." + item.image_url}
                     ></ItemCard>
                   </Grid>
