@@ -20,7 +20,7 @@ import Alert from "./pages_vendor/Alert";
 import RatingReview from "./pages_vendor/RatingReview";
 
 import useFetch from "./hooks/useFetch";
-import { data, userInfoType } from "./interfaces";
+import { Props, data, userInfoType } from "./interfaces";
 
 function App() {
   const fetchData = useFetch();
@@ -42,6 +42,8 @@ function App() {
 
   const [haveActiveOrder, setHaveActiveOrder] = useState<boolean>(false);
   const [activeOrderId, setActiveOrderId] = useState<String>("");
+
+  const [cartItemInfo, setCartItemInfo] = useState<Props>({});
 
   // endpoint
   const getUserInfo = async (isVendor = false) => {
@@ -106,6 +108,26 @@ function App() {
     }
   };
 
+  const getCartItems = async () => {
+    const res: data = await fetchData(
+      "/api/carts/" + userId,
+      "POST",
+      undefined,
+      accessToken
+    );
+
+    if (res.ok) {
+      setCartItemInfo(res.data);
+      setVendorId(res.data.vendor_id);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   // function
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
@@ -163,6 +185,9 @@ function App() {
           setHaveActiveOrder,
           activeOrderId,
           setActiveOrderId,
+          cartItemInfo,
+          setCartItemInfo,
+          getCartItems,
         }}
       >
         <Routes>

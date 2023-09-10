@@ -25,6 +25,10 @@ export interface UserContextType {
   setHaveActiveOrder: React.Dispatch<React.SetStateAction<boolean>>;
   activeOrderId: String;
   setActiveOrderId: React.Dispatch<React.SetStateAction<String>>;
+
+  cartItemInfo: Props;
+  setCartItemInfo: React.Dispatch<React.SetStateAction<Props>>;
+  getCartItems: () => Promise<void>;
 }
 
 export interface data {

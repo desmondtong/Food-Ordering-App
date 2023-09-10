@@ -10,11 +10,13 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  Badge,
+  BadgeProps,
+  styled,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { Props, navBarType } from "../interfaces";
 
-import { navBarType } from "../interfaces";
-//icons
 import LocalDiningOutlinedIcon from "@mui/icons-material/LocalDiningOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import RestoreIcon from "@mui/icons-material/Restore";
@@ -27,7 +29,15 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 
 const drawerWidth = 280;
 
-const NavBar: React.FC = () => {
+const StyledBadge = styled(Badge)<BadgeProps>(() => ({
+  "& .MuiBadge-badge": {
+    right: 28,
+    top: 20,
+    padding: "0 4px",
+  },
+}));
+
+const NavBar: React.FC<Props> = (props) => {
   const userCtx = useContext(UserContext);
 
   const navBarCustomer: navBarType[] = [
@@ -107,7 +117,18 @@ const NavBar: React.FC = () => {
             >
               <ListItem>
                 <ListItemButton>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <StyledBadge
+                    badgeContent={
+                      item.item === "Cart" ? userCtx.cartItemInfo.orders?.length : 0
+                    }
+                    color="warning"
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                  </StyledBadge>
                   <ListItemText primary={item.item} />
                 </ListItemButton>
               </ListItem>

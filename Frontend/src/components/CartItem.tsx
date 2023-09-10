@@ -48,7 +48,7 @@ const CartItem: React.FC<Props> = (props) => {
     );
 
     if (res.ok) {
-      props.getCartItems?.();
+      userCtx?.getCartItems?.();
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -73,7 +73,7 @@ const CartItem: React.FC<Props> = (props) => {
     );
 
     if (res.ok) {
-      props.getCartItems?.();
+      userCtx?.getCartItems?.();
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();

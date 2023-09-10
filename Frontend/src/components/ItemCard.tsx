@@ -142,6 +142,7 @@ const ItemCard: React.FC<Props> = (props) => {
     if (res.ok) {
       console.log("added to cart");
       setOpenAddCart(false);
+      userCtx?.getCartItems();
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
