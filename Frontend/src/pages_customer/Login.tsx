@@ -98,7 +98,10 @@ const Login: React.FC = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(../login-art.jpg)",
+            backgroundImage:
+              pathName === "/login/vendor"
+                ? "url(../login-art-2.jpg)"
+                : "url(../login-art.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"

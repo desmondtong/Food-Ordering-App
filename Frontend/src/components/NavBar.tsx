@@ -15,7 +15,7 @@ import {
   styled,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import { Props, navBarType } from "../interfaces";
+import { navBarType } from "../interfaces";
 
 import LocalDiningOutlinedIcon from "@mui/icons-material/LocalDiningOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
@@ -37,7 +37,7 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   },
 }));
 
-const NavBar: React.FC<Props> = (props) => {
+const NavBar: React.FC = () => {
   const userCtx = useContext(UserContext);
 
   const navBarCustomer: navBarType[] = [

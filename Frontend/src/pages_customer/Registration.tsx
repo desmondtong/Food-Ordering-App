@@ -152,7 +152,10 @@ const Registration: React.FC = () => {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: "url(../register-art.png)",
+            backgroundImage:
+              pathName === "/registration/vendor"
+                ? "url(../register-art-2.jpg)"
+                : "url(../register-art.jpg)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -196,7 +199,7 @@ const Registration: React.FC = () => {
                 <>
                   <Grid item xs={6}>
                     <TextField
-                      margin="dense"
+                      margin="none"
                       required
                       fullWidth
                       id="firstName"
@@ -210,7 +213,7 @@ const Registration: React.FC = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      margin="dense"
+                      margin="none"
                       required
                       fullWidth
                       name="last name"
@@ -229,7 +232,7 @@ const Registration: React.FC = () => {
                 <>
                   <Grid item xs={12}>
                     <TextField
-                      margin="dense"
+                      margin="none"
                       required
                       fullWidth
                       name="store name"
@@ -241,7 +244,7 @@ const Registration: React.FC = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <TextField
-                      margin="dense"
+                      margin="none"
                       select
                       required
                       fullWidth
@@ -261,7 +264,7 @@ const Registration: React.FC = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      margin="dense"
+                      margin="none"
                       required
                       fullWidth
                       name="address"
@@ -273,7 +276,7 @@ const Registration: React.FC = () => {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
-                      margin="dense"
+                      margin="none"
                       required
                       fullWidth
                       name="postal code"
@@ -287,7 +290,7 @@ const Registration: React.FC = () => {
 
               <Grid item xs={12}>
                 <TextField
-                  margin="dense"
+                  margin="none"
                   required
                   fullWidth
                   name="email"
@@ -300,7 +303,7 @@ const Registration: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  margin="dense"
+                  margin="none"
                   required
                   fullWidth
                   name="phone number"
@@ -312,7 +315,7 @@ const Registration: React.FC = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  margin="dense"
+                  margin="none"
                   required
                   fullWidth
                   name="password"
@@ -325,7 +328,7 @@ const Registration: React.FC = () => {
               <Grid item xs={12}>
                 <TextField
                   error={wrongPassword}
-                  margin="dense"
+                  margin="none"
                   required
                   fullWidth
                   name="confirm password"
