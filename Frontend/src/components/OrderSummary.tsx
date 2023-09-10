@@ -1,14 +1,12 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useContext } from "react";
 import UserContext from "../context/user";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import useFetch from "../hooks/useFetch";
 
 import { Paper, Grid, Typography, Divider, Button } from "@mui/material";
-import { Props, data, userInfoType } from "../interfaces";
+import { Props } from "../interfaces";
 
 const OrderSummary: React.FC<Props> = (props) => {
-  const fetchData = useFetch();
   const navigate = useNavigate();
   const params = useParams();
   const userCtx = useContext(UserContext);
@@ -29,11 +27,11 @@ const OrderSummary: React.FC<Props> = (props) => {
               </Typography>
             )}
           </Grid>
-          
+
           {isCheckOut && (
             <>
               {props.orders?.map((item, idx) => (
-                <Grid item container xs={12} my="1rem">
+                <Grid item container xs={12} my="1rem" key={idx}>
                   <Grid item xs={1.2}>
                     <Typography variant="body1">{`${item.quantity_ordered} x`}</Typography>
                   </Grid>
