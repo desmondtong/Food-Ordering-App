@@ -144,6 +144,9 @@ function App() {
       if (res.data.order_id.length) {
         setHaveActiveOrder(true);
         setActiveOrderId(res.data.order_id);
+      } else {
+        setHaveActiveOrder(false);
+        setActiveOrderId([]);
       }
     } else {
       alert(JSON.stringify(res.data));
@@ -241,6 +244,7 @@ function App() {
           setCartItemInfo,
           getCartItems,
           orderInfo,
+          getVendorActiveOrder,
         }}
       >
         <Routes>

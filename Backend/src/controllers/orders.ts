@@ -148,8 +148,8 @@ const getActiveOrdersByVendorId = async (req: Request, res: Response) => {
   try {
     const vendor_id: String = req.body.vendor_id;
     const getByVendorId = await pool.query(
-      "SELECT uuid FROM orders WHERE vendor_id = $1 AND status != $2",
-      [vendor_id, "COMPLETED"]
+      "SELECT uuid FROM orders WHERE vendor_id = $1 AND NOT (status = $2 OR status = $3)",
+      [vendor_id, "COMPLETED", "CANCELLED"]
     );
 
     const order_id = getByVendorId.rows.reduce((acc, item) => {

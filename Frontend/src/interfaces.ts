@@ -31,6 +31,7 @@ export interface UserContextType {
   getCartItems: () => Promise<void>;
 
   orderInfo: OrderInfo;
+  getVendorActiveOrder: () => Promise<void>;
 }
 
 export interface data {
@@ -116,6 +117,7 @@ export interface statuses {
   PREPARING: JSX.Element;
   DELIVERING: JSX.Element;
   COMPLETED: JSX.Element;
+  CANCELLED: JSX.Element;
 }
 
 export interface navBarType {

@@ -119,7 +119,9 @@ const NavBar: React.FC = () => {
                 <ListItemButton>
                   <StyledBadge
                     badgeContent={
-                      item.item === "Cart" ? userCtx.cartItemInfo.orders?.length : 0
+                      item.item === "Cart"
+                        ? userCtx.cartItemInfo.orders?.length
+                        : 0
                     }
                     color="warning"
                     anchorOrigin={{
@@ -147,7 +149,20 @@ const NavBar: React.FC = () => {
             >
               <ListItem>
                 <ListItemButton>
-                  <ListItemIcon>{item.icon}</ListItemIcon>
+                  <StyledBadge
+                    badgeContent={
+                      item.item === "Alert"
+                        ? userCtx.orderInfo?.length
+                        : 0
+                    }
+                    color="warning"
+                    anchorOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                  >
+                    <ListItemIcon>{item.icon}</ListItemIcon>
+                  </StyledBadge>
                   <ListItemText primary={item.item} />
                 </ListItemButton>
               </ListItem>
