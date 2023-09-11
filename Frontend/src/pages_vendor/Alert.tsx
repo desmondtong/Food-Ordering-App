@@ -18,8 +18,6 @@ const Alert: React.FC = () => {
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
           <TopBar></TopBar>
-          {JSON.stringify(userCtx?.activeOrderId)}
-          <br></br>
           {JSON.stringify(userCtx?.orderInfo)}
           <Stack my="2rem" spacing={3}>
             {userCtx?.orderInfo?.map((item, idx) => (

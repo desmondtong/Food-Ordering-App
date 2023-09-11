@@ -15,9 +15,22 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import MopedOutlinedIcon from "@mui/icons-material/MopedOutlined";
 import DoneIcon from "@mui/icons-material/Done";
-import { Props } from "../interfaces";
+import { Props, statuses } from "../interfaces";
 
-const alertIcons = {
+const alertIcons: statuses = {
+  SENT: (
+    <Grid item xs={0.5} mr="1rem">
+      <ReceiptLongOutlinedIcon
+        sx={{
+          bgcolor: "var(--yellow)",
+          borderRadius: "50%",
+          p: "0.8rem",
+          fontSize: "3.5rem",
+          color: "var(--white)",
+        }}
+      />
+    </Grid>
+  ),
   PREPARING: (
     <Grid item xs={0.5} mr="1rem">
       <ReceiptLongOutlinedIcon
@@ -60,18 +73,22 @@ const alertIcons = {
 };
 
 const OrderAccordian: React.FC<Props> = (props) => {
-    const userCtx = useContext(UserContext);
+  const userCtx = useContext(UserContext);
 
   const [expanded, setExpanded] = useState<string | false>(false);
 
   const formattedOrderId = props.orderInfo?.order_id
     ?.split("-")[4]
     .toUpperCase();
+  const status = props.orderInfo?.status!;
+  const date = new Date(props.orderInfo?.date!).toDateString().slice(4);
+  const time = props.orderInfo?.time?.slice(0, 5);
 
   // function
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
+      event;
     };
 
   return (
@@ -87,7 +104,7 @@ const OrderAccordian: React.FC<Props> = (props) => {
           id="panel1bh-header"
         >
           <Grid container alignItems="center" height="4rem">
-            {alertIcons.DELIVERING}
+            {alertIcons[status]}
             <Grid item flexGrow="1">
               <Typography variant="h6" fontWeight="bold">
                 {`Order #${formattedOrderId}`}
@@ -95,7 +112,7 @@ const OrderAccordian: React.FC<Props> = (props) => {
             </Grid>
             <Grid
               item
-              xs={1}
+              xs={2}
               container
               direction="column"
               alignItems="flex-end"
@@ -105,9 +122,9 @@ const OrderAccordian: React.FC<Props> = (props) => {
                 color="text.secondary"
                 fontWeight="light"
               >
-                date-time
+                {`${date}, ${time}`}
               </Typography>
-              <Typography variant="h6">S$ price</Typography>
+              <Typography variant="h6">{`S$ ${props.orderInfo?.total_price}`}</Typography>
             </Grid>
             <Grid item xs={1} container justifyContent="flex-end">
               <Typography
@@ -123,6 +140,8 @@ const OrderAccordian: React.FC<Props> = (props) => {
 
         <AccordionDetails>
           <Grid container alignItems="center">
+
+            
             {/* order details */}
             <Grid item xs={10}>
               <Stack direction="row" spacing={3}>

@@ -104,6 +104,16 @@ export interface Props {
   // order accordian component
   order_id?: String;
   orderInfo?: Props;
+  status?: keyof statuses;
+  date?: string;
+  time?: string;
+}
+
+export interface statuses {
+  SENT: JSX.Element;
+  PREPARING: JSX.Element;
+  DELIVERING: JSX.Element;
+  COMPLETED: JSX.Element;
 }
 
 export interface navBarType {
