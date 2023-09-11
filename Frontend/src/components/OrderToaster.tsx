@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import ReactDOM from "react-dom";
 
 import { Stack, Typography } from "@mui/material";
@@ -8,6 +9,7 @@ import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 
 const OverLay: React.FC = () => {
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const status = userCtx?.orderInfo?.[0]?.[0].status;
 
@@ -24,10 +26,12 @@ const OverLay: React.FC = () => {
           left: "77%",
           width: "22%",
           borderRadius: "1rem 1rem 0 0",
+          cursor: "pointer",
         }}
         direction="row"
         justifyContent="center"
         alignItems="center"
+        onClick={() => navigate(`/tracker/${userCtx?.activeOrderId}`)}
       >
         {(status === "SENT" || status === "PREPARING") && (
           <>

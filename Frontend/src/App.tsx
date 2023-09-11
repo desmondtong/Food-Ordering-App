@@ -268,7 +268,7 @@ function App() {
                 element={<HistoryDetail />}
               ></Route>
 
-              <Route path="/favourite/:item" element={<Favourite />}></Route>
+              <Route path="/favourite" element={<Favourite />}></Route>
 
               <Route path="/tracker/:item" element={<Tracker />}></Route>
             </>
