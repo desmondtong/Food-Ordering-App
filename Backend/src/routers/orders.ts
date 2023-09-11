@@ -9,6 +9,7 @@ import {
   validateUpdateOrder,
   validateCreateItemsOrders,
   validateGetItemById,
+  validateGetItemByOrderId
 } from "../validators/orders";
 import {
   createOrder,
@@ -49,7 +50,7 @@ router.put(
 router.post(
   "/orders/items/order_id",
   auth,
-  validateGetItemById,
+  validateGetItemByOrderId,
   checkValid,
   getItemsOrdersByOrderId
 );

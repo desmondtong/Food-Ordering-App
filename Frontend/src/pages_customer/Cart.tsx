@@ -14,7 +14,7 @@ const Cart: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    userCtx?.getCartItems();
+    // userCtx?.getCartItems();
   }, []);
   return (
     <>

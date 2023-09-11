@@ -41,9 +41,10 @@ function App() {
   const [vendorInfo, setVendorInfo] = useState<userInfoType>({});
 
   const [haveActiveOrder, setHaveActiveOrder] = useState<boolean>(false);
-  const [activeOrderId, setActiveOrderId] = useState<String>("");
+  const [activeOrderId, setActiveOrderId] = useState<String[]>([]);
 
   const [cartItemInfo, setCartItemInfo] = useState<Props>({});
+  const [orderInfo, setOrderInfo] = useState<Props[]>([]);
 
   // endpoint
   const getUserInfo = async (isVendor = false) => {
@@ -71,26 +72,6 @@ function App() {
       }
     } else {
       // alert(JSON.stringify(res.data));
-    }
-  };
-
-  const getCustomerActiveOrder = async () => {
-    const res: data = await fetchData(
-      "/api/orders/items/active/user_id",
-      "POST",
-      {
-        user_id: userId,
-      },
-      accessToken
-    );
-
-    if (res.ok) {
-      if (res.data.active_order.length) {
-        setHaveActiveOrder(true);
-        setActiveOrderId(res.data.uuid);
-      }
-    } else {
-      alert(JSON.stringify(res.data));
     }
   };
 
@@ -124,6 +105,66 @@ function App() {
       // userCtx?.refresh();
 
       // if failed to refresh
+      console.log("cart fail");
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const getCustomerActiveOrder = async () => {
+    const res: data = await fetchData(
+      "/api/orders/items/active/user_id",
+      "POST",
+      {
+        user_id: userId,
+      },
+      accessToken
+    );
+
+    if (res.ok) {
+      if (res.data.active_order.length) {
+        setHaveActiveOrder(true);
+        setActiveOrderId([res.data.active_order[0].uuid]);
+      }
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const getVendorActiveOrder = async () => {
+    const res: data = await fetchData(
+      "/api/orders/items/active/vendor_id",
+      "POST",
+      {
+        vendor_id: userId,
+      },
+      accessToken
+    );
+
+    if (res.ok) {
+      if (res.data.order_id.length) {
+        setHaveActiveOrder(true);
+        setActiveOrderId(res.data.order_id);
+      }
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const getOrderByOrderId = async () => {
+    const res: data = await fetchData(
+      "/api/orders/items/order_id",
+      "POST",
+      activeOrderId,
+      accessToken
+    );
+
+    if (res.ok) {
+      setOrderInfo(res.data);
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -149,11 +190,22 @@ function App() {
     }
   };
 
-  // when user logs in, userId is updated and app gets user info
   useEffect(() => {
+    // for customer
     userId && getUserInfo();
-    userId && getCustomerActiveOrder();
+    role === "CUSTOMER" && getCartItems();
+
+    // for customer
+    role === "CUSTOMER" && getCustomerActiveOrder();
+
+    // for vendor
+    role === "VENDOR" && getVendorActiveOrder();
   }, [userId]);
+
+  // get all active order info if there is an activeOrder
+  useEffect(() => {
+    userId && getOrderByOrderId();
+  }, [activeOrderId]);
 
   // set vendorId state whenever user visit Cart page; vendorId is used in Checkout page
   useEffect(() => {
@@ -188,6 +240,7 @@ function App() {
           cartItemInfo,
           setCartItemInfo,
           getCartItems,
+          orderInfo,
         }}
       >
         <Routes>

@@ -44,10 +44,19 @@ const validateGetItemById = [
     .isLength({ min: 36, max: 36 }),
 ];
 
+const validateGetItemByOrderId = [
+  body().isArray().withMessage("Input should be an array"),
+  body("*")
+    .isString()
+    .isLength({ min: 36, max: 36 })
+    .withMessage("Each item should be a string"),
+];
+
 export {
   validateIdInParam,
   validateCreateOrder,
   validateUpdateOrder,
   validateCreateItemsOrders,
   validateGetItemById,
+  validateGetItemByOrderId,
 };

@@ -23,12 +23,14 @@ export interface UserContextType {
 
   haveActiveOrder: boolean;
   setHaveActiveOrder: React.Dispatch<React.SetStateAction<boolean>>;
-  activeOrderId: String;
-  setActiveOrderId: React.Dispatch<React.SetStateAction<String>>;
+  activeOrderId: String[];
+  setActiveOrderId: React.Dispatch<React.SetStateAction<String[]>>;
 
   cartItemInfo: Props;
   setCartItemInfo: React.Dispatch<React.SetStateAction<Props>>;
   getCartItems: () => Promise<void>;
+
+  orderInfo: Props[];
 }
 
 export interface data {
@@ -98,6 +100,10 @@ export interface Props {
   getCartItems?: () => Promise<void>;
   user_note?: String;
   quantity_ordered?: String;
+
+  // order accordian component
+  order_id?: String;
+  orderInfo?: Props;
 }
 
 export interface navBarType {

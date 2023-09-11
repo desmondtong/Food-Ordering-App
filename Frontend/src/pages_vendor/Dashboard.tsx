@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import NavBar from "../components/NavBar";
 
 import { Typography, Box } from "@mui/material";
 import TopBar from "../components/TopBar";
+import UserContext from "../context/user";
 
 const Dashboard: React.FC = () => {
+  const userCtx = useContext(UserContext);
+
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -16,6 +19,7 @@ const Dashboard: React.FC = () => {
           <TopBar></TopBar>
           <br />
           <Typography>Dashboard</Typography>
+          {JSON.stringify(userCtx?.activeOrderId)}
         </Box>
       </Box>
     </>

@@ -75,7 +75,7 @@ const CheckOut: React.FC = () => {
 
     if (res.ok) {
       userCtx?.setHaveActiveOrder(true);
-      userCtx?.setActiveOrderId(res.data.order_id);
+      userCtx?.setActiveOrderId([res.data.order_id]);
 
       createItemsOrders(res.data.order_id);
       getCartItems(true);
@@ -121,7 +121,7 @@ const CheckOut: React.FC = () => {
     );
 
     if (res.ok) {
-      userCtx?.setActiveOrderId(res.data.order_id);
+      userCtx?.setActiveOrderId([res.data.order_id]);
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Typography,
   Stack,
@@ -9,10 +9,13 @@ import {
   Button,
 } from "@mui/material";
 
+import UserContext from "../context/user";
+
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import MopedOutlinedIcon from "@mui/icons-material/MopedOutlined";
 import DoneIcon from "@mui/icons-material/Done";
+import { Props } from "../interfaces";
 
 const alertIcons = {
   PREPARING: (
@@ -56,13 +59,21 @@ const alertIcons = {
   ),
 };
 
-const OrderAccordian: React.FC = () => {
+const OrderAccordian: React.FC<Props> = (props) => {
+    const userCtx = useContext(UserContext);
+
   const [expanded, setExpanded] = useState<string | false>(false);
 
+  const formattedOrderId = props.orderInfo?.order_id
+    ?.split("-")[4]
+    .toUpperCase();
+
+  // function
   const handleChange =
     (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
       setExpanded(isExpanded ? panel : false);
     };
+
   return (
     <>
       <Accordion
@@ -79,7 +90,7 @@ const OrderAccordian: React.FC = () => {
             {alertIcons.DELIVERING}
             <Grid item flexGrow="1">
               <Typography variant="h6" fontWeight="bold">
-                Order #12345
+                {`Order #${formattedOrderId}`}
               </Typography>
             </Grid>
             <Grid
