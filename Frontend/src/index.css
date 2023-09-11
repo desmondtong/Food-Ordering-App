@@ -72,3 +72,14 @@
 .disabled-btn {
   color: var(--darkgrey-text) !important;
 }
+
+/* tracker */
+.tracker {
+  position: relative !important;
+}
+
+.back-btn {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+}

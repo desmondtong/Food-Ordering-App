@@ -6,13 +6,40 @@ import {
   Grid,
   Paper,
   CssBaseline,
+  IconButton,
 } from "@mui/material";
+
 import UserContext from "../context/user";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const Tracker: React.FC = () => {
   const userCtx = useContext(UserContext);
 
   const orderInfo = userCtx?.orderInfo?.[0];
+  const status = userCtx?.orderInfo?.[0]?.[0].status;
+
+  const trackerContent: { [key: string]: { title?: string; url?: string } } = {
+    SENT: {
+      title: "The restaurant is preparing your order!",
+      url: "../tracker-cook.jpg",
+    },
+    PREPARING: {
+      title: "The restaurant is preparing your order!",
+      url: "../tracker-cook.jpg",
+    },
+    DELIVERING: {
+      title: "The rider is heading to your location!",
+      url: "../tracker-delivering.jpg",
+    },
+    COMPLETED: {
+      title: "Delivered!",
+      url: "../tracker-done.jpg",
+    },
+    CANCELLED: {
+      title: "Your order has been cancelled..",
+      url: "../tracker-done.jpg", //UPDATE TO CANCELLED PIC
+    },
+  };
 
   return (
     <>
@@ -22,6 +49,7 @@ const Tracker: React.FC = () => {
         justifyContent="center"
         alignItems="center"
         height="100vh"
+        className="tracker"
         // sx={{
         //   backgroundImage:
         //     "url(../tracker-bg.png),linear-gradient(var(--orange),var(--blue))",
@@ -30,6 +58,14 @@ const Tracker: React.FC = () => {
         //   backgroundPosition: "center",
         // }}
       >
+        <IconButton
+          sx={{ bgcolor: "var(--white)", m: "2rem" }}
+          onClick={() => history.back()}
+          className="back-btn"
+        >
+          <ArrowBackIcon sx={{ color: "var(--orange)" }}></ArrowBackIcon>
+        </IconButton>
+
         <Paper
           sx={{
             width: "30%",
@@ -37,24 +73,28 @@ const Tracker: React.FC = () => {
             px: "1rem",
             py: "2rem",
           }}
-          elevation={10}
+          elevation={20}
         >
           <Stack direction="column" justifyContent="center" alignItems="center">
             {/* <img src="../logo-word-2.jpg" style={{ width: "8rem" }}></img> */}
             <Typography variant="h5" gutterBottom>
-              The restaurant is preparing your order!
+              {trackerContent[status!]?.title}
             </Typography>
             <Typography fontWeight="light" variant="body1" gutterBottom>
               Estimate time 10 - 15 min
             </Typography>
 
-            <img src="../tracker-cook.jpg" style={{ margin: "1rem 0" }}></img>
-
-            <Typography variant="h6" fontWeight="bold">
-              Here's your receipt
-            </Typography>
+            <img
+              src={trackerContent[status!]?.url}
+              style={{ margin: "1rem 0" }}
+            ></img>
 
             <Grid container alignItems="center" px="5rem">
+              <Grid item xs={12}>
+                <Typography variant="h6" fontWeight="bold" textAlign="left">
+                  Here's your receipt
+                </Typography>
+              </Grid>
               {orderInfo?.map((item, idx) => (
                 <Grid item container xs={12} mt="1rem" key={idx}>
                   <Grid item xs={1.2}>
