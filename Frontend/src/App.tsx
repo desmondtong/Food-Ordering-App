@@ -120,15 +120,8 @@ function App() {
     );
 
     if (res.ok) {
-      // if (res.data.active_order.length) {
-      console.log("here setActiveOrder");
       setHaveActiveOrder(true);
       setActiveOrderId([res.data.active_order[0].uuid]);
-      // }
-      // else {
-      //   setHaveActiveOrder(false);
-      //   setActiveOrderId([]);
-      // }
     } else {
       alert(JSON.stringify(res.data));
     }

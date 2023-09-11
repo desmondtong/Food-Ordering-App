@@ -3,11 +3,10 @@ import ReactDOM from "react-dom";
 
 import { Stack, Typography } from "@mui/material";
 import UserContext from "../context/user";
-import { Props } from "../interfaces";
 
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 
-const OverLay: React.FC<Props> = (props) => {
+const OverLay: React.FC = () => {
   const userCtx = useContext(UserContext);
 
   const status = userCtx?.orderInfo?.[0]?.[0].status;
@@ -32,7 +31,10 @@ const OverLay: React.FC<Props> = (props) => {
       >
         {(status === "SENT" || status === "PREPARING") && (
           <>
-            <img src="./preparing.png" style={{ marginRight: "1rem" }}></img>
+            <img
+              src={"../preparing.png" || "./preparing.png"}
+              style={{ marginRight: "1rem" }}
+            ></img>
             <Typography
               textAlign="center"
               variant="h5"
@@ -46,7 +48,10 @@ const OverLay: React.FC<Props> = (props) => {
 
         {status === "DELIVERING" && (
           <>
-            <img src="./delivering.png" style={{ marginRight: "1rem" }}></img>
+            <img
+              src={"../delivering.png" || "./delivering.png"}
+              style={{ marginRight: "1rem" }}
+            ></img>
             <Typography
               textAlign="center"
               variant="h5"

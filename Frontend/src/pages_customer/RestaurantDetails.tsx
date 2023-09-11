@@ -19,6 +19,7 @@ import { Props, data } from "../interfaces";
 
 import StarIcon from "@mui/icons-material/Star";
 import ItemCard from "../components/ItemCard";
+import OrderToaster from "../components/OrderToaster";
 
 const RestaurantDetails: React.FC = () => {
   const fetchData = useFetch();
@@ -180,6 +181,8 @@ const RestaurantDetails: React.FC = () => {
           ))}
         </Box>
       </Box>
+
+      <OrderToaster></OrderToaster>
     </>
   );
 };

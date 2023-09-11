@@ -7,6 +7,7 @@ import { Box, Grid, Typography, Stack, CardMedia, Button } from "@mui/material";
 import TopBar from "../components/TopBar";
 import CartItem from "../components/CartItem";
 import OrderSummary from "../components/OrderSummary";
+import OrderToaster from "../components/OrderToaster";
 
 const Cart: React.FC = () => {
   const userCtx = useContext(UserContext);
@@ -99,6 +100,8 @@ const Cart: React.FC = () => {
           </Grid>
         </Box>
       </Box>
+
+      <OrderToaster></OrderToaster>
     </>
   );
 };
