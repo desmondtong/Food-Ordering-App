@@ -24,15 +24,14 @@ const CartItem: React.FC<Props> = (props) => {
 
   // function
   const handleUpdateQuantity = (isAdd = true) => {
-    if (isAdd) {
-      // add quantity; cap at 50
-      quantity == 50 ? undefined : setQuantity(quantity + 1);
-    } else {
-      // reduce quantity; cap at 1
-      quantity == 1 ? undefined : setQuantity(quantity - 1);
-    }
+    // max cap 50; min cap 1
+    const count = Math.max(
+      Math.min(isAdd ? quantity + 1 : quantity - 1, 50),
+      1
+    );
 
-    updateItemsQuantity(isAdd ? quantity + 1 : quantity - 1);
+    setQuantity(count); // quantity to display in cart
+    updateItemsQuantity(count); // update quantity to cart database
   };
 
   // endpoint

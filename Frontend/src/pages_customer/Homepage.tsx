@@ -114,6 +114,9 @@ const Homepage: React.FC = () => {
             <>
               <Typography variant="h3">GOT ACTIVE ORDER!!!!</Typography>
               <Typography variant="h3">{userCtx?.activeOrderId}</Typography>
+              <Typography variant="h3">
+                {JSON.stringify(userCtx?.orderInfo)}
+              </Typography>
             </>
           )}
           <Grid container mt="1.5rem" alignItems="center" spacing={4}>

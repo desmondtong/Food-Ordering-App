@@ -79,6 +79,8 @@ const CheckOut: React.FC = () => {
 
       createItemsOrders(res.data.order_id);
       getCartItems(true);
+
+      navigate("/");
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -100,7 +102,7 @@ const CheckOut: React.FC = () => {
     );
 
     if (res.ok) {
-      getCartItems();
+      userCtx?.getCartItems();
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -120,9 +122,7 @@ const CheckOut: React.FC = () => {
       userCtx?.accessToken
     );
 
-    if (res.ok) {
-      userCtx?.setActiveOrderId([res.data.order_id]);
-    } else {
+    if (!res.ok) {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
 

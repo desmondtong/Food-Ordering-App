@@ -105,7 +105,6 @@ function App() {
       // userCtx?.refresh();
 
       // if failed to refresh
-      console.log("cart fail");
       alert(JSON.stringify(res.data));
     }
   };
@@ -124,6 +123,9 @@ function App() {
       if (res.data.active_order.length) {
         setHaveActiveOrder(true);
         setActiveOrderId([res.data.active_order[0].uuid]);
+      } else {
+        setHaveActiveOrder(false);
+        setActiveOrderId([]);
       }
     } else {
       alert(JSON.stringify(res.data));
@@ -162,7 +164,9 @@ function App() {
     );
 
     if (res.ok) {
-      setOrderInfo(res.data);
+      if (res.data.length) {
+        setOrderInfo(res.data);
+      }
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
