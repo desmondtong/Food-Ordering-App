@@ -74,14 +74,14 @@ const NavBar: React.FC = () => {
       icon: <MenuIcon />,
     },
     {
-      item: "History",
-      link: "/history",
-      icon: <RestoreIcon />,
-    },
-    {
       item: "Alert",
       link: "/alert",
       icon: <NotificationsNoneIcon />,
+    },
+    {
+      item: "History",
+      link: "/history",
+      icon: <RestoreIcon />,
     },
     {
       item: "Rating & Reviews",
@@ -151,9 +151,7 @@ const NavBar: React.FC = () => {
                 <ListItemButton>
                   <StyledBadge
                     badgeContent={
-                      item.item === "Alert"
-                        ? userCtx.orderInfo?.length
-                        : 0
+                      item.item === "Alert" ? userCtx.orderInfo?.length : 0
                     }
                     color="warning"
                     anchorOrigin={{
