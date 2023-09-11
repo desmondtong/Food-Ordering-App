@@ -30,7 +30,7 @@ export interface UserContextType {
   setCartItemInfo: React.Dispatch<React.SetStateAction<Props>>;
   getCartItems: () => Promise<void>;
 
-  orderInfo: Props[];
+  orderInfo: OrderInfo;
 }
 
 export interface data {
@@ -103,11 +103,13 @@ export interface Props {
 
   // order accordian component
   order_id?: String;
-  orderInfo?: Props;
+  orderInfo?: Props[];
   status?: keyof statuses;
   date?: string;
   time?: string;
 }
+
+export type OrderInfo = Props[][];
 
 export interface statuses {
   SENT: JSX.Element;

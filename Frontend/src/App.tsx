@@ -20,7 +20,7 @@ import Alert from "./pages_vendor/Alert";
 import RatingReview from "./pages_vendor/RatingReview";
 
 import useFetch from "./hooks/useFetch";
-import { Props, data, userInfoType } from "./interfaces";
+import { OrderInfo, Props, data, userInfoType } from "./interfaces";
 
 function App() {
   const fetchData = useFetch();
@@ -44,7 +44,7 @@ function App() {
   const [activeOrderId, setActiveOrderId] = useState<String[]>([]);
 
   const [cartItemInfo, setCartItemInfo] = useState<Props>({});
-  const [orderInfo, setOrderInfo] = useState<Props[]>([]);
+  const [orderInfo, setOrderInfo] = useState<OrderInfo>([]);
 
   // endpoint
   const getUserInfo = async (isVendor = false) => {

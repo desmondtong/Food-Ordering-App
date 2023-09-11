@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import {
   Typography,
   Stack,
@@ -9,13 +9,12 @@ import {
   Button,
 } from "@mui/material";
 
-import UserContext from "../context/user";
-
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import MopedOutlinedIcon from "@mui/icons-material/MopedOutlined";
 import DoneIcon from "@mui/icons-material/Done";
 import { Props, statuses } from "../interfaces";
+import OrderItem from "./OrderItem";
 
 const alertIcons: statuses = {
   SENT: (
@@ -73,16 +72,14 @@ const alertIcons: statuses = {
 };
 
 const OrderAccordian: React.FC<Props> = (props) => {
-  const userCtx = useContext(UserContext);
-
   const [expanded, setExpanded] = useState<string | false>(false);
 
-  const formattedOrderId = props.orderInfo?.order_id
+  const formattedOrderId = props.orderInfo?.[0].order_id
     ?.split("-")[4]
     .toUpperCase();
-  const status = props.orderInfo?.status!;
-  const date = new Date(props.orderInfo?.date!).toDateString().slice(4);
-  const time = props.orderInfo?.time?.slice(0, 5);
+  const status = props.orderInfo?.[0].status!;
+  const date = new Date(props.orderInfo?.[0].date!).toDateString().slice(4);
+  const time = props.orderInfo?.[0].time?.slice(0, 5);
 
   // function
   const handleChange =
@@ -124,7 +121,7 @@ const OrderAccordian: React.FC<Props> = (props) => {
               >
                 {`${date}, ${time}`}
               </Typography>
-              <Typography variant="h6">{`S$ ${props.orderInfo?.total_price}`}</Typography>
+              <Typography variant="h6">{`S$ ${props.orderInfo?.[0].total_price}`}</Typography>
             </Grid>
             <Grid item xs={1} container justifyContent="flex-end">
               <Typography
@@ -140,9 +137,20 @@ const OrderAccordian: React.FC<Props> = (props) => {
 
         <AccordionDetails>
           <Grid container alignItems="center">
+            <Grid item xs={0.5}></Grid>
+            <Grid item xs={11.5}>
+              {props.orderInfo?.map((item, idx) => (
+                <OrderItem
+                  name={item.name}
+                  user_note={item.user_note}
+                  item_price={item.item_price}
+                  quantity_ordered={item.quantity_ordered}
+                  image_url={item.image_url}
+                  key={idx}
+                ></OrderItem>
+              ))}
+            </Grid>
 
-            
-            {/* order details */}
             <Grid item xs={10}>
               <Stack direction="row" spacing={3}>
                 <Button variant="contained">Preparing</Button>
