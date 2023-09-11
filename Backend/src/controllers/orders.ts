@@ -129,12 +129,16 @@ const getItemsOrdersByUserId = async (req: Request, res: Response) => {
   }
 };
 
-const getActiveOrderByUserId = async (req: Request, res: Response) => {
+const getLastOrderByUserId = async (req: Request, res: Response) => {
   try {
     const user_id: String = req.body.user_id;
+    // const getByUserId = await pool.query(
+    //   "SELECT * FROM orders WHERE user_id = $1 AND status != $2",
+    //   [user_id, "COMPLETED"]
+    // );
     const getByUserId = await pool.query(
-      "SELECT * FROM orders WHERE user_id = $1 AND status != $2",
-      [user_id, "COMPLETED"]
+      "SELECT * FROM orders WHERE user_id = $1 ORDER BY date DESC, time DESC LIMIT 1",
+      [user_id]
     );
 
     res.status(201).json({ active_order: getByUserId.rows });
@@ -171,6 +175,6 @@ export {
   getItemsOrdersByOrderId,
   getItemsOrdersByVendorId,
   getItemsOrdersByUserId,
-  getActiveOrderByUserId,
+  getLastOrderByUserId,
   getActiveOrdersByVendorId,
 };

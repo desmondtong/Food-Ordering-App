@@ -109,7 +109,7 @@ function App() {
     }
   };
 
-  const getCustomerActiveOrder = async () => {
+  const getCustomerLastOrder = async () => {
     const res: data = await fetchData(
       "/api/orders/items/active/user_id",
       "POST",
@@ -120,13 +120,15 @@ function App() {
     );
 
     if (res.ok) {
-      if (res.data.active_order.length) {
-        setHaveActiveOrder(true);
-        setActiveOrderId([res.data.active_order[0].uuid]);
-      } else {
-        setHaveActiveOrder(false);
-        setActiveOrderId([]);
-      }
+      // if (res.data.active_order.length) {
+      console.log("here setActiveOrder");
+      setHaveActiveOrder(true);
+      setActiveOrderId([res.data.active_order[0].uuid]);
+      // }
+      // else {
+      //   setHaveActiveOrder(false);
+      //   setActiveOrderId([]);
+      // }
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -203,7 +205,7 @@ function App() {
     role === "CUSTOMER" && getCartItems();
 
     // for customer
-    role === "CUSTOMER" && getCustomerActiveOrder();
+    role === "CUSTOMER" && getCustomerLastOrder();
 
     // for vendor
     role === "VENDOR" && getVendorActiveOrder();

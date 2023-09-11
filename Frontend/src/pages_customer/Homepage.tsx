@@ -11,6 +11,7 @@ import UserContext from "../context/user";
 import { Props, data } from "../interfaces";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import OrderToaster from "../components/OrderToaster";
 
 const Homepage: React.FC = () => {
   const fetchData = useFetch();
@@ -112,9 +113,8 @@ const Homepage: React.FC = () => {
           <TopBar handleSearch={handleSearch}></TopBar>
           {userCtx?.haveActiveOrder && (
             <>
-              <Typography variant="h3">GOT ACTIVE ORDER!!!!</Typography>
-              <Typography variant="h3">{userCtx?.activeOrderId}</Typography>
-              <Typography variant="h3">
+              <Typography variant="body2">{userCtx?.activeOrderId}</Typography>
+              <Typography variant="body2">
                 {JSON.stringify(userCtx?.orderInfo)}
               </Typography>
             </>
@@ -185,6 +185,8 @@ const Homepage: React.FC = () => {
           </Grid>
         </Box>
       </Box>
+
+      <OrderToaster></OrderToaster>
     </>
   );
 };

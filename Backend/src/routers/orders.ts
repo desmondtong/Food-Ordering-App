@@ -9,7 +9,7 @@ import {
   validateUpdateOrder,
   validateCreateItemsOrders,
   validateGetItemById,
-  validateGetItemByOrderId
+  validateGetItemByOrderId,
 } from "../validators/orders";
 import {
   createOrder,
@@ -18,7 +18,7 @@ import {
   getItemsOrdersByOrderId,
   getItemsOrdersByVendorId,
   getItemsOrdersByUserId,
-  getActiveOrderByUserId,
+  getLastOrderByUserId,
   getActiveOrdersByVendorId,
 } from "../controllers/orders";
 
@@ -73,7 +73,7 @@ router.post(
   auth,
   validateGetItemById,
   checkValid,
-  getActiveOrderByUserId
+  getLastOrderByUserId
 );
 router.post(
   "/orders/items/active/vendor_id",
