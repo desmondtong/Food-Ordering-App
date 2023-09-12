@@ -146,6 +146,10 @@ const Registration: React.FC = () => {
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main">
         <CssBaseline />
+        <img
+          src={"../logo+word.png" || "./logo+word.png"}
+          className="logo"
+        ></img>
         <Grid
           item
           xs={false}

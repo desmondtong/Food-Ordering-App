@@ -90,8 +90,12 @@ const Login: React.FC = () => {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main">
+      <Grid container component="main" className="login">
         <CssBaseline />
+        <img
+          src={"../logo+word.png" || "./logo+word.png"}
+          className="logo"
+        ></img>
         <Grid
           item
           xs={false}

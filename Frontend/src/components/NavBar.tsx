@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  Grid,
   Badge,
   BadgeProps,
   styled,
@@ -101,11 +102,15 @@ const NavBar: React.FC = () => {
       }}
       variant="permanent"
       anchor="left"
+      className="nav-bar"
     >
-      <Toolbar>
-        {/* APP ICON */}
-        <Typography fontWeight="600">App Name</Typography>
-      </Toolbar>
+      <Grid component="main">
+        <img
+          src={"../logo+word.png" || "./logo+word.png"}
+          className="logo-nav"
+        ></img>
+
+      </Grid>
 
       {userCtx?.role === "CUSTOMER" && (
         <List sx={{ flexGrow: 1 }}>

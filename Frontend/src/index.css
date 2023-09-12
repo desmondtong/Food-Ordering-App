@@ -96,3 +96,19 @@
   top: 0 !important;
   left: 0 !important;
 }
+
+/* logo positioning */
+.nav-bar {
+  position: relative !important;
+}
+
+.logo {
+  position: absolute !important;
+  width: 10rem;
+  margin: 30px;
+}
+
+.logo-nav {
+  width: 10rem;
+  margin: 30px;
+}
