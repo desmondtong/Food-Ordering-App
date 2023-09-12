@@ -122,27 +122,48 @@ const updateItemById = async (req: Request, res: Response) => {
       category: String;
       availability: String;
     } = req.body;
-    const updatedItem = await pool.query(
-      "UPDATE items SET name = $1, item_price = $2, image_url = $3, description = $4, availability = $6 WHERE uuid = $5 RETURNING *",
-      [
-        name,
-        item_price,
-        image_url,
-        description,
-        req.params.item_id,
-        availability,
-      ]
-    );
 
-    const updatedCategory = await pool.query(
-      "UPDATE item_categories SET category = $1 WHERE item_id = $2 RETURNING *",
-      [category, req.params.item_id]
-    );
+    if ("name" in req.body) {
+      await pool.query(
+        "UPDATE items SET name = $1 WHERE uuid = $2 RETURNING *",
+        [name, req.params.item_id]
+      );
+    }
+    if ("item_price" in req.body) {
+      await pool.query(
+        "UPDATE items SET item_price = $1 WHERE uuid = $2 RETURNING *",
+        [item_price, req.params.item_id]
+      );
+    }
+    if ("image_url" in req.body) {
+      await pool.query(
+        "UPDATE items SET image_url = $1 WHERE uuid = $2 RETURNING *",
+        [image_url, req.params.item_id]
+      );
+    }
+    if ("description" in req.body) {
+      await pool.query(
+        "UPDATE items SET description = $1 WHERE uuid = $2 RETURNING *",
+        [description, req.params.item_id]
+      );
+    }
+
+    if ("availability" in req.body) {
+      await pool.query(
+        "UPDATE items SET availability = $1 WHERE uuid = $2 RETURNING *",
+        [availability, req.params.item_id]
+      );
+    }
+    if ("categories" in req.body) {
+      await pool.query(
+        "UPDATE item_categories SET category = $1 WHERE item_id = $2 RETURNING *",
+        [category, req.params.item_id]
+      );
+    }
 
     res.status(201).json({
+      status: "ok",
       msg: "Item updated",
-      updatedItem: updatedItem.rows,
-      updatedCategory: updatedCategory.rows,
     });
   } catch (error: any) {
     console.log(error.message);
