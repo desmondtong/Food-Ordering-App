@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import NavBar from "../components/NavBar";
 
-import { Grid, Box, Typography, IconButton } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Typography,
+  IconButton,
+  Paper,
+  Button,
+} from "@mui/material";
 import TopBar from "../components/TopBar";
 import Cuisine from "../components/Cuisine";
 import Restaurant from "../components/Restaurant";
@@ -123,11 +130,65 @@ const Homepage: React.FC = () => {
             {/* to hide banner and cuisines card when using search bar */}
             {!isSearching && (
               <>
-                <Grid item xs={8} sx={{ borderStyle: "solid" }}>
-                  BANNER 1
+                <Grid item xs={8}>
+                  <Paper
+                    sx={{
+                      borderRadius: "1rem",
+                      backgroundImage: "url(../mooncake.avif)",
+                      bgcolor: "var(--lightgrey)",
+                      backgroundSize: "cover",
+                      // backgroundRepeat: "no-repeat",
+                      backgroundPosition: "center",
+                      p: "1.5rem",
+                      height: "25rem",
+                    }}
+                    elevation={5}
+                  >
+                    <Typography variant="h2" mb="0.5rem" color="var(--white)">
+                      Happy Mooncake Festival from Burps
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      fontWeight="light"
+                      color="text.secondary"
+                      mb="1.5rem"
+                    >
+                      Best food for you
+                    </Typography>
+                    <Button variant="contained" size="large" color="warning">
+                      Celebrate with us
+                    </Button>
+                  </Paper>
                 </Grid>
-                <Grid item xs={4} sx={{ borderStyle: "solid" }}>
-                  BANNER 2
+
+                <Grid item xs={4}>
+                  <Paper
+                    sx={{
+                      borderRadius: "1rem",
+                      backgroundImage: "url(../tracker-bg.png)",
+                      backgroundSize: "cover",
+                      backgroundPosition: "right",
+                      bgcolor: "var(--lightgrey)",
+                      p: "1.5rem",
+                      height: "25rem",
+                    }}
+                    elevation={5}
+                  >
+                    <Typography variant="h4" mb="0.5rem">
+                      Best food for you
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      fontWeight="light"
+                      color="text.secondary"
+                      mb="1.5rem"
+                    >
+                      Best food for you
+                    </Typography>
+                    <Button variant="contained" size="large" color="warning">
+                      Explore More
+                    </Button>
+                  </Paper>
                 </Grid>
 
                 {/* cuisines cards */}
@@ -137,7 +198,7 @@ const Homepage: React.FC = () => {
                 {categories.map((category, idx) => (
                   <Grid
                     item
-                    xs={1.5}
+                    xs={2}
                     key={idx}
                     onClick={(e) => handleSearch(e, false)}
                   >

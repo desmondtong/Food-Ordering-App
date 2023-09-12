@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import UserContext from "../context/user";
 
 import {
@@ -38,6 +39,7 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
 
 const NavBar: React.FC = () => {
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const navBarCustomer: navBarType[] = [
     {
@@ -106,8 +108,9 @@ const NavBar: React.FC = () => {
         <img
           src={"../logo+word.png" || "./logo+word.png"}
           className="logo-nav"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate("/")}
         ></img>
-
       </Grid>
 
       {userCtx?.role === "CUSTOMER" && (
