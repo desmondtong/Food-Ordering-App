@@ -48,7 +48,12 @@ const RatingReview: React.FC = () => {
 
     if (res.ok) {
       if (res.data.length) {
-        setOrderInfo(res.data);
+        //filter orders only with rating or review
+        const orderInfo = res.data;
+        const filteredOrderInfo = orderInfo.filter(
+          (item: any) => item[0].rating || item[0].review
+        );
+        setOrderInfo(filteredOrderInfo);
       }
     } else {
       //attempt to refresh to get new access token
