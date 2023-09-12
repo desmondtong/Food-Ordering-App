@@ -7,6 +7,7 @@ import UserContext from "../context/user";
 
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
+import { TrackerToaster } from "../interfaces";
 
 const OverLay: React.FC = () => {
   const userCtx = useContext(UserContext);
@@ -14,7 +15,7 @@ const OverLay: React.FC = () => {
 
   const status = userCtx?.orderInfo?.[0]?.[0].status;
 
-  const toasterContent: { [key: string]: { url?: string; text?: string } } = {
+  const toasterContent: TrackerToaster = {
     SENT: {
       url: "../preparing.png" || "./preparing.png",
       text: "Preparing your food!",
@@ -43,10 +44,10 @@ const OverLay: React.FC = () => {
           zIndex: "100",
           overflow: "hidden",
           position: "fixed",
-          top: "93%",
-          height: "7%",
-          left: "77%",
-          width: "22%",
+          top: "91%",
+          height: "9%",
+          left: "70%",
+          width: "27%",
           borderRadius: "1rem 1rem 0 0",
           cursor: "pointer",
         }}

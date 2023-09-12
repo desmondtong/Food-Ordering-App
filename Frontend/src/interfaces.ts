@@ -160,3 +160,15 @@ export interface userInfoType {
   store_name?: String;
   description?: any;
 }
+type variant = "indeterminate" | "determinate" | "buffer" | "query" | undefined;
+
+export interface TrackerToaster {
+  [key: string]: {
+    title?: string;
+    url?: string;
+    text?: string;
+    value?: number[];
+    width?: number[];
+    variant?: variant[];
+  };
+}
