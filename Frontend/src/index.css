@@ -29,6 +29,12 @@
   position: relative !important;
 }
 
+.avail-btn {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
 .edit-btn {
   position: absolute !important;
   bottom: 0 !important;

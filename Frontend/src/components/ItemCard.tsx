@@ -28,6 +28,7 @@ import IconButton from "@mui/material/IconButton";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import FlakyIcon from "@mui/icons-material/Flaky";
 import { Props, data } from "../interfaces";
 
 const ItemCard: React.FC<Props> = (props) => {
@@ -57,19 +58,28 @@ const ItemCard: React.FC<Props> = (props) => {
     setQuantity(1);
   };
 
+  const handleAvailShortCut = () => {
+    handleUpdate(true);
+  };
+
   // endpoint
-  const handleUpdate = async () => {
+  const handleUpdate = async (isShortcut = false) => {
+    const body = isShortcut
+      ? { availability: !props.availability }
+      : {
+          name: nameRef.current?.value,
+          item_price: priceRef.current?.value,
+          image_url: "./sample-image.webp",
+          description: descriptionRef.current?.value,
+          category: category,
+          availability: availability,
+        };
+    console.log(body);
+
     const res: data = await fetchData(
       "/api/items/" + props.uuid,
       "PATCH",
-      {
-        name: nameRef.current?.value,
-        item_price: priceRef.current?.value,
-        image_url: "./sample-image.webp",
-        description: descriptionRef.current?.value,
-        category: category,
-        availability: availability,
-      },
+      body,
       userCtx?.accessToken
     );
 
@@ -183,25 +193,38 @@ const ItemCard: React.FC<Props> = (props) => {
 
         <CardMedia
           component="img"
-          sx={{ width: "8rem", height: "8rem", p: "1rem" }}
+          sx={{ width: "10rem", height: "10rem", p: "1rem" }}
           image={props.image_url}
         />
 
         {userCtx?.role === "VENDOR" ? (
-          <Tooltip title="Edit Item">
-            <IconButton
-              className="edit-btn"
-              size="small"
-              sx={{ m: "0.4rem" }}
-              style={{ backgroundColor: "var(--orange)" }}
-              onClick={handleOpenUpdate}
-            >
-              <BorderColorOutlinedIcon
-                fontSize="small"
-                sx={{ p: "0.1rem", color: "white" }}
-              />
-            </IconButton>
-          </Tooltip>
+          <>
+            <Tooltip title="Update availability">
+              <IconButton
+                className="avail-btn"
+                size="small"
+                sx={{ mb: "0.4rem", mr: "2.5rem" }}
+                style={{ backgroundColor: "var(--red)" }}
+                onClick={handleAvailShortCut}
+              >
+                <FlakyIcon fontSize="small" sx={{ color: "white" }} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Edit Item">
+              <IconButton
+                className="edit-btn"
+                size="small"
+                sx={{ m: "0.4rem" }}
+                style={{ backgroundColor: "var(--orange)" }}
+                onClick={handleOpenUpdate}
+              >
+                <BorderColorOutlinedIcon
+                  fontSize="small"
+                  sx={{ p: "0.1rem", color: "white" }}
+                />
+              </IconButton>
+            </Tooltip>
+          </>
         ) : (
           <Tooltip title={props.availability ? "Add To Cart" : ""}>
             <IconButton
@@ -334,7 +357,11 @@ const ItemCard: React.FC<Props> = (props) => {
         <DialogActions>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Button fullWidth variant="contained" onClick={handleUpdate}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={() => handleUpdate(false)}
+              >
                 Save Changes
               </Button>
             </Grid>

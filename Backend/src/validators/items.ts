@@ -15,21 +15,22 @@ const validateAddItem = [
     .notEmpty()
     .isDecimal(),
   body("image_url", "image url is required").optional().notEmpty().isString(),
-  body("description", "description is required")
-    .optional()
-    .isString(),
+  body("description", "description is required").optional().isString(),
 ];
 
 const validateUpdateItem = [
-  body("name", "name is required").notEmpty().isString(),
+  body("name", "name is required").optional().notEmpty().isString(),
   body("item_price", "item price is required and should be decimal")
+    .optional()
     .notEmpty()
     .isDecimal(),
   body("image_url", "image url is required").optional().notEmpty().isString(),
-  body("description", "description is required")
+  body("description", "description is required").optional().isString(),
+  body("category", "category is required").optional().notEmpty().isString(),
+  body("availability", "availability is required")
     .optional()
-    .isString(),
-  body("category", "category is required").notEmpty().isString(),
+    .notEmpty()
+    .isBoolean(),
 ];
 
 export {

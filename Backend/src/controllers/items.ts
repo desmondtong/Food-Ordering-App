@@ -154,7 +154,7 @@ const updateItemById = async (req: Request, res: Response) => {
         [availability, req.params.item_id]
       );
     }
-    if ("categories" in req.body) {
+    if ("category" in req.body) {
       await pool.query(
         "UPDATE item_categories SET category = $1 WHERE item_id = $2 RETURNING *",
         [category, req.params.item_id]
