@@ -154,7 +154,7 @@ const CheckOut: React.FC = () => {
               </IconButton>
             </Grid>
 
-            <Grid item xs={9}>
+            <Grid item xs={8}>
               <Paper
                 sx={{
                   p: "1rem",
@@ -198,7 +198,7 @@ const CheckOut: React.FC = () => {
               </Button>
             </Grid>
 
-            <Grid item xs={3}>
+            <Grid item xs={4}>
               <OrderSummary
                 total_price={cartItemInfo.total_price}
                 orders={cartItemInfo.orders}

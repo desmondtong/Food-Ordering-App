@@ -97,7 +97,7 @@ const getItemsOrdersByOrderId = async (req: Request, res: Response) => {
     let orderInfoArr = [];
     for (const order_id of order_ids) {
       const getByOrderId = await pool.query(
-        "SELECT user_id, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, image_url FROM orders JOIN items_orders ON orders.uuid = order_id JOIN items ON item_id = items.uuid WHERE orders.uuid = $1",
+        "SELECT orders.user_id, user_details.first_name AS customer_name, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, image_url FROM orders JOIN items_orders ON orders.uuid = order_id JOIN items ON item_id = items.uuid JOIN user_details ON orders.user_id = user_details.user_id WHERE orders.uuid = $1",
         [order_id]
       );
 

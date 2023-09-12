@@ -61,7 +61,7 @@ const OrderItem: React.FC<Props> = (props) => {
                 <Typography variant="body2" fontWeight="light">
                   {`S$ ${props.item_price}`}{" "}
                   <span style={{ fontWeight: "bold" }}>
-                    x ${props.quantity_ordered}
+                    x {props.quantity_ordered}
                   </span>
                 </Typography>
               </Stack>

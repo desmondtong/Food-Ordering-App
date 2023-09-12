@@ -108,6 +108,9 @@ export interface Props {
   status?: keyof statuses;
   date?: string;
   time?: string;
+  isReview?: boolean;
+
+  customer_name?: string;
 
   // tracker component
   rating?: number;
