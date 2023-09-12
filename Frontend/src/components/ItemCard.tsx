@@ -74,7 +74,6 @@ const ItemCard: React.FC<Props> = (props) => {
           category: category,
           availability: availability,
         };
-    console.log(body);
 
     const res: data = await fetchData(
       "/api/items/" + props.uuid,
@@ -228,9 +227,9 @@ const ItemCard: React.FC<Props> = (props) => {
         ) : (
           <Tooltip title={props.availability ? "Add To Cart" : ""}>
             <IconButton
-              className="edit-btn"
+              className="add-btn"
               size="small"
-              sx={{ m: "0.4rem", boxShadow: 3 }}
+              sx={{ m: "0.6rem", boxShadow: 3 }}
               style={{
                 backgroundColor: props.availability
                   ? "var(--white)"
