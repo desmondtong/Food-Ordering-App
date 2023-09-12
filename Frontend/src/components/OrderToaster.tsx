@@ -97,11 +97,16 @@ const OverLay: React.FC = () => {
 };
 
 const OrderToaster = () => {
+  const userCtx = useContext(UserContext);
   return (
     <>
-      {ReactDOM.createPortal(
-        <OverLay />,
-        document.querySelector("#modal-root")!
+      {userCtx?.haveActiveOrder && (
+        <>
+          {ReactDOM.createPortal(
+            <OverLay />,
+            document.querySelector("#modal-root")!
+          )}
+        </>
       )}
     </>
   );
