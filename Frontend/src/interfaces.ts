@@ -32,6 +32,8 @@ export interface UserContextType {
 
   orderInfo: OrderInfo;
   getVendorActiveOrder: () => Promise<void>;
+
+  getCustomerLastOrder: () => Promise<void>;
 }
 
 export interface data {

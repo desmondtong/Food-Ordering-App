@@ -20,7 +20,7 @@ const getCartById = async (req: Request, res: Response) => {
   try {
     // to get list of orders
     const cart = await pool.query(
-      "SELECT user_id, cart_id, vendor_id, item_id, carts_items.id, name, carts_items.item_price, quantity_ordered, user_note, image_url FROM carts JOIN carts_items ON carts.uuid = cart_id JOIN items ON items.uuid = item_id WHERE user_id = $1 AND carts_items.is_deleted = FALSE",
+      "SELECT user_id, cart_id, items.vendor_id, store_name,item_id, carts_items.id, name, carts_items.item_price, quantity_ordered, user_note, image_url FROM carts JOIN carts_items ON carts.uuid = cart_id JOIN items ON items.uuid = item_id JOIN vendor_details ON vendor_details.vendor_id = items.vendor_id WHERE user_id = $1 AND carts_items.is_deleted = FALSE",
       [req.params.user_id]
     );
 
@@ -43,6 +43,7 @@ const getCartById = async (req: Request, res: Response) => {
       orders: cart.rows,
       total_price: updateCart.rows[0].total_price || 0,
       vendor_id: cart.rows[0]?.vendor_id,
+      store_name: cart.rows[0]?.store_name,
     });
   } catch (error: any) {
     console.log(error.message);

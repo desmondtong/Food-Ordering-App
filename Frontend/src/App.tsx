@@ -47,18 +47,19 @@ function App() {
   const [orderInfo, setOrderInfo] = useState<OrderInfo>([]);
 
   // endpoint
-  const getUserInfo = async (isVendor = false) => {
-    const id = isVendor ? vendorId : userId;
+  const getUserInfo = async () => {
+    // const id = isVendor ? vendorId : userId;
 
     const res: data = await fetchData(
-      "/auth/accounts/" + id,
+      // "/auth/accounts/" + id,
+      "/auth/accounts/" + userId,
       undefined,
       undefined,
       accessToken
     );
 
     if (res.ok) {
-      if (!isVendor) {
+      // if (!isVendor) {
         // Store userInfo to localStorage and set as initial state
         localStorage.setItem("userInfo", JSON.stringify(res.data));
 
@@ -67,9 +68,9 @@ function App() {
         if (initUserInfo) {
           setUserInfo(initUserInfo);
         }
-      } else {
-        setVendorInfo(res.data);
-      }
+      // } else {
+      //   setVendorInfo(res.data);
+      // }
     } else {
       // alert(JSON.stringify(res.data));
     }
@@ -120,9 +121,11 @@ function App() {
     );
 
     if (res.ok) {
-      if (res.data.active_order.length) {
+      if (res.data[0].length) {
+        setOrderInfo(res.data);
+
         setHaveActiveOrder(true);
-        setActiveOrderId([res.data.active_order[0].uuid]);
+        setActiveOrderId([res.data[0][0].order_id]);
       }
     } else {
       alert(JSON.stringify(res.data));
@@ -140,12 +143,16 @@ function App() {
     );
 
     if (res.ok) {
-      if (res.data.order_id.length) {
+      // if (res.data.order_id.length) {
+      //   setHaveActiveOrder(true);
+      //   setActiveOrderId(res.data.order_id);
+      // } else {
+      //   setHaveActiveOrder(false);
+      //   setActiveOrderId([]);
+      // }
+      if (res.data[0].length) {
+        setOrderInfo(res.data);
         setHaveActiveOrder(true);
-        setActiveOrderId(res.data.order_id);
-      } else {
-        setHaveActiveOrder(false);
-        setActiveOrderId([]);
       }
     } else {
       alert(JSON.stringify(res.data));
@@ -207,14 +214,14 @@ function App() {
   }, [userId]);
 
   // get all active order info if there is an activeOrder
-  useEffect(() => {
-    userId && getOrderByOrderId();
-  }, [activeOrderId]);
+  // useEffect(() => {
+  //   userId && getOrderByOrderId();
+  // }, [activeOrderId]);
 
   // set vendorId state whenever user visit Cart page; vendorId is used in Checkout page
-  useEffect(() => {
-    if (vendorId) getUserInfo(true);
-  }, [vendorId]);
+  // useEffect(() => {
+  //   if (vendorId) getUserInfo(true);
+  // }, [vendorId]);
 
   return (
     <div>
@@ -246,6 +253,7 @@ function App() {
           getCartItems,
           orderInfo,
           getVendorActiveOrder,
+          getCustomerLastOrder,
         }}
       >
         <Routes>

@@ -14,6 +14,7 @@ const OverLay: React.FC = () => {
   const navigate = useNavigate();
 
   const status = userCtx?.orderInfo?.[0]?.[0].status;
+  const activeOrderId = userCtx?.orderInfo?.[0]?.[0].order_id;
 
   const toasterContent: TrackerToaster = {
     SENT: {
@@ -54,7 +55,7 @@ const OverLay: React.FC = () => {
         direction="row"
         justifyContent="center"
         alignItems="center"
-        onClick={() => navigate(`/tracker/${userCtx?.activeOrderId}`)}
+        onClick={() => navigate(`/tracker/${activeOrderId}`)}
       >
         {/* conditional rendering based on order statuses */}
         {status === "COMPLETED" || status === "CANCELLED" ? (

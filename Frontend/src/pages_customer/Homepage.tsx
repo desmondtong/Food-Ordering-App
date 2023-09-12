@@ -120,7 +120,7 @@ const Homepage: React.FC = () => {
           <TopBar handleSearch={handleSearch}></TopBar>
           {userCtx?.haveActiveOrder && (
             <>
-              <Typography variant="body2">{userCtx?.activeOrderId}</Typography>
+              {/* <Typography variant="body2">{userCtx?.activeOrderId}</Typography> */}
               <Typography variant="body2">
                 {JSON.stringify(userCtx?.orderInfo)}
               </Typography>

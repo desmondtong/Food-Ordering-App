@@ -31,7 +31,7 @@ const Dashboard: React.FC = () => {
             <EngineeringIcon
               sx={{ color: "var(--orange)", fontSize: "10rem" }}
             />
-            <Typography>{JSON.stringify(userCtx?.activeOrderId)}</Typography>
+            {/* <Typography>{JSON.stringify(userCtx?.activeOrderId)}</Typography> */}
           </Stack>
         </Box>
       </Box>

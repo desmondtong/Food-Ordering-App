@@ -106,7 +106,7 @@ const NavBar: React.FC = () => {
     >
       <Grid component="main">
         <img
-          src={"../logo+word.png" || "./logo+word.png"}
+          src={"../../logo+word.png" || "./logo+word.png"}
           className="logo-nav"
           style={{ cursor: "pointer" }}
           onClick={() => navigate("/")}

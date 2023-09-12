@@ -67,7 +67,7 @@ const CheckOut: React.FC = () => {
       "/api/orders/" + userCtx?.userId,
       "PUT",
       {
-        vendor_id: userCtx?.vendorId,
+        vendor_id: userCtx?.cartItemInfo.vendor_id,
         total_price: cartItemInfo.total_price,
       },
       userCtx?.accessToken
@@ -75,9 +75,11 @@ const CheckOut: React.FC = () => {
 
     if (res.ok) {
       userCtx?.setHaveActiveOrder(true);
-      userCtx?.setActiveOrderId([res.data.order_id]);
+      userCtx?.getCustomerLastOrder();
 
       createItemsOrders(res.data.order_id);
+
+      //to clear cart
       getCartItems(true);
 
       navigate("/");

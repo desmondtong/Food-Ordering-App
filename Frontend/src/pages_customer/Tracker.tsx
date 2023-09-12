@@ -93,7 +93,7 @@ const Tracker: React.FC = () => {
 
     if (res.ok) {
       userCtx?.setHaveActiveOrder(false);
-      userCtx?.setActiveOrderId([]);
+      // userCtx?.setActiveOrderId([]);
 
       // close modal and go back to previous page
       setOpenReview(false);

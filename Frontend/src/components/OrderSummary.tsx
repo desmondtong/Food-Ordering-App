@@ -30,7 +30,7 @@ const OrderSummary: React.FC<Props> = (props) => {
             </Typography>
             {isCheckOut && (
               <Typography fontWeight="light" gutterBottom color="var(--orange)">
-                {userCtx?.vendorInfo.store_name}
+                {userCtx?.cartItemInfo.store_name}
               </Typography>
             )}
           </Grid>
