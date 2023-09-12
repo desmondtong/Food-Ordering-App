@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
+import { useParams } from "react-router-dom";
 import {
   Divider,
   Stack,
@@ -8,14 +9,32 @@ import {
   CssBaseline,
   IconButton,
   LinearProgress,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  Button,
+  DialogActions,
+  Rating,
 } from "@mui/material";
 
+import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import { Props, TrackerToaster, data } from "../interfaces";
+
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { TrackerToaster } from "../interfaces";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Tracker: React.FC = () => {
   const userCtx = useContext(UserContext);
+  const fetchData = useFetch();
+  const params = useParams();
+
+  const [openReview, setOpenReview] = useState<boolean>(false); // model
+  const [ratingValue, setRatingValue] = useState<number | null>();
+
+  const reviewRef = useRef<HTMLInputElement>();
 
   const orderInfo = userCtx?.orderInfo?.[0];
   const status = userCtx?.orderInfo?.[0]?.[0].status;
@@ -57,6 +76,42 @@ const Tracker: React.FC = () => {
       variant: ["determinate", "determinate", "determinate"],
     },
   };
+
+  // endpoint
+  const updateOrderRatingReviews = async () => {
+    const body: Props = { is_active: false };
+    if (ratingValue) body.rating = ratingValue;
+    if (reviewRef.current?.value) body.review = reviewRef.current?.value;
+    console.log(body);
+
+    const res: data = await fetchData(
+      "/api/orders/" + params.item,
+      "PATCH",
+      body,
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      userCtx?.setHaveActiveOrder(false);
+      userCtx?.setActiveOrderId([]);
+
+      // close modal and go back to previous page
+      setOpenReview(false);
+      history.back();
+    } else {
+      //attempt to refresh to get new access token
+      // userCtx?.refresh();
+
+      // if failed to refresh
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  useEffect(() => {
+    if (status === "COMPLETED" || status === "CANCELLED") {
+      setOpenReview(true);
+    }
+  }, []);
 
   return (
     <>
@@ -229,6 +284,73 @@ const Tracker: React.FC = () => {
           </Grid>
         </Paper>
       </Stack>
+
+      {/* add item modal */}
+      <Dialog open={openReview} fullWidth maxWidth="sm">
+        <DialogTitle variant="h6" fontWeight="bold" textAlign="center">
+          Rate our service
+        </DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={updateOrderRatingReviews}
+          sx={{
+            position: "absolute",
+            right: 8,
+            top: 8,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+        <Stack direction="row" justifyContent="center">
+          <Rating
+            name="rating"
+            defaultValue={0}
+            precision={0.5}
+            size="large"
+            sx={{ fontSize: "3rem" }}
+            onChange={(_, newValue) => {
+              setRatingValue(newValue);
+            }}
+          />
+        </Stack>
+        <DialogContent>
+          <DialogContentText
+            my="1rem"
+            variant="h6"
+            fontWeight="bold"
+            textAlign="center"
+          >
+            Drop us a review!
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="normal"
+            id="review"
+            label="Review"
+            placeholder="Tell us about your meal and service.."
+            multiline
+            rows={4}
+            type="text"
+            fullWidth
+            inputRef={reviewRef}
+          />
+        </DialogContent>
+
+        <DialogActions sx={{ m: "1rem" }}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={updateOrderRatingReviews}
+              >
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

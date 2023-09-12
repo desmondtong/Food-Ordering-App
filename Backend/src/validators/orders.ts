@@ -14,9 +14,14 @@ const validateCreateOrder = [
 ];
 
 const validateUpdateOrder = [
-  body("status", "status is required").notEmpty().isString().isUppercase(),
+  body("status", "status is required")
+    .optional()
+    .notEmpty()
+    .isString()
+    .isUppercase(),
   body("rating", "rating is required").optional().notEmpty().isFloat(),
   body("review", "review is required").optional().isString(),
+  body("isActive", "isActive status is required").optional().isBoolean(),
 ];
 
 const validateCreateItemsOrders = [

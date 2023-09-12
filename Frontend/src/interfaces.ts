@@ -108,6 +108,11 @@ export interface Props {
   status?: keyof statuses;
   date?: string;
   time?: string;
+
+  // tracker component
+  rating?: number;
+  review?: string;
+  is_active?: boolean;
 }
 
 export type OrderInfo = Props[][];

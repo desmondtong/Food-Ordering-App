@@ -33,7 +33,7 @@ const Cart: React.FC = () => {
 
             {userCtx?.cartItemInfo.orders?.length != 0 ? (
               <>
-                <Grid item xs={9}>
+                <Grid item xs={8}>
                   <Stack spacing={3}>
                     {userCtx?.cartItemInfo.orders?.map((item, idx) => (
                       <CartItem
@@ -52,7 +52,7 @@ const Cart: React.FC = () => {
                   </Stack>
                 </Grid>
 
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <OrderSummary
                     total_price={userCtx?.cartItemInfo.total_price}
                     orders={userCtx?.cartItemInfo.orders}

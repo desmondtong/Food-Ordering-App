@@ -28,14 +28,36 @@ const updateOrder = async (req: Request, res: Response) => {
       status,
       rating,
       review,
-    }: { status: String; rating: Number; review: String } = req.body;
+      is_active,
+    }: { status: String; rating: Number; review: String; is_active: Boolean } =
+      req.body;
 
-    const order = await pool.query(
-      "UPDATE orders SET status = $1, rating =$2, review = $3 WHERE uuid = $4 RETURNING *",
-      [status, rating, review, req.params.order_id]
-    );
+    if ("status" in req.body) {
+      await pool.query("UPDATE orders SET status = $1 WHERE uuid = $2", [
+        status,
+        req.params.order_id,
+      ]);
+    }
+    if ("rating" in req.body) {
+      await pool.query("UPDATE orders SET rating =$1 WHERE uuid = $2", [
+        rating,
+        req.params.order_id,
+      ]);
+    }
+    if ("review" in req.body) {
+      await pool.query("UPDATE orders SET review = $1 WHERE uuid = $2", [
+        review,
+        req.params.order_id,
+      ]);
+    }
+    if ("is_active" in req.body) {
+      await pool.query("UPDATE orders SET is_active = $1 WHERE uuid = $2", [
+        is_active,
+        req.params.order_id,
+      ]);
+    }
 
-    res.status(201).json({ msg: "Order updated", updatedOrder: order.rows });
+    res.status(201).json({ status: "ok", msg: "Order updated" });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Update order failed" });
@@ -137,14 +159,14 @@ const getLastOrderByUserId = async (req: Request, res: Response) => {
     //   [user_id, "COMPLETED"]
     // );
     const getByUserId = await pool.query(
-      "SELECT * FROM orders WHERE user_id = $1 ORDER BY date DESC, time DESC LIMIT 1",
-      [user_id]
+      "SELECT * FROM orders WHERE user_id = $1 AND is_active = $2",
+      [user_id, true]
     );
 
     res.status(201).json({ active_order: getByUserId.rows });
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: "Get active order failed" });
+    res.json({ status: "error", msg: "Get lastest active order failed" });
   }
 };
 
