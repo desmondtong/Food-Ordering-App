@@ -56,7 +56,7 @@ router.post(
 );
 router.post(
   "/orders/items/vendor_id",
-  authVendor,
+  auth,
   validateGetItemById,
   checkValid,
   getItemsOrdersByVendorId

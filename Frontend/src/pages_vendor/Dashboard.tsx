@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import NavBar from "../components/NavBar";
 
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Stack } from "@mui/material";
 import TopBar from "../components/TopBar";
 import UserContext from "../context/user";
+import EngineeringIcon from "@mui/icons-material/Engineering";
 
 const Dashboard: React.FC = () => {
   const userCtx = useContext(UserContext);
@@ -18,8 +19,20 @@ const Dashboard: React.FC = () => {
         >
           <TopBar></TopBar>
           <br />
-          <Typography>Dashboard</Typography>
-          {JSON.stringify(userCtx?.activeOrderId)}
+          <Stack
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            height="70vh"
+          >
+            <Typography variant="h4" color="text.secondary">
+              {"UNDER MAINTENANCE :("}
+            </Typography>
+            <EngineeringIcon
+              sx={{ color: "var(--orange)", fontSize: "10rem" }}
+            />
+            <Typography>{JSON.stringify(userCtx?.activeOrderId)}</Typography>
+          </Stack>
         </Box>
       </Box>
     </>

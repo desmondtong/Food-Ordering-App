@@ -7,7 +7,6 @@ import {
   AccordionDetails,
   Grid,
   Button,
-  Rating,
 } from "@mui/material";
 
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -20,6 +19,7 @@ import UserContext from "../context/user";
 import MopedOutlinedIcon from "@mui/icons-material/MopedOutlined";
 import { Props, data, statuses } from "../interfaces";
 import OrderItem from "./OrderItem";
+import ReviewItem from "./ReviewItem";
 
 const alertIcons: statuses = {
   SENT: (
@@ -258,37 +258,11 @@ const OrderAccordian: React.FC<Props> = (props) => {
             )}
 
             {props.isReview && (
-              <>
-                <Grid item flexGrow="1">
-                  <Typography variant="body1" fontWeight="light" gutterBottom>
-                    {props.orderInfo?.[0].customer_name}
-                  </Typography>
-                </Grid>
-                <Grid item xs={0.5} pr="1rem">
-                  <Typography variant="body1" fontWeight="light">
-                    {props.orderInfo?.[0].rating}
-                  </Typography>
-                </Grid>
-                <Grid item xs={1} container justifyContent="flex-end">
-                  <Rating
-                    name="rating"
-                    value={Number(props.orderInfo?.[0].rating)}
-                    precision={0.5}
-                    readOnly
-                    size="small"
-                  />
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Typography
-                    variant="body2"
-                    fontWeight="light"
-                    color="text.secondary"
-                  >
-                    {props.orderInfo?.[0].review}
-                  </Typography>
-                </Grid>
-              </>
+              <ReviewItem
+                customer_name={props.orderInfo?.[0].customer_name}
+                rating={props.orderInfo?.[0].rating}
+                review={props.orderInfo?.[0].review}
+              ></ReviewItem>
             )}
           </Grid>
         </AccordionDetails>

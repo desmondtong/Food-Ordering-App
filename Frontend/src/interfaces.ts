@@ -116,6 +116,10 @@ export interface Props {
   rating?: number;
   review?: string;
   is_active?: boolean;
+
+  // review component
+  reviewInfo?: OrderInfo;
+  vendorInfo?: Props;
 }
 
 export type OrderInfo = Props[][];
