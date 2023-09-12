@@ -3,13 +3,11 @@ import UserContext from "../context/user";
 
 import {
   Drawer,
-  Toolbar,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Typography,
   Grid,
   Badge,
   BadgeProps,
