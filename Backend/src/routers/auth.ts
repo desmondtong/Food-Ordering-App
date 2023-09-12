@@ -9,7 +9,7 @@ import {
   validateUpdateProfile,
   validateUpdateOperatings,
 } from "../validators/auth";
-import { auth } from "../middleware/auth";
+import { auth, authVendor } from "../middleware/auth";
 import { validation as checkValid } from "../middleware/checkValid";
 import {
   register,
@@ -54,7 +54,7 @@ router.delete(
 );
 router.patch(
   "/update/vendor/:id",
-  auth,
+  authVendor,
   validateIdInParam,
   validateUpdateOperatings,
   checkValid,

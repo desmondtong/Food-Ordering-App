@@ -5,7 +5,7 @@ export {};
 declare global {
   namespace Express {
     interface Request {
-      decoded: String | JwtPayload;
+      decoded: JwtPayload | string;
     }
   }
 }

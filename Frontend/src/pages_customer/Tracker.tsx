@@ -62,8 +62,12 @@ const Tracker: React.FC = () => {
           sx={{ bgcolor: "var(--white)", m: "2rem" }}
           onClick={() => history.back()}
           className="back-btn"
+          size="large"
         >
-          <ArrowBackIcon sx={{ color: "var(--orange)" }}></ArrowBackIcon>
+          <ArrowBackIcon
+            sx={{ color: "var(--orange)" }}
+            fontSize="large"
+          ></ArrowBackIcon>
         </IconButton>
 
         <Paper

@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { auth } from "../middleware/auth";
+import { auth, authVendor } from "../middleware/auth";
 import { validation as checkValid } from "../middleware/checkValid";
 import {
   validateIdInParam,
@@ -56,7 +56,7 @@ router.post(
 );
 router.post(
   "/orders/items/vendor_id",
-  auth,
+  authVendor,
   validateGetItemById,
   checkValid,
   getItemsOrdersByVendorId
@@ -77,7 +77,7 @@ router.post(
 );
 router.post(
   "/orders/items/active/vendor_id",
-  auth,
+  authVendor,
   validateGetItemById,
   checkValid,
   getActiveOrdersByVendorId

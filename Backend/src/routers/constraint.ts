@@ -6,6 +6,7 @@ import {
   getCategories,
   getStatuses,
 } from "../controllers/constraint";
+import { authVendor } from "../middleware/auth";
 
 router.get("/openingdays", getOpeningDays);
 router.get("/categories", getCategories);

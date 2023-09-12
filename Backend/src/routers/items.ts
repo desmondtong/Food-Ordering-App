@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { auth } from "../middleware/auth";
+import { auth, authVendor } from "../middleware/auth";
 import { validation as checkValid } from "../middleware/checkValid";
 import {
   validateIdInParam,
@@ -18,7 +18,6 @@ import {
   updateItemById,
   deleteItemById,
 } from "../controllers/items";
-import { validate } from "uuid";
 
 router.get(
   "/items/categories/:vendor_id",
@@ -29,7 +28,7 @@ router.get(
 );
 router.put(
   "/items/categories/:item_id",
-  auth,
+  authVendor,
   validateIdInParam,
   validateAddCategory,
   checkValid,
@@ -43,8 +42,8 @@ router.get(
   checkValid,
   getAllItemByVendor
 );
-router.put("/items/:vendor_id", auth, validateAddItem, checkValid, addItem);
-router.post(
+router.put("/items/:vendor_id", authVendor, validateAddItem, checkValid, addItem);
+router.post( // this endpoint not used
   "/items/:item_id",
   auth,
   validateIdInParam,
@@ -53,7 +52,7 @@ router.post(
 );
 router.patch(
   "/items/:item_id",
-  auth,
+  authVendor,
   validateIdInParam,
   validateUpdateItem,
   checkValid,
@@ -61,7 +60,7 @@ router.patch(
 );
 router.delete(
   "/items/:item_id",
-  auth,
+  authVendor,
   validateIdInParam,
   checkValid,
   deleteItemById
