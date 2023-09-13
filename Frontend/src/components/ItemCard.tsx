@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogContent,
   DialogContentText,
+  DialogTitle,
   TextField,
   DialogActions,
   Grid,
@@ -23,12 +24,14 @@ import {
 
 import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import { VisuallyHiddenInput } from "../customStyles";
 
 import IconButton from "@mui/material/IconButton";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import FlakyIcon from "@mui/icons-material/Flaky";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Props, data } from "../interfaces";
 
 const ItemCard: React.FC<Props> = (props) => {
@@ -69,7 +72,7 @@ const ItemCard: React.FC<Props> = (props) => {
       : {
           name: nameRef.current?.value,
           item_price: priceRef.current?.value,
-          image_url: "./sample-image.webp",
+          image_url: userCtx?.imageUrl || props.image_url,
           description: descriptionRef.current?.value,
           category: category,
           availability: availability,
@@ -84,6 +87,7 @@ const ItemCard: React.FC<Props> = (props) => {
 
     if (res.ok) {
       setOpenUpdate(false);
+      userCtx?.setImageUrl("");
 
       props.setUpdate?.(!props.update);
     } else {
@@ -104,6 +108,7 @@ const ItemCard: React.FC<Props> = (props) => {
 
     if (res.ok) {
       setOpenUpdate(false);
+      userCtx?.setImageUrl("");
 
       props.setUpdate?.(!props.update);
     } else {
@@ -265,19 +270,40 @@ const ItemCard: React.FC<Props> = (props) => {
         onClose={() => setOpenUpdate(false)}
         scroll="body"
       >
-        <CardMedia
-          component="img"
-          sx={{
-            aspectRatio: 1.5,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-          image={`./${props.image_url}`}
-          id={props.category}
-        />
+        <DialogTitle sx={{ p: 0 }} className="pic-display">
+          <CardMedia
+            component="img"
+            sx={{ height: 600, width: 600 }}
+            image={userCtx?.imageUrl || props.image_url}
+            id={props.category}
+          />
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+            href="#file-upload"
+            size="small"
+            color="warning"
+            className="upload-btn"
+            sx={{ m: "1rem" }}
+          >
+            Replace Image
+            <VisuallyHiddenInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => userCtx?.displayImage(e)}
+            />
+          </Button>
+        </DialogTitle>
         <DialogContent>
           <Divider sx={{ borderStyle: "solid" }} />
-          <DialogContentText my="1rem">Item Details</DialogContentText>
+          <DialogContentText
+            my="1rem"
+            variant="h5"
+            color="var(--darkgrey-text)"
+          >
+            Item Details
+          </DialogContentText>
           <TextField
             autoFocus
             required
@@ -367,7 +393,10 @@ const ItemCard: React.FC<Props> = (props) => {
               <Button
                 fullWidth
                 variant="outlined"
-                onClick={() => setOpenUpdate(false)}
+                onClick={() => {
+                  setOpenUpdate(false);
+                  userCtx?.setImageUrl("");
+                }}
               >
                 Cancel
               </Button>
@@ -392,11 +421,11 @@ const ItemCard: React.FC<Props> = (props) => {
         <CardMedia
           component="img"
           sx={{
-            aspectRatio: 1.5,
+            aspectRatio: 1,
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
-          image={`./${props.image_url}`}
+          image={props.image_url}
           id={props.category}
         />
         <DialogContent>

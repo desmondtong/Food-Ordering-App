@@ -39,6 +39,10 @@ export interface UserContextType {
   setVendorClaims: React.Dispatch<React.SetStateAction<Props>>;
   customerClaims: Props;
   setCustomerClaims: React.Dispatch<React.SetStateAction<Props>>;
+
+  imageUrl: string;
+  setImageUrl: React.Dispatch<React.SetStateAction<string>>;
+  displayImage: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
 }
 
 export interface data {

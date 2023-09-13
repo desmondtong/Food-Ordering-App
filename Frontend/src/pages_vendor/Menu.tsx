@@ -18,6 +18,7 @@ import {
   InputAdornment,
   IconButton,
   Tooltip,
+  CardMedia,
 } from "@mui/material";
 import TopBar from "../components/TopBar";
 
@@ -25,9 +26,12 @@ import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import { Props, data } from "../interfaces";
 import ItemCard from "../components/ItemCard";
+import { VisuallyHiddenInput } from "../customStyles";
 
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
 
 const Menu: React.FC = () => {
   const fetchData = useFetch();
@@ -109,7 +113,7 @@ const Menu: React.FC = () => {
       {
         name: nameRef.current?.value,
         item_price: priceRef.current?.value,
-        image_url: "./sample-image.webp",
+        image_url: userCtx?.imageUrl || "./sample-image.webp",
         description: descriptionRef.current?.value,
       },
       userCtx?.accessToken
@@ -120,6 +124,7 @@ const Menu: React.FC = () => {
       setItemId(res.data.item_id);
 
       setOpenCat(true);
+      userCtx?.setImageUrl("");
     } else {
       //attempt to refresh to get new access token
       // userCtx?.refresh();
@@ -226,11 +231,39 @@ const Menu: React.FC = () => {
       </Box>
 
       {/* add item modal */}
-      <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
-        <DialogTitle>UPLOAD PICTURE</DialogTitle>
+      <Dialog open={openAdd} onClose={() => setOpenAdd(false)} scroll="body">
+        <DialogTitle sx={{ p: 0 }} className="pic-display">
+          <CardMedia
+            sx={{ height: 600, width: 600 }}
+            component="img"
+            image={userCtx?.imageUrl}
+          ></CardMedia>
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+            href="#file-upload"
+            size="small"
+            color="warning"
+            className="upload-btn"
+            sx={{ m: "1rem" }}
+          >
+            Add Image
+            <VisuallyHiddenInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => userCtx?.displayImage(e)}
+            />
+          </Button>
+        </DialogTitle>
         <DialogContent>
-          <Divider sx={{ borderStyle: "solid" }} />
-          <DialogContentText my="1rem">Item Details</DialogContentText>
+          <DialogContentText
+            my="1rem"
+            variant="h5"
+            color="var(--darkgrey-text)"
+          >
+            Item Details
+          </DialogContentText>
           <TextField
             autoFocus
             required
@@ -280,7 +313,10 @@ const Menu: React.FC = () => {
               <Button
                 fullWidth
                 variant="outlined"
-                onClick={() => setOpenAdd(false)}
+                onClick={() => {
+                  setOpenAdd(false);
+                  userCtx?.setImageUrl("");
+                }}
               >
                 Cancel
               </Button>

@@ -112,3 +112,14 @@
   width: 10rem;
   margin: 30px;
 }
+
+/* upload button */
+.pic-display {
+  position: relative !important;
+}
+
+.upload-btn {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}

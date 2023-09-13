@@ -214,7 +214,7 @@ const RestaurantDetails: React.FC = () => {
                 sx={{ fontSize: "1rem", mr: "0.3rem", color: "var(--orange)" }}
               ></StarIcon>
               <Typography variant="body2" component="div" fontWeight="light">
-                5.0
+                {vendorInfo.rating}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -252,7 +252,7 @@ const RestaurantDetails: React.FC = () => {
                           availability={item.availability}
                           category={item.category}
                           vendor_id={params.item}
-                          image_url={"." + item.image_url}
+                          image_url={item.image_url}
                         ></ItemCard>
                       </Grid>
                     ))}

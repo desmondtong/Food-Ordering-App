@@ -20,10 +20,12 @@ import Alert from "./pages_vendor/Alert";
 import RatingReview from "./pages_vendor/RatingReview";
 
 import useFetch from "./hooks/useFetch";
+import useFetchImg from "./hooks/useFetchImg";
 import { OrderInfo, Props, data, userInfoType } from "./interfaces";
 
 function App() {
   const fetchData = useFetch();
+  const fetchDataImg = useFetchImg();
   const navigate = useNavigate();
 
   // states for login
@@ -57,6 +59,8 @@ function App() {
 
   const [cartItemInfo, setCartItemInfo] = useState<Props>({});
   const [orderInfo, setOrderInfo] = useState<OrderInfo>([]);
+
+  const [imageUrl, setImageUrl] = useState<string>("");
 
   // endpoint
   // const getUserInfo = async () => {
@@ -178,6 +182,26 @@ function App() {
     }
   };
 
+  const displayImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.files!;
+
+    const formData = new FormData();
+    formData.append("image", input[0]);
+
+    const res: data = await fetchDataImg(
+      "/api/image",
+      "POST",
+      formData,
+      accessToken
+    );
+
+    if (res.ok) {
+      setImageUrl(res.data.imageUrl);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   // const getOrderByOrderId = async () => {
   //   const res: data = await fetchData(
   //     "/api/orders/items/order_id",
@@ -238,16 +262,6 @@ function App() {
     role === "VENDOR" && getVendorActiveOrder();
   }, [userId]);
 
-  // get all active order info if there is an activeOrder
-  // useEffect(() => {
-  //   userId && getOrderByOrderId();
-  // }, [activeOrderId]);
-
-  // set vendorId state whenever user visit Cart page; vendorId is used in Checkout page
-  // useEffect(() => {
-  //   if (vendorId) getUserInfo(true);
-  // }, [vendorId]);
-
   return (
     <div>
       <UserContext.Provider
@@ -260,11 +274,8 @@ function App() {
           setRole,
           userId,
           setUserId,
-          // userInfo,
-          // setUserInfo,
           handleLogout,
           refresh,
-          // getUserInfo,
           vendorId,
           setVendorId,
           setVendorInfo,
@@ -283,6 +294,9 @@ function App() {
           setVendorClaims,
           customerClaims,
           setCustomerClaims,
+          imageUrl,
+          setImageUrl,
+          displayImage,
         }}
       >
         <Routes>
