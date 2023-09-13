@@ -35,7 +35,7 @@ router.put(
   addItemToCart
 );
 router.delete(
-  "/carts/items/:item_id",
+  "/carts/items/:cart_id",
   auth,
   validateIdInParam,
   validateDelItem,

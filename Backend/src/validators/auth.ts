@@ -80,12 +80,14 @@ const validateUpdateProfile = [
     .optional()
     .notEmpty()
     .isString(),
+  body("rating", "rating is required").optional().notEmpty().isFloat(),
+  body("image_url", "image url is required").optional().notEmpty().isString(),
 ];
 
 const validateUpdateOperatings = [
   body().isArray().withMessage("Input should be an array"),
   body("*").isObject().withMessage("Each item should be an object"),
-  
+
   // apply checking to each item within the array, *.
   body("*.opening_day", "opening day is required")
     .notEmpty()

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/user";
@@ -26,49 +26,15 @@ const CheckOut: React.FC = () => {
   const userCtx = useContext(UserContext);
   const params = useParams();
 
-  const [cartItemInfo, setCartItemInfo] = useState<Props>({});
-
   // endpoint
-  const getCartItems = async (clearCart = false) => {
-    const res: data = await fetchData(
-      "/api/carts/" + userCtx?.userId,
-      "POST",
-      undefined,
-      userCtx?.accessToken
-    );
-
-    if (res.ok) {
-      setCartItemInfo(res.data);
-
-      // clearCart after createOrder
-      if (clearCart) {
-        // get itemId and Id of all items within cart
-        const items = res.data.orders.reduce((acc: Props[], item: any) => {
-          acc.push({ item_id: item.item_id, id: item.id });
-          return acc;
-        }, []);
-
-        // for-of loop to remove items from cart one by one
-        for (const item of items) {
-          deleteCartItem(item.item_id, item.id);
-        }
-      }
-    } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
-      alert(JSON.stringify(res.data));
-    }
-  };
-
   const createOrder = async () => {
     const res: data = await fetchData(
       "/api/orders/" + userCtx?.userId,
       "PUT",
       {
         vendor_id: userCtx?.cartItemInfo.vendor_id,
-        total_price: cartItemInfo.total_price,
+        // total_price: cartItemInfo.total_price,
+        total_price: userCtx?.cartItemInfo.total_price,
       },
       userCtx?.accessToken
     );
@@ -80,7 +46,8 @@ const CheckOut: React.FC = () => {
       createItemsOrders(res.data.order_id);
 
       //to clear cart
-      getCartItems(true);
+      // getCartItems(true);
+      deleteCartItem();
 
       navigate("/");
     } else {
@@ -92,14 +59,16 @@ const CheckOut: React.FC = () => {
     }
   };
 
-  const deleteCartItem = async (itemId: String, id: String) => {
+  const deleteCartItem = async () => {
+    const body = userCtx?.cartItemInfo.orders?.reduce((acc: Props[], item) => {
+      acc.push({ item_id: item.item_id, id: item.id });
+      return acc;
+    }, []);
+
     const res: data = await fetchData(
-      "/api/carts/items/" + itemId,
+      "/api/carts/items/" + params.item,
       "DELETE",
-      {
-        cart_id: params.item,
-        id: id,
-      },
+      body,
       userCtx?.accessToken
     );
 
@@ -115,11 +84,12 @@ const CheckOut: React.FC = () => {
   };
 
   const createItemsOrders = async (orderId: String) => {
+    console.log("createItemsOrders");
     const res: data = await fetchData(
       "/api/orders/items/" + orderId,
       "PUT",
       {
-        cart_id: userCtx?.userInfo.cart_id,
+        cart_id: userCtx?.customerClaims.cart_id,
       },
       userCtx?.accessToken
     );
@@ -134,7 +104,8 @@ const CheckOut: React.FC = () => {
   };
 
   useEffect(() => {
-    getCartItems();
+    // getCartItems();
+    userCtx?.getCartItems();
   }, []);
   return (
     <>
@@ -202,8 +173,8 @@ const CheckOut: React.FC = () => {
 
             <Grid item xs={4}>
               <OrderSummary
-                total_price={cartItemInfo.total_price}
-                orders={cartItemInfo.orders}
+                total_price={userCtx?.cartItemInfo.total_price}
+                orders={userCtx?.cartItemInfo.orders}
               ></OrderSummary>
             </Grid>
           </Grid>

@@ -9,12 +9,12 @@ export interface UserContextType {
   setRole: React.Dispatch<React.SetStateAction<String>>;
   userId: String;
   setUserId: React.Dispatch<React.SetStateAction<String>>;
-  userInfo: userInfoType;
-  setUserInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
+  // userInfo: userInfoType;
+  // setUserInfo: React.Dispatch<React.SetStateAction<userInfoType>>;
 
   handleLogout: () => void;
   refresh: () => Promise<void>;
-  getUserInfo: () => Promise<void>;
+  // getUserInfo: () => Promise<void>;
 
   vendorId: String;
   setVendorId: React.Dispatch<React.SetStateAction<String>>;
@@ -34,6 +34,11 @@ export interface UserContextType {
   getVendorActiveOrder: () => Promise<void>;
 
   getCustomerLastOrder: () => Promise<void>;
+
+  vendorClaims: Props;
+  setVendorClaims: React.Dispatch<React.SetStateAction<Props>>;
+  customerClaims: Props;
+  setCustomerClaims: React.Dispatch<React.SetStateAction<Props>>;
 }
 
 export interface data {
@@ -122,6 +127,8 @@ export interface Props {
   // review component
   reviewInfo?: OrderInfo;
   vendorInfo?: Props;
+
+  postal_code?: string;
 }
 
 export type OrderInfo = Props[][];

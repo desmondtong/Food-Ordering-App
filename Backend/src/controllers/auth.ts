@@ -131,7 +131,7 @@ const login = async (req: Request, res: Response) => {
 
     // check if account exist
     const auth = await pool.query(
-      "SELECT * FROM users WHERE email = $1 and is_deleted = FALSE",
+      `SELECT * FROM users WHERE email = $1 AND is_deleted = FALSE`,
       [email]
     );
 
@@ -151,11 +151,56 @@ const login = async (req: Request, res: Response) => {
     }
 
     // create claims
-    const claims: { email: String; id: Number; role: String } = {
+    const claims: {
+      email: String;
+      id: Number;
+      role: String;
+      cart_id?: String;
+      first_name?: String;
+      last_name?: String;
+      address?: String;
+      postal_code?: String;
+      store_name?: String;
+      category?: String;
+    } = {
       email: auth.rows[0].email,
       id: auth.rows[0].uuid,
       role: auth.rows[0].role,
     };
+
+    // to add additional claims based on role
+    if (auth.rows[0].role === "CUSTOMER") {
+      const customerAddnClaims = await pool.query(
+        `SELECT carts.uuid AS cart_id, 
+        first_name, last_name
+        FROM carts 
+        JOIN user_details ON carts.user_id = user_details.user_id
+        WHERE carts.user_id = $1
+        `,
+        [auth.rows[0].uuid]
+      );
+
+      claims.cart_id = customerAddnClaims.rows[0].cart_id;
+      claims.first_name = customerAddnClaims.rows[0].first_name;
+      claims.last_name = customerAddnClaims.rows[0].last_name;
+      // claims.address = userAddnClaims.rows[0].address;
+      // claims.postal_code = userAddnClaims.rows[0].postal_code;
+    } else if (auth.rows[0].role === "VENDOR") {
+      const vendorAddnClaims = await pool.query(
+        `SELECT address, postal_code, 
+          store_name, category 
+          FROM addresses 
+          JOIN vendor_details ON vendor_id = id 
+          WHERE id = $1
+          `,
+        [auth.rows[0].uuid]
+      );
+
+      claims.address = vendorAddnClaims.rows[0].address;
+      claims.postal_code = vendorAddnClaims.rows[0].postal_code;
+      claims.store_name = vendorAddnClaims.rows[0].store_name;
+      claims.category = vendorAddnClaims.rows[0].category;
+    }
 
     const access = jwt.sign(claims, String(process.env.ACCESS_SECRET), {
       expiresIn: "30d",
@@ -166,7 +211,7 @@ const login = async (req: Request, res: Response) => {
       jwtid: uuidv4(),
     });
 
-    res.json({ access, refresh });
+    res.json({ access, refresh, claims });
   } catch (error: any) {
     console.log(error.message);
     res.status(400).json({ status: "error", msg: "Login failed" });
@@ -214,6 +259,8 @@ const updateProfile = async (req: Request, res: Response) => {
       category,
       store_name,
       description,
+      rating,
+      image_url,
     }: {
       contact: Number;
       address: String;
@@ -223,6 +270,8 @@ const updateProfile = async (req: Request, res: Response) => {
       category: String;
       store_name: String;
       description: String;
+      rating: Number;
+      image_url: String;
     } = req.body;
 
     if ("contact" in req.body) {
@@ -274,6 +323,18 @@ const updateProfile = async (req: Request, res: Response) => {
       await pool.query(
         "UPDATE vendor_details SET description = $1 WHERE vendor_id = $2",
         [description, req.params.id]
+      );
+    }
+    if ("rating" in req.body) {
+      await pool.query(
+        "UPDATE vendor_details SET rating = $1 WHERE vendor_id = $2",
+        [rating, req.params.id]
+      );
+    }
+    if ("image_url" in req.body) {
+      await pool.query(
+        "UPDATE vendor_details SET image_url = $1 WHERE vendor_id = $2",
+        [image_url, req.params.id]
       );
     }
 

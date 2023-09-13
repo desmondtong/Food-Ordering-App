@@ -67,6 +67,7 @@ const Homepage: React.FC = () => {
 
   // endpoint
   const getCategories = async () => {
+    console.log("get categories");
     const res: data = await fetchData(
       "/api/categories",
       undefined,
@@ -86,6 +87,7 @@ const Homepage: React.FC = () => {
   };
 
   const getAllVendors = async () => {
+    console.log("get all vendors");
     const res: data = await fetchData(
       "/auth/accounts/vendor",
       undefined,
@@ -121,11 +123,15 @@ const Homepage: React.FC = () => {
           {userCtx?.haveActiveOrder && (
             <>
               {/* <Typography variant="body2">{userCtx?.activeOrderId}</Typography> */}
-              <Typography variant="body2">
+              {/* <Typography variant="body2">
                 {JSON.stringify(userCtx?.orderInfo)}
-              </Typography>
+              </Typography> */}
             </>
           )}
+          <Typography variant="body2">
+            {JSON.stringify(userCtx?.cartItemInfo)}
+          </Typography>
+          
           <Grid container mt="1.5rem" alignItems="center" spacing={4}>
             {/* to hide banner and cuisines card when using search bar */}
             {!isSearching && (

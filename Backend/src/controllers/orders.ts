@@ -39,11 +39,44 @@ const updateOrder = async (req: Request, res: Response) => {
       ]);
     }
     if ("rating" in req.body) {
-      await pool.query("UPDATE orders SET rating =$1 WHERE uuid = $2", [
-        rating,
-        req.params.order_id,
-      ]);
+      try {
+        // Begin a transaction
+        await pool.query("BEGIN");
+
+        // Update the order's rating and get the vendor_id
+        const updateResult = await pool.query(
+          "UPDATE orders SET rating = $1 WHERE uuid = $2 RETURNING vendor_id",
+          [rating, req.params.order_id]
+        );
+
+        const thisVendorId = updateResult.rows[0].vendor_id;
+
+        // Calculate the average rating
+        const avgRatingResult = await pool.query(
+          "SELECT ROUND(AVG(rating), 2) FROM orders WHERE vendor_id = $1",
+          [thisVendorId]
+        );
+
+        const avgRating = avgRatingResult.rows[0].round;
+
+        // Update the vendor's details with the calculated average rating
+        await pool.query(
+          "UPDATE vendor_details SET rating = $1 WHERE vendor_id = $2",
+          [avgRating, thisVendorId]
+        );
+
+        // Commit the transaction
+        await pool.query("COMMIT");
+      } catch (error: any) {
+        await pool.query("ROLLBACK");
+        
+        console.error(error.message);
+        res
+          .status(500)
+          .json({ error: "An error occurred while updating the rating" });
+      }
     }
+
     if ("review" in req.body) {
       await pool.query("UPDATE orders SET review = $1 WHERE uuid = $2", [
         review,
@@ -159,7 +192,7 @@ const getLastOrderByUserId = async (req: Request, res: Response) => {
     // return an array of objects of the active order ID
     const getByUserId = await pool.query(
       `WITH ActiveOrder AS (SELECT uuid FROM orders WHERE user_id = $1 AND is_active = $2) 
-      SELECT orders.user_id, user_details.first_name AS customer_name, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, image_url 
+      SELECT orders.user_id, user_details.first_name AS customer_name, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, image_url, is_active
       FROM ActiveOrder 
       JOIN orders ON orders.uuid = ActiveOrder.uuid 
       JOIN items_orders ON orders.uuid = order_id 
@@ -171,7 +204,10 @@ const getLastOrderByUserId = async (req: Request, res: Response) => {
     res.status(201).json([getByUserId.rows]);
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: "Get lastest active order failed" });
+    res.json({
+      status: "error",
+      msg: "Get latest customer active order failed",
+    });
   }
 };
 
@@ -194,13 +230,13 @@ const getActiveOrdersByVendorId = async (req: Request, res: Response) => {
       `WITH ActiveOrder AS (
         SELECT uuid FROM orders WHERE vendor_id = $1 AND NOT (status = $2 OR status = $3)
       )
-      SELECT orders.user_id, user_details.first_name AS customer_name, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, image_url 
+      SELECT orders.user_id, user_details.first_name AS customer_name, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, image_url, is_active
       FROM ActiveOrder 
       JOIN orders ON orders.uuid = ActiveOrder.uuid 
       JOIN items_orders ON orders.uuid = order_id 
-      JOIN items ON item_id = items.uuid 
+      JOIN items ON items_orders.item_id = items.uuid 
       JOIN user_details ON orders.user_id = user_details.user_id 
-      ORDER BY order_id;`,
+      ORDER BY order_id`,
       [vendor_id, "COMPLETED", "CANCELLED"]
     );
 
@@ -222,7 +258,7 @@ const getActiveOrdersByVendorId = async (req: Request, res: Response) => {
     res.status(201).json(transformedArray);
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: "Get active orders failed" });
+    res.json({ status: "error", msg: "Get vendor active orders failed" });
   }
 };
 

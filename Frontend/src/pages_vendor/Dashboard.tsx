@@ -1,14 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import NavBar from "../components/NavBar";
 
 import { Typography, Box, Stack } from "@mui/material";
 import TopBar from "../components/TopBar";
-import UserContext from "../context/user";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 
 const Dashboard: React.FC = () => {
-  const userCtx = useContext(UserContext);
-
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -31,7 +28,6 @@ const Dashboard: React.FC = () => {
             <EngineeringIcon
               sx={{ color: "var(--orange)", fontSize: "10rem" }}
             />
-            {/* <Typography>{JSON.stringify(userCtx?.activeOrderId)}</Typography> */}
           </Stack>
         </Box>
       </Box>

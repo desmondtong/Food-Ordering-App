@@ -20,7 +20,12 @@ const getCartById = async (req: Request, res: Response) => {
   try {
     // to get list of orders
     const cart = await pool.query(
-      "SELECT user_id, cart_id, items.vendor_id, store_name,item_id, carts_items.id, name, carts_items.item_price, quantity_ordered, user_note, image_url FROM carts JOIN carts_items ON carts.uuid = cart_id JOIN items ON items.uuid = item_id JOIN vendor_details ON vendor_details.vendor_id = items.vendor_id WHERE user_id = $1 AND carts_items.is_deleted = FALSE",
+      `SELECT user_id, cart_id, items.vendor_id, store_name,item_id, carts_items.id, name, carts_items.item_price, quantity_ordered, user_note, items.image_url 
+      FROM carts 
+      JOIN carts_items ON carts.uuid = cart_id 
+      JOIN items ON items.uuid = item_id 
+      JOIN vendor_details ON vendor_details.vendor_id = items.vendor_id 
+      WHERE user_id = $1 AND carts_items.is_deleted = FALSE`,
       [req.params.user_id]
     );
 
@@ -29,7 +34,7 @@ const getCartById = async (req: Request, res: Response) => {
       "SELECT SUM(carts_items.item_price*quantity_ordered) FROM carts JOIN carts_items ON carts.uuid = cart_id JOIN items ON items.uuid = item_id WHERE user_id = $1 AND carts_items.is_deleted = FALSE",
       [req.params.user_id]
     );
-    
+
     const delivery_fee = 1; // hardcoded
     const total_price: Number = Number(calcPrice.rows[0].sum) + delivery_fee;
 
@@ -81,16 +86,19 @@ const addItemToCart = async (req: Request, res: Response) => {
 
 const delItemFromCart = async (req: Request, res: Response) => {
   try {
-    const { cart_id, id }: { cart_id: String; id: String } = req.body;
-    const delItem = await pool.query(
-      "UPDATE carts_items SET is_deleted = TRUE WHERE item_id = $1 AND cart_id = $2 AND id = $3 RETURNING *",
-      [req.params.item_id, cart_id, id]
-    );
+    // const { cart_id, id }: { cart_id: String; id: String } = req.body;
+    const itemIds: { item_id: String; id: String }[] = req.body;
+
+    for (const itemId of itemIds) {
+      await pool.query(
+        "UPDATE carts_items SET is_deleted = TRUE WHERE cart_id = $1 AND item_id = $2 AND id = $3 RETURNING *",
+        [req.params.cart_id, itemId.item_id, itemId.id]
+      );
+    }
 
     res.json({
       status: "ok",
       msg: "Item deleted",
-      deleted: delItem.rows,
     });
   } catch (error: any) {
     console.log(error.message);

@@ -49,7 +49,9 @@ const NavBar: React.FC = () => {
     },
     {
       item: "Cart",
-      link: `/cart/${userCtx?.userInfo.cart_id}`,
+      link: userCtx?.customerClaims
+        ? `/cart/${userCtx?.customerClaims.cart_id}`
+        : "",
       icon: <ShoppingCartOutlinedIcon />,
     },
     {

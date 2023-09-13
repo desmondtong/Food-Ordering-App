@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import UserContext from "../context/user";
@@ -13,10 +13,6 @@ const Cart: React.FC = () => {
   const userCtx = useContext(UserContext);
   const params = useParams();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // userCtx?.getCartItems();
-  }, []);
   return (
     <>
       <Box sx={{ display: "flex" }}>
@@ -27,6 +23,9 @@ const Cart: React.FC = () => {
         >
           <TopBar></TopBar>
           <Grid container columnSpacing={8}>
+            <Typography variant="body2">
+              {JSON.stringify(userCtx?.cartItemInfo)}
+            </Typography>
             <Grid item xs={12} my="2.5rem">
               <Typography variant="h4">Cart</Typography>
             </Grid>

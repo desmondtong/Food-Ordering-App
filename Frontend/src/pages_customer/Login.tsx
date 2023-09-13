@@ -77,7 +77,35 @@ const Login: React.FC = () => {
         userCtx?.setRole(decoded.role);
         localStorage.setItem("role", JSON.stringify(decoded.role));
 
-        // userCtx?.getUserInfo();
+        if (role === "CUSTOMER") {
+          userCtx?.setCustomerClaims({
+            cart_id: decoded.cart_id,
+            name: `${decoded.first_name} ${decoded.last_name}`,
+          });
+          localStorage.setItem(
+            "customerClaims",
+            JSON.stringify({
+              cart_id: decoded.cart_id,
+              name: `${decoded.first_name} ${decoded.last_name}`,
+            })
+          );
+        } else if (role === "VENDOR") {
+          userCtx?.setVendorClaims({
+            address: decoded.address,
+            postal_code: decoded.postal_code,
+            store_name: decoded.store_name,
+            category: decoded.category,
+          });
+          localStorage.setItem(
+            "vendorClaims",
+            JSON.stringify({
+              address: decoded.address,
+              postal_code: decoded.postal_code,
+              store_name: decoded.store_name,
+              category: decoded.category,
+            })
+          );
+        }
 
         navigate(`/`);
       } else {

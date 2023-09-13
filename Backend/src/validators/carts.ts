@@ -20,11 +20,12 @@ const validateAddItem = [
 ];
 
 const validateDelItem = [
-  body("cart_id", "cart id is required")
+  body().isArray().withMessage("Input should be an array"),
+  body("*.item_id", "cart id is required")
     .notEmpty()
     .isString()
     .isLength({ min: 36, max: 36 }),
-  body("id", "id is required").notEmpty().isInt(),
+  body("*.id", "id is required").notEmpty().isInt(),
 ];
 
 const validateUpdateItem = [

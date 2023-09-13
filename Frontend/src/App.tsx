@@ -26,16 +26,28 @@ function App() {
   const fetchData = useFetch();
   const navigate = useNavigate();
 
+  // states for login
   const initAccessToken = JSON.parse(localStorage.getItem("accessToken")!);
   const initRefreshToken = JSON.parse(localStorage.getItem("refreshToken")!);
   const initRole = JSON.parse(localStorage.getItem("role")!);
   const initUserId = JSON.parse(localStorage.getItem("userId")!);
 
+  const initCustomerClaims = JSON.parse(
+    localStorage.getItem("customerClaims")!
+  );
+  const initVendorClaims = JSON.parse(localStorage.getItem("vendorClaims")!);
+
   const [accessToken, setAccessToken] = useState<String>(initAccessToken);
   const [refreshToken, setRefreshToken] = useState<String>(initRefreshToken);
   const [role, setRole] = useState<String>(initRole);
   const [userId, setUserId] = useState<String>(initUserId);
-  const [userInfo, setUserInfo] = useState<userInfoType>({});
+
+  const [customerClaims, setCustomerClaims] =
+    useState<Props>(initCustomerClaims);
+  const [vendorClaims, setVendorClaims] = useState<Props>(initVendorClaims);
+
+  // other states
+  // const [userInfo, setUserInfo] = useState<userInfoType>({});
 
   const [vendorId, setVendorId] = useState<String>("");
   const [vendorInfo, setVendorInfo] = useState<userInfoType>({});
@@ -47,34 +59,35 @@ function App() {
   const [orderInfo, setOrderInfo] = useState<OrderInfo>([]);
 
   // endpoint
-  const getUserInfo = async () => {
-    // const id = isVendor ? vendorId : userId;
+  // const getUserInfo = async () => {
+  //   console.log("get userinfo");
+  //   // const id = isVendor ? vendorId : userId;
 
-    const res: data = await fetchData(
-      // "/auth/accounts/" + id,
-      "/auth/accounts/" + userId,
-      undefined,
-      undefined,
-      accessToken
-    );
+  //   const res: data = await fetchData(
+  //     // "/auth/accounts/" + id,
+  //     "/auth/accounts/" + userId,
+  //     undefined,
+  //     undefined,
+  //     accessToken
+  //   );
 
-    if (res.ok) {
-      // if (!isVendor) {
-        // Store userInfo to localStorage and set as initial state
-        localStorage.setItem("userInfo", JSON.stringify(res.data));
+  //   if (res.ok) {
+  //     // if (!isVendor) {
+  //     // Store userInfo to localStorage and set as initial state
+  //     localStorage.setItem("userInfo", JSON.stringify(res.data));
 
-        // Set initial userInfo from localStorage after component mounts
-        const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
-        if (initUserInfo) {
-          setUserInfo(initUserInfo);
-        }
-      // } else {
-      //   setVendorInfo(res.data);
-      // }
-    } else {
-      // alert(JSON.stringify(res.data));
-    }
-  };
+  //     // Set initial userInfo from localStorage after component mounts
+  //     const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
+  //     if (initUserInfo) {
+  //       setUserInfo(initUserInfo);
+  //     }
+  //     // } else {
+  //     //   setVendorInfo(res.data);
+  //     // }
+  //   } else {
+  //     // alert(JSON.stringify(res.data));
+  //   }
+  // };
 
   const refresh = async () => {
     const res: data = await fetchData("/auth/refresh/", "POST", {
@@ -91,6 +104,7 @@ function App() {
   };
 
   const getCartItems = async () => {
+    console.log("get cart items");
     const res: data = await fetchData(
       "/api/carts/" + userId,
       "POST",
@@ -111,6 +125,7 @@ function App() {
   };
 
   const getCustomerLastOrder = async () => {
+    console.log("get last order");
     const res: data = await fetchData(
       "/api/orders/items/active/user_id",
       "POST",
@@ -133,6 +148,7 @@ function App() {
   };
 
   const getVendorActiveOrder = async () => {
+    console.log("get vendor order");
     const res: data = await fetchData(
       "/api/orders/items/active/vendor_id",
       "POST",
@@ -150,7 +166,7 @@ function App() {
       //   setHaveActiveOrder(false);
       //   setActiveOrderId([]);
       // }
-      if (res.data[0].length) {
+      if (res.data.length) {
         setOrderInfo(res.data);
         setHaveActiveOrder(true);
       }
@@ -159,26 +175,26 @@ function App() {
     }
   };
 
-  const getOrderByOrderId = async () => {
-    const res: data = await fetchData(
-      "/api/orders/items/order_id",
-      "POST",
-      activeOrderId,
-      accessToken
-    );
+  // const getOrderByOrderId = async () => {
+  //   const res: data = await fetchData(
+  //     "/api/orders/items/order_id",
+  //     "POST",
+  //     activeOrderId,
+  //     accessToken
+  //   );
 
-    if (res.ok) {
-      if (res.data.length) {
-        setOrderInfo(res.data);
-      }
-    } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
+  //   if (res.ok) {
+  //     if (res.data.length) {
+  //       setOrderInfo(res.data);
+  //     }
+  //   } else {
+  //     //attempt to refresh to get new access token
+  //     // userCtx?.refresh();
 
-      // if failed to refresh
-      alert(JSON.stringify(res.data));
-    }
-  };
+  //     // if failed to refresh
+  //     alert(JSON.stringify(res.data));
+  //   }
+  // };
 
   // function
   const handleLogout = () => {
@@ -186,13 +202,19 @@ function App() {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
-    localStorage.removeItem("userInfo");
+    // localStorage.removeItem("userInfo");
+
+    localStorage.removeItem("customerClaims");
+    localStorage.removeItem("vendorClaims");
 
     setAccessToken("");
     setRefreshToken("");
     setRole("");
     setUserId("");
-    setUserInfo({});
+    // setUserInfo({});
+
+    setCustomerClaims({});
+    setVendorClaims({});
 
     if (role === "CUSTOMER") {
       navigate("/");
@@ -203,7 +225,7 @@ function App() {
 
   useEffect(() => {
     // for customer
-    userId && getUserInfo();
+    // userId && getUserInfo();
     role === "CUSTOMER" && getCartItems();
 
     // for customer
@@ -235,11 +257,11 @@ function App() {
           setRole,
           userId,
           setUserId,
-          userInfo,
-          setUserInfo,
+          // userInfo,
+          // setUserInfo,
           handleLogout,
           refresh,
-          getUserInfo,
+          // getUserInfo,
           vendorId,
           setVendorId,
           setVendorInfo,
@@ -254,6 +276,10 @@ function App() {
           orderInfo,
           getVendorActiveOrder,
           getCustomerLastOrder,
+          vendorClaims,
+          setVendorClaims,
+          customerClaims,
+          setCustomerClaims,
         }}
       >
         <Routes>

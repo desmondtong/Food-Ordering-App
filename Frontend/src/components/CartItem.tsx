@@ -37,12 +37,14 @@ const CartItem: React.FC<Props> = (props) => {
   // endpoint
   const deleteCartItem = async () => {
     const res: data = await fetchData(
-      "/api/carts/items/" + props.item_id,
+      "/api/carts/items/" + props.cart_id,
       "DELETE",
-      {
-        cart_id: props.cart_id,
-        id: props.id,
-      },
+      [
+        {
+          item_id: props.item_id,
+          id: props.id,
+        },
+      ],
       userCtx?.accessToken
     );
 

@@ -33,7 +33,9 @@ const TopBar: React.FC<Props> = (props) => {
       {userCtx?.role === "VENDOR" ? (
         <Grid container alignItems="center">
           <Grid item sx={{ flexGrow: 1 }}>
-            <Typography variant="h5">{userCtx?.userInfo.store_name}</Typography>
+            <Typography variant="h5">
+              {userCtx?.vendorClaims.store_name}
+            </Typography>
             <Typography variant="body2" fontWeight="light">
               {todayDate}
             </Typography>
@@ -98,7 +100,7 @@ const TopBar: React.FC<Props> = (props) => {
             <Tooltip title="Profile">
               <Chip
                 icon={<FaceIcon />}
-                label={userCtx?.userInfo.first_name}
+                label={userCtx?.customerClaims.name?.split(" ")[0]}
                 onClick={(e) => setAnchorEl(e.currentTarget)}
                 sx={{ ml: "0.5rem" }}
               />

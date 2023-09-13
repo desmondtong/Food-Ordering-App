@@ -140,7 +140,7 @@ const ItemCard: React.FC<Props> = (props) => {
       "/api/carts/items/" + props.uuid,
       "PUT",
       {
-        cart_id: userCtx?.userInfo.cart_id,
+        cart_id: userCtx?.customerClaims.cart_id,
         item_price: props.item_price,
         quantity_ordered: quantity,
         user_note: userNoteRef.current?.value,
@@ -149,7 +149,6 @@ const ItemCard: React.FC<Props> = (props) => {
     );
 
     if (res.ok) {
-      console.log("added to cart");
       setOpenAddCart(false);
       userCtx?.getCartItems();
     } else {
