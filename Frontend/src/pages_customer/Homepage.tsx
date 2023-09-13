@@ -122,16 +122,16 @@ const Homepage: React.FC = () => {
           <TopBar handleSearch={handleSearch}></TopBar>
           {userCtx?.haveActiveOrder && (
             <>
-              {/* <Typography variant="body2">{userCtx?.activeOrderId}</Typography> */}
-              {/* <Typography variant="body2">
+              <Typography variant="body2">
                 {JSON.stringify(userCtx?.orderInfo)}
-              </Typography> */}
+              </Typography>
+              <Typography>==============</Typography>
             </>
           )}
           <Typography variant="body2">
             {JSON.stringify(userCtx?.cartItemInfo)}
           </Typography>
-          
+
           <Grid container mt="1.5rem" alignItems="center" spacing={4}>
             {/* to hide banner and cuisines card when using search bar */}
             {!isSearching && (
@@ -143,20 +143,25 @@ const Homepage: React.FC = () => {
                       backgroundImage: "url(../mooncake.avif)",
                       bgcolor: "var(--lightgrey)",
                       backgroundSize: "cover",
-                      // backgroundRepeat: "no-repeat",
                       backgroundPosition: "center",
                       p: "1.5rem",
                       height: "25rem",
                     }}
                     elevation={5}
                   >
-                    <Typography variant="h2" mb="0.5rem" color="var(--white)">
-                      Happy Mooncake Festival from Burps
+                    <Typography
+                      variant="h2"
+                      mb="0.5rem"
+                      color="var(--white)"
+                      fontWeight="bold"
+                      sx={{textShadow:'0.5rem 0.5rem 0.5rem var(--darkgrey-text)'}}
+                    >
+                      Happy Mooncake Festival from <span style={{color:'var(--orange)'}}>Burps</span>
                     </Typography>
                     <Typography
                       variant="body1"
                       fontWeight="light"
-                      color="text.secondary"
+                      color="var(--white)"
                       mb="1.5rem"
                     >
                       Best food for you

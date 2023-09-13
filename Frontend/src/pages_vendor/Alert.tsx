@@ -20,6 +20,9 @@ const Alert: React.FC = () => {
         >
           <TopBar></TopBar>
           <Stack my="2rem" spacing={3}>
+            {userCtx?.userId}
+            <br></br>
+            {JSON.stringify(userCtx?.orderInfo)}
             {userCtx?.orderInfo?.map((item, idx) => (
               <OrderAccordian key={idx} orderInfo={item}></OrderAccordian>
             ))}

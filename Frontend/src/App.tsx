@@ -169,6 +169,9 @@ function App() {
       if (res.data.length) {
         setOrderInfo(res.data);
         setHaveActiveOrder(true);
+      } else {
+        setOrderInfo([]);
+        setHaveActiveOrder(false);
       }
     } else {
       alert(JSON.stringify(res.data));
