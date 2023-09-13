@@ -154,9 +154,12 @@ const Homepage: React.FC = () => {
                       mb="0.5rem"
                       color="var(--white)"
                       fontWeight="bold"
-                      sx={{textShadow:'0.5rem 0.5rem 0.5rem var(--darkgrey-text)'}}
+                      sx={{
+                        textShadow: "0.5rem 0.5rem 0.5rem var(--darkgrey-text)",
+                      }}
                     >
-                      Happy Mooncake Festival from <span style={{color:'var(--orange)'}}>Burps</span>
+                      Happy Mooncake Festival from{" "}
+                      <span style={{ color: "var(--orange)" }}>Burps</span>
                     </Typography>
                     <Typography
                       variant="body1"
@@ -249,6 +252,8 @@ const Homepage: React.FC = () => {
                 <Restaurant
                   name={item.store_name}
                   address={item.address}
+                  rating={item.rating}
+                  // image_url={item.image_url}
                   // postal_code={item.postal_code}
                   uuid={item.uuid}
                 ></Restaurant>

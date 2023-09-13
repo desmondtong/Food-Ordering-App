@@ -86,12 +86,20 @@ const Restaurant: React.FC<Props> = (props) => {
             justifyContent="flex-end"
             alignItems="center"
           >
-            <StarIcon
-              sx={{ fontSize: "1rem", mr: "0.3rem", color: "var(--orange)" }}
-            ></StarIcon>
-            <Typography variant="body2" component="div" fontWeight="light">
-              5.0
-            </Typography>
+            {props.rating && (
+              <>
+                <StarIcon
+                  sx={{
+                    fontSize: "1rem",
+                    mr: "0.3rem",
+                    color: "var(--orange)",
+                  }}
+                ></StarIcon>
+                <Typography variant="body2" component="div" fontWeight="light">
+                  {props.rating}
+                </Typography>
+              </>
+            )}
           </Grid>
           <Grid item xs={9}>
             <Grid container direction="row">
