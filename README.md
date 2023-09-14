@@ -83,7 +83,7 @@ All the backend code is in the Back-end directory. Run all backend commands from
 Create a new .env file in the back-end directory and add the following lines:
 ```
 PORT=5001
-DATABASE=''
+DATABASE=burps
 DB_USER=''
 HOST=127.0.0.1
 PASSWORD=''
