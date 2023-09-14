@@ -189,8 +189,6 @@ const login = async (req: Request, res: Response) => {
       claims.cart_id = customerAddnClaims.rows[0].cart_id;
       claims.first_name = customerAddnClaims.rows[0].first_name;
       claims.last_name = customerAddnClaims.rows[0].last_name;
-      // claims.address = userAddnClaims.rows[0].address;
-      // claims.postal_code = userAddnClaims.rows[0].postal_code;
     } else if (auth.rows[0].role === "VENDOR") {
       const vendorAddnClaims = await pool.query(
         `SELECT address, postal_code, 

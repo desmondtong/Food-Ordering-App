@@ -225,18 +225,6 @@ const getLastOrderByUserId = async (req: Request, res: Response) => {
 const getActiveOrdersByVendorId = async (req: Request, res: Response) => {
   try {
     const vendor_id: String = req.body.vendor_id;
-    // const getByVendorId = await pool.query(
-    //   "SELECT uuid FROM orders WHERE vendor_id = $1 AND NOT (status = $2 OR status = $3)",
-    //   [vendor_id, "COMPLETED", "CANCELLED"]
-    // );
-
-    // const order_id = getByVendorId.rows.reduce((acc, item) => {
-    //   acc.push(item.uuid);
-    //   return acc;
-    // }, []);
-
-    // using CTE, get active order IDs from 1st SELECT; using the order IDs obtained, get info from 2nd SELECT
-    // return an array of objects of all active orders
     const getByVendorId = await pool.query(
       `WITH ActiveOrder AS (
         SELECT uuid FROM orders WHERE vendor_id = $1 AND NOT (status = $2 OR status = $3)
