@@ -12,10 +12,8 @@ const useFetchImg = () => {
     const res = await fetch(path, {
       method,
       headers: {
-        // "Content-Type": "multipart/form-data",
         Authorization: "Bearer " + token,
       },
-      //   body: JSON.stringify(body),
       body,
     });
 

@@ -91,9 +91,6 @@ const ItemCard: React.FC<Props> = (props) => {
 
       props.setUpdate?.(!props.update);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
       alert(JSON.stringify(res.data));
     }
   };
@@ -157,9 +154,6 @@ const ItemCard: React.FC<Props> = (props) => {
       setOpenAddCart(false);
       userCtx?.getCartItems();
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
       alert(JSON.stringify(res.data));
     }
   };

@@ -69,15 +69,9 @@ function App() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [snackPack, setSnackPack] = useState<readonly SnackbarMessage[]>([]);
 
-  // function
-  // const handleClick = (message: string) => () => {
-  //   setSnackPack((prev) => [...prev, { message, key: new Date().getTime() }]);
-  // };
-
   // endpoint
   const getUserInfo = async () => {
     const res: data = await fetchData(
-      // "/auth/accounts/" + id,
       "/auth/accounts/" + userId,
       undefined,
       undefined,
@@ -117,10 +111,6 @@ function App() {
       setCartItemInfo(res.data);
       setVendorId(res.data.vendor_id);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -158,13 +148,6 @@ function App() {
     );
 
     if (res.ok) {
-      // if (res.data.order_id.length) {
-      //   setHaveActiveOrder(true);
-      //   setActiveOrderId(res.data.order_id);
-      // } else {
-      //   setHaveActiveOrder(false);
-      //   setActiveOrderId([]);
-      // }
       if (res.data.length) {
         setOrderInfo(res.data);
         setHaveActiveOrder(true);
@@ -196,27 +179,6 @@ function App() {
       alert(JSON.stringify(res.data));
     }
   };
-
-  // const getOrderByOrderId = async () => {
-  //   const res: data = await fetchData(
-  //     "/api/orders/items/order_id",
-  //     "POST",
-  //     activeOrderId,
-  //     accessToken
-  //   );
-
-  //   if (res.ok) {
-  //     if (res.data.length) {
-  //       setOrderInfo(res.data);
-  //     }
-  //   } else {
-  //     //attempt to refresh to get new access token
-  //     // userCtx?.refresh();
-
-  //     // if failed to refresh
-  //     alert(JSON.stringify(res.data));
-  //   }
-  // };
 
   // function
   const handleLogout = () => {

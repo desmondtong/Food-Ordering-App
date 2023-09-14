@@ -71,7 +71,7 @@ const Tracker: React.FC = () => {
     },
     CANCELLED: {
       title: "Your order has been cancelled..",
-      url: "../tracker-done.jpg", //UPDATE TO CANCELLED PIC
+      url: "../tracker-done.jpg",
       value: [0, 0, 0],
       width: [20, 20, 20],
       variant: ["determinate", "determinate", "determinate"],
@@ -94,16 +94,11 @@ const Tracker: React.FC = () => {
 
     if (res.ok) {
       userCtx?.setHaveActiveOrder(false);
-      // userCtx?.setActiveOrderId([]);
 
       // close modal and go back to previous page
       setOpenReview(false);
       history.back();
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };

@@ -53,10 +53,6 @@ const RestaurantDetails: React.FC = () => {
     if (res.ok) {
       setItemInfo(res.data);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -72,10 +68,6 @@ const RestaurantDetails: React.FC = () => {
     if (res.ok) {
       setVendorInfo(res.data);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -91,10 +83,6 @@ const RestaurantDetails: React.FC = () => {
     if (res.ok) {
       setCategories(res.data);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -112,10 +100,6 @@ const RestaurantDetails: React.FC = () => {
     if (res.ok) {
       getOrderByOrderId(res.data.order_id);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -138,10 +122,6 @@ const RestaurantDetails: React.FC = () => {
         setReviewInfo(filteredOrderInfo);
       }
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };

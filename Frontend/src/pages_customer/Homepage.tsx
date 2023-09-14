@@ -78,10 +78,6 @@ const Homepage: React.FC = () => {
     if (res.ok) {
       setCategories(res.data);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -98,10 +94,6 @@ const Homepage: React.FC = () => {
       setVendors(res.data);
       setDisplayVendors(res.data);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -206,7 +198,6 @@ const Homepage: React.FC = () => {
                   >
                     <Cuisine
                       category={category}
-                      // handleSearch={handleSearch}
                     ></Cuisine>
                   </Grid>
                 ))}
@@ -241,8 +232,6 @@ const Homepage: React.FC = () => {
                   name={item.store_name}
                   address={item.address}
                   rating={item.rating}
-                  // image_url={item.image_url}
-                  // postal_code={item.postal_code}
                   uuid={item.uuid}
                 ></Restaurant>
               </Grid>

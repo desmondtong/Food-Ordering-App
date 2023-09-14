@@ -128,10 +128,6 @@ const OrderAccordian: React.FC<Props> = (props) => {
     if (res.ok) {
       userCtx?.getVendorActiveOrder();
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };

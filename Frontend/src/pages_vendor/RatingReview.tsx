@@ -56,10 +56,6 @@ const RatingReview: React.FC = () => {
     if (res.ok) {
       getOrderByOrderId(res.data.order_id);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -83,10 +79,6 @@ const RatingReview: React.FC = () => {
         setDisplayOrderInfo(filteredOrderInfo);
       }
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -96,7 +88,6 @@ const RatingReview: React.FC = () => {
   }, []);
   return (
     <>
-      {" "}
       <Box sx={{ display: "flex" }}>
         <NavBar></NavBar>
         <Box

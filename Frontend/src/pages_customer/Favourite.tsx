@@ -6,12 +6,10 @@ import { Typography, Box, Grid, CardMedia, Button } from "@mui/material";
 import OrderToaster from "../components/OrderToaster";
 import TopBar from "../components/TopBar";
 
-// import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const Favourite: React.FC = () => {
-  // const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
 

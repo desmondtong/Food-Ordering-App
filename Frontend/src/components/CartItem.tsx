@@ -51,10 +51,6 @@ const CartItem: React.FC<Props> = (props) => {
     if (res.ok) {
       userCtx?.getCartItems?.();
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -76,10 +72,6 @@ const CartItem: React.FC<Props> = (props) => {
     if (res.ok) {
       userCtx?.getCartItems?.();
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -102,7 +94,6 @@ const CartItem: React.FC<Props> = (props) => {
           component="img"
           sx={{ width: "10rem", height: "10rem", p: "1rem" }}
           image={props.image_url}
-          //add image_url from backend!!!
         />
 
         <Box
@@ -152,7 +143,6 @@ const CartItem: React.FC<Props> = (props) => {
               >
                 -
               </Button>
-              {/* <Typography mx="2rem">{quantity}</Typography> */}
               <Button disabled className="disabled-btn">
                 {quantity}
               </Button>

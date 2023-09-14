@@ -79,10 +79,6 @@ const Menu: React.FC = () => {
     if (res.ok) {
       setCategories(res.data);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
-      // if failed to refresh
       alert(JSON.stringify(res.data));
     }
   };
@@ -99,9 +95,6 @@ const Menu: React.FC = () => {
       setItems(res.data);
       setDisplayItem(res.data);
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
-
       alert(JSON.stringify(res.data));
     }
   };
@@ -126,8 +119,6 @@ const Menu: React.FC = () => {
       setOpenCat(true);
       userCtx?.setImageUrl("");
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
       alert(JSON.stringify(res.data));
     }
   };
@@ -153,8 +144,6 @@ const Menu: React.FC = () => {
       getCategories();
       getItems();
     } else {
-      //attempt to refresh to get new access token
-      // userCtx?.refresh();
       alert(JSON.stringify(res.data));
     }
   };

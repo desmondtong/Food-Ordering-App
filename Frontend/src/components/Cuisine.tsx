@@ -13,7 +13,6 @@ const Cuisine: React.FC<Props> = (props) => {
       <Card
         sx={{ display: "flex", borderRadius: "0.5rem" }}
         elevation={0}
-        // onClick={props.handleSearch}
       >
         <CardActionArea>
           <CardMedia
