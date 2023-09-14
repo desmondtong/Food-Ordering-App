@@ -88,6 +88,7 @@ const Cart: React.FC = () => {
                     variant="outlined"
                     size="large"
                     onClick={() => navigate("/")}
+                    color="warning"
                   >
                     Browse Now
                   </Button>

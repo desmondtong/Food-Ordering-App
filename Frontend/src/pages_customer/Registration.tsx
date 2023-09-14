@@ -81,14 +81,15 @@ const Registration: React.FC = () => {
       email,
       password,
       contact,
-      first_name: firstName,
-      last_name: lastName,
     };
     if (pathName === "/registration/vendor") {
       body["category"] = category;
       body["store_name"] = storeName;
       body["address"] = address;
       body["postal_code"] = postalCode;
+    } else {
+      body["first_name"] = firstName;
+      body["last_name"] = lastName;
     }
 
     const res: data = await fetchData("/auth/register", "PUT", body);
@@ -99,13 +100,23 @@ const Registration: React.FC = () => {
         email,
         password,
       });
+
       if (resLogin.ok) {
         const decoded: any = jwtDecode(resLogin.data?.access);
 
+        const role = decoded.role;
+
+        // check if user login using the correct login portal
         userCtx?.setAccessToken(resLogin.data?.access);
         localStorage.setItem(
           "accessToken",
           JSON.stringify(resLogin.data?.access)
+        );
+
+        userCtx?.setRefreshToken(resLogin.data?.refresh);
+        localStorage.setItem(
+          "refreshToken",
+          JSON.stringify(resLogin.data?.refresh)
         );
 
         userCtx?.setUserId(decoded.id);
@@ -114,27 +125,41 @@ const Registration: React.FC = () => {
         userCtx?.setRole(decoded.role);
         localStorage.setItem("role", JSON.stringify(decoded.role));
 
-        createUserCart(decoded.id, resLogin.data.access);
+        if (role === "CUSTOMER") {
+          userCtx?.setCustomerClaims({
+            cart_id: decoded.cart_id,
+            name: `${decoded.first_name} ${decoded.last_name}`,
+          });
+          localStorage.setItem(
+            "customerClaims",
+            JSON.stringify({
+              cart_id: decoded.cart_id,
+              name: `${decoded.first_name} ${decoded.last_name}`,
+            })
+          );
+        } else if (role === "VENDOR") {
+          userCtx?.setVendorClaims({
+            address: decoded.address,
+            postal_code: decoded.postal_code,
+            store_name: decoded.store_name,
+            category: decoded.category,
+          });
+          localStorage.setItem(
+            "vendorClaims",
+            JSON.stringify({
+              address: decoded.address,
+              postal_code: decoded.postal_code,
+              store_name: decoded.store_name,
+              category: decoded.category,
+            })
+          );
+        }
 
         navigate(`/`);
       } else {
         alert(JSON.stringify(resLogin.data));
       }
     } else {
-      alert(JSON.stringify(res.data));
-    }
-  };
-
-  const createUserCart = async (userId: String, accessToken: String) => {
-    console.log(userId, accessToken);
-    const res: data = await fetchData(
-      "/api/carts/" + userId,
-      "PUT",
-      undefined,
-      accessToken
-    );
-
-    if (!res.ok) {
       alert(JSON.stringify(res.data));
     }
   };
@@ -191,6 +216,7 @@ const Registration: React.FC = () => {
               fontWeight="bold"
               gutterBottom
               mb="2rem"
+              color="var(--orange)"
             >
               {pathName === "/registration/vendor"
                 ? "Register Your Store"
@@ -349,6 +375,7 @@ const Registration: React.FC = () => {
               variant="contained"
               sx={{ mt: "3rem", mb: "1rem" }}
               onClick={handleRegister}
+              color="warning"
             >
               CREATE ACCOUNT
             </Button>

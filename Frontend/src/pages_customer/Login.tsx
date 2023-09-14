@@ -159,7 +159,12 @@ const Login: React.FC = () => {
           height="100vh"
         >
           <Box mx="6rem">
-            <Typography variant="h3" align="left" fontWeight="bold">
+            <Typography
+              variant="h3"
+              align="left"
+              fontWeight="bold"
+              color="var(--orange)"
+            >
               {pathName === "/login/vendor"
                 ? `Welcome Back to Vendor Portal!`
                 : "Welcome Back!"}
@@ -195,6 +200,7 @@ const Login: React.FC = () => {
               variant="contained"
               sx={{ mt: "3rem", mb: "1rem" }}
               onClick={handleLogin}
+              color="warning"
             >
               LOG IN
             </Button>

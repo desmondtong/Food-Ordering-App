@@ -107,6 +107,12 @@ const register = async (req: Request, res: Response) => {
         "INSERT INTO user_details (user_id, first_name, last_name) VALUES ($1, $2, $3)",
         [newAuthId, first_name, last_name]
       );
+
+      // create new cart for customer
+      const cart = await pool.query(
+        "INSERT INTO carts (user_id) VALUES ($1) RETURNING *",
+        [newAuthId]
+      );
     } else if (role === "VENDOR") {
       await pool.query(
         "INSERT INTO vendor_details (vendor_id, category, store_name) VALUES ($1, $2, $3)",
@@ -118,7 +124,7 @@ const register = async (req: Request, res: Response) => {
       );
     } // reserve for ADMIN role
 
-    res.status(201).json({ msg: "User created", createdUser: addAuth });
+    res.status(201).json({ msg: "User & cart created", createdUser: addAuth });
   } catch (error: any) {
     console.log(error.message);
     res.json({ status: "error", msg: "Server error" });
