@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import { Alert, Grid, Paper, Typography, Stack } from "@mui/material";
+import { Grid, Paper, Typography, Stack } from "@mui/material";
 import { SnackbarMessage } from "../interfaces";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 
