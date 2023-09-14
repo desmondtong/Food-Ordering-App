@@ -19,6 +19,7 @@ import UserContext from "../context/user";
 import { Props, data } from "../interfaces";
 
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const RatingReview: React.FC = () => {
   const fetchData = useFetch();
@@ -76,7 +77,7 @@ const RatingReview: React.FC = () => {
         //filter orders only with rating or review
         const orderInfo = res.data;
         const filteredOrderInfo = orderInfo.filter(
-          (item: any) => item[0].rating || item[0].review
+          (item: any) => item?.[0]?.rating || item?.[0]?.review
         );
         setOrderInfo(filteredOrderInfo);
         setDisplayOrderInfo(filteredOrderInfo);
@@ -143,6 +144,7 @@ const RatingReview: React.FC = () => {
               ></OrderAccordian>
             ))}
           </Stack>
+          <ConsecutiveSnackbars />
         </Box>
       </Box>
     </>

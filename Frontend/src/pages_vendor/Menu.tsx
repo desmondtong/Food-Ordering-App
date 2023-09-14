@@ -31,6 +31,7 @@ import { VisuallyHiddenInput } from "../customStyles";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 
 const Menu: React.FC = () => {
@@ -227,6 +228,7 @@ const Menu: React.FC = () => {
               </Grid>
             ))}
           </Grid>
+          <ConsecutiveSnackbars/>
         </Box>
       </Box>
 

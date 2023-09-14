@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import { Typography, Box, Stack } from "@mui/material";
 import TopBar from "../components/TopBar";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const Dashboard: React.FC = () => {
   return (
@@ -23,12 +24,13 @@ const Dashboard: React.FC = () => {
             height="70vh"
           >
             <Typography variant="h4" color="text.secondary">
-              {"UNDER MAINTENANCE :("}
+              {"DASHBOARD IS UNDER MAINTENANCE :("}
             </Typography>
             <EngineeringIcon
               sx={{ color: "var(--orange)", fontSize: "10rem" }}
             />
           </Stack>
+          <ConsecutiveSnackbars />
         </Box>
       </Box>
     </>

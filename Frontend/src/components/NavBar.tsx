@@ -169,7 +169,10 @@ const NavBar: React.FC = () => {
                   >
                     <ListItemIcon>{item.icon}</ListItemIcon>
                   </StyledBadge>
-                  <ListItemText primary={item.item} />
+                  <ListItemText
+                    primary={item.item}
+                    sx={{ color: "var(--darkgrey-text)" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </NavLink>

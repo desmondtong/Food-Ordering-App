@@ -24,9 +24,6 @@ const Cart: React.FC = () => {
         >
           <TopBar></TopBar>
           <Grid container columnSpacing={8}>
-            <Typography variant="body2">
-              {JSON.stringify(userCtx?.cartItemInfo)}
-            </Typography>
             <Grid item xs={12} my="2.5rem">
               <Typography variant="h4">Cart</Typography>
             </Grid>
@@ -41,7 +38,7 @@ const Cart: React.FC = () => {
                         item_price={item.item_price}
                         user_note={item.user_note}
                         quantity_ordered={item.quantity_ordered}
-                        image_url={"." + item.image_url}
+                        image_url={item.image_url}
                         cart_id={params.item}
                         item_id={item.item_id}
                         id={item.id}

@@ -119,17 +119,6 @@ const Homepage: React.FC = () => {
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
           <TopBar handleSearch={handleSearch}></TopBar>
-          {userCtx?.haveActiveOrder && (
-            <>
-              <Typography variant="body2">
-                {JSON.stringify(userCtx?.orderInfo)}
-              </Typography>
-              <Typography>==============</Typography>
-            </>
-          )}
-          <Typography variant="body2">
-            {JSON.stringify(userCtx?.cartItemInfo)}
-          </Typography>
 
           <Grid container mt="1.5rem" alignItems="center" spacing={4}>
             {/* to hide banner and cuisines card when using search bar */}

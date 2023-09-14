@@ -39,6 +39,7 @@ const updateOrder = async (req: Request, res: Response) => {
         [status, req.params.order_id]
       );
 
+      // use socket.io to trigger the frontend receiver to trigger action of fetching new orderInfo
       io.emit("orderStatusUpdate", updateStatus.rows[0].user_id);
     }
     if ("rating" in req.body) {
@@ -114,6 +115,13 @@ const createItemsOrders = async (req: Request, res: Response) => {
       acc.push(item.item_id);
       return acc;
     }, []);
+
+    const vendor_id = await pool.query(
+      "SELECT vendor_id FROM orders WHERE uuid = $1 ",
+      [req.params.order_id]
+    );
+
+    io.emit("newOrder", vendor_id.rows[0].vendor_id);
 
     res.status(201).json({
       msg: "Items_orders created",

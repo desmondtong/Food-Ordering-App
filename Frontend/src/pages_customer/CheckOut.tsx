@@ -94,6 +94,9 @@ const CheckOut: React.FC = () => {
       userCtx?.accessToken
     );
 
+    // // pass new order's vendor_id to server
+    // socket.emit("createOrder", userCtx?.cartItemInfo.vendor_id);
+
     if (!res.ok) {
       //attempt to refresh to get new access token
       // userCtx?.refresh();

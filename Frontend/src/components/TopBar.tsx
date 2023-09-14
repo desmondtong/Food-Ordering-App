@@ -41,7 +41,6 @@ const TopBar: React.FC<Props> = (props) => {
     <>
       {userCtx?.role === "VENDOR" ? (
         <Grid container alignItems="center">
-          <Grid item xs={12}>{JSON.stringify(userCtx?.userInfo)}</Grid>
           <Grid item sx={{ flexGrow: 1 }}>
             <Typography variant="h5">
               {userCtx?.vendorClaims.store_name}
