@@ -12,10 +12,10 @@ const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 //set up new s3 object
 const s3: S3Client = new S3Client({
   credentials: {
-    accessKeyId: accessKey,
-    secretAccessKey: secretAccessKey,
+    accessKeyId: accessKey || "",
+    secretAccessKey: secretAccessKey || "",
   },
-  region: bucketRegion,
+  region: bucketRegion || "",
 });
 
 //upload new item image to s3 and update item image URL in postgres db

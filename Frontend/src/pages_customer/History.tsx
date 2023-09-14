@@ -4,6 +4,7 @@ import NavBar from "../components/NavBar";
 import { Typography, Box } from "@mui/material";
 import OrderToaster from "../components/OrderToaster";
 import TopBar from "../components/TopBar";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const History: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const History: React.FC = () => {
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
           <TopBar></TopBar>
+          <ConsecutiveSnackbars />
         </Box>
       </Box>
 

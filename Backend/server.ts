@@ -1,5 +1,9 @@
 import dotenv from "dotenv";
+
 import express, { Express } from "express";
+import http from "http";
+import { Server } from "socket.io";
+
 import cors from "cors"; //enables anyone to use the api
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -7,8 +11,6 @@ import bodyParser from "body-parser";
 
 dotenv.config();
 
-// const transactions = require("./src/routers/transactions");
-// const listings = require("./src/routers/listings");
 import auth from "./src/routers/auth";
 import items from "./src/routers/items";
 import carts from "./src/routers/carts";
@@ -25,6 +27,16 @@ const limit = rateLimit({
 });
 
 const app: Express = express();
+const server = http.createServer(app);
+export const io = new Server(server, {
+  cors: {
+    origin: "*",
+  },
+});
+// io.on("connection", () => {
+//   console.log("user connected");
+// });
+
 app.use(cors());
 app.use(helmet());
 app.use(limit);
@@ -45,6 +57,9 @@ app.use("/api", constraint);
 app.use("/api", image);
 
 const PORT = process.env.PORT || 5001;
-app.listen(PORT, () => {
+// app.listen(PORT, () => {
+//   console.log(`server has started on port ${PORT}`);
+// });
+server.listen(PORT, () => {
   console.log(`server has started on port ${PORT}`);
 });

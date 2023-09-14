@@ -1,3 +1,4 @@
+import React, { useContext, useState } from "react";
 import {
   IconButton,
   Grid,
@@ -10,28 +11,37 @@ import {
   OutlinedInput,
   InputAdornment,
   Chip,
+  Dialog,
+  DialogTitle,
+  Button,
+  CardMedia,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@mui/material";
-import React, { useContext, useState } from "react";
 
 import ManageAccountsOutlinedIcon from "@mui/icons-material/ManageAccountsOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FaceIcon from "@mui/icons-material/Face";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import UserContext from "../context/user";
 import { Props } from "../interfaces";
+import { VisuallyHiddenInput } from "../customStyles";
 
 const TopBar: React.FC<Props> = (props) => {
   const userCtx = useContext(UserContext);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [locationEl, setLocationEl] = useState<null | HTMLElement>(null);
+  const [vendorProfile, setVendorProfile] = useState<boolean>(false);
 
   const todayDate = new Date().toDateString();
-
   return (
     <>
       {userCtx?.role === "VENDOR" ? (
         <Grid container alignItems="center">
+          <Grid item xs={12}>{JSON.stringify(userCtx?.userInfo)}</Grid>
           <Grid item sx={{ flexGrow: 1 }}>
             <Typography variant="h5">
               {userCtx?.vendorClaims.store_name}
@@ -126,7 +136,15 @@ const TopBar: React.FC<Props> = (props) => {
         open={Boolean(anchorEl)}
         onClose={() => setAnchorEl(null)}
       >
-        <MenuItem onClick={() => setAnchorEl(null)}>Profile</MenuItem>
+        <MenuItem
+          onClick={() => {
+            setAnchorEl(null);
+            setVendorProfile(true);
+            userCtx?.getUserInfo();
+          }}
+        >
+          Profile
+        </MenuItem>
         <MenuItem onClick={userCtx?.handleLogout}>Logout</MenuItem>
       </Menu>
 
@@ -149,6 +167,148 @@ const TopBar: React.FC<Props> = (props) => {
       >
         <MenuItem onClick={() => setLocationEl(null)}>Location</MenuItem>
       </Menu>
+
+      {/* vendor profile setting popup */}
+      <Dialog
+        open={userCtx?.role === "VENDOR" && vendorProfile}
+        onClose={() => setVendorProfile(false)}
+        scroll="body"
+      >
+        <DialogTitle sx={{ p: 0 }} className="pic-display">
+          <Typography variant="h5" my="1rem" ml="1rem">
+            Business Profile
+          </Typography>
+          <CardMedia
+            component="img"
+            sx={{ aspectRatio: 1.5 }}
+            image={userCtx?.imageUrl || userCtx?.userInfo.image_url}
+          />
+          <Button
+            component="label"
+            variant="contained"
+            startIcon={<CloudUploadIcon />}
+            href="#file-upload"
+            size="small"
+            color="warning"
+            className="upload-btn"
+            sx={{ m: "1rem" }}
+          >
+            Replace Image
+            <VisuallyHiddenInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => userCtx?.displayImage(e)}
+            />
+          </Button>
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="storename"
+            label="Store Name"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.userInfo.store_name}
+            // inputRef={storeNameRef}
+          />
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="description"
+            label="Description"
+            placeholder="Tell us more about your store"
+            type="text"
+            multiline
+            rows={3}
+            fullWidth
+            defaultValue={userCtx?.userInfo.description}
+            // inputRef={descriptionRef}
+          />
+          <TextField
+            required
+            select
+            margin="normal"
+            id="category"
+            label="Category"
+            type="text"
+            fullWidth
+            value={userCtx?.userInfo.category}
+            // onChange={(e) => setCategory(e.target.value)}
+          >
+            {props.categories?.map((item, idx) => (
+              <MenuItem key={idx} value={item}>
+                {item}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            required
+            margin="normal"
+            id="address"
+            label="Address"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.userInfo.address}
+            // inputRef={addressRef}
+          />
+          <TextField
+            required
+            margin="normal"
+            id="postalcode"
+            label="Postal Code"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.userInfo.postal_code}
+            // inputRef={postalCodeRef}
+          />
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="contact"
+            label="Contact Number"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.userInfo.contact}
+            // inputRef={contactRef}
+          />
+
+          <Typography variant="h5" mt="1.5rem">
+            Opening Times
+          </Typography>
+          <Grid container alignItems="center">
+
+          </Grid>
+        </DialogContent>
+        <DialogActions sx={{ p: "1.5rem" }}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="contained"
+                // onClick={() => handleUpdate(false)}
+              >
+                Save Changes
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  setVendorProfile(false);
+                  userCtx?.setImageUrl("");
+                }}
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

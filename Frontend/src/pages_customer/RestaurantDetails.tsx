@@ -21,6 +21,7 @@ import StarIcon from "@mui/icons-material/Star";
 import ItemCard from "../components/ItemCard";
 import OrderToaster from "../components/OrderToaster";
 import ReviewAbout from "../components/ReviewAbout";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const RestaurantDetails: React.FC = () => {
   const fetchData = useFetch();
@@ -183,7 +184,6 @@ const RestaurantDetails: React.FC = () => {
             <Grid
               item
               xs={2}
-              // sx={{ borderStyle: "solid" }}
               container
               direction="row"
               justifyContent="flex-end"
@@ -260,6 +260,7 @@ const RestaurantDetails: React.FC = () => {
               ))}
             </>
           )}
+          <ConsecutiveSnackbars />
         </Box>
       </Box>
 

@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "./context/user";
+import { socket } from "./socket";
 
 import Login from "./pages_customer/Login";
 import Registration from "./pages_customer/Registration";
@@ -21,7 +22,13 @@ import RatingReview from "./pages_vendor/RatingReview";
 
 import useFetch from "./hooks/useFetch";
 import useFetchImg from "./hooks/useFetchImg";
-import { OrderInfo, Props, data, userInfoType } from "./interfaces";
+import {
+  OrderInfo,
+  Props,
+  SnackbarMessage,
+  data,
+  userInfoType,
+} from "./interfaces";
 
 function App() {
   const fetchData = useFetch();
@@ -47,10 +54,9 @@ function App() {
   const [customerClaims, setCustomerClaims] =
     useState<Props>(initCustomerClaims);
   const [vendorClaims, setVendorClaims] = useState<Props>(initVendorClaims);
+  const [userInfo, setUserInfo] = useState<Props>({});
 
   // other states
-  // const [userInfo, setUserInfo] = useState<userInfoType>({});
-
   const [vendorId, setVendorId] = useState<String>("");
   const [vendorInfo, setVendorInfo] = useState<userInfoType>({});
 
@@ -61,37 +67,29 @@ function App() {
   const [orderInfo, setOrderInfo] = useState<OrderInfo>([]);
 
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [snackPack, setSnackPack] = useState<readonly SnackbarMessage[]>([]);
+
+  // function
+  // const handleClick = (message: string) => () => {
+  //   setSnackPack((prev) => [...prev, { message, key: new Date().getTime() }]);
+  // };
 
   // endpoint
-  // const getUserInfo = async () => {
-  //   console.log("get userinfo");
-  //   // const id = isVendor ? vendorId : userId;
+  const getUserInfo = async () => {
+    const res: data = await fetchData(
+      // "/auth/accounts/" + id,
+      "/auth/accounts/" + userId,
+      undefined,
+      undefined,
+      accessToken
+    );
 
-  //   const res: data = await fetchData(
-  //     // "/auth/accounts/" + id,
-  //     "/auth/accounts/" + userId,
-  //     undefined,
-  //     undefined,
-  //     accessToken
-  //   );
-
-  //   if (res.ok) {
-  //     // if (!isVendor) {
-  //     // Store userInfo to localStorage and set as initial state
-  //     localStorage.setItem("userInfo", JSON.stringify(res.data));
-
-  //     // Set initial userInfo from localStorage after component mounts
-  //     const initUserInfo = JSON.parse(localStorage.getItem("userInfo")!);
-  //     if (initUserInfo) {
-  //       setUserInfo(initUserInfo);
-  //     }
-  //     // } else {
-  //     //   setVendorInfo(res.data);
-  //     // }
-  //   } else {
-  //     // alert(JSON.stringify(res.data));
-  //   }
-  // };
+    if (res.ok) {
+      setUserInfo(res.data);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
 
   const refresh = async () => {
     const res: data = await fetchData("/auth/refresh/", "POST", {
@@ -108,7 +106,6 @@ function App() {
   };
 
   const getCartItems = async () => {
-    console.log("get cart items");
     const res: data = await fetchData(
       "/api/carts/" + userId,
       "POST",
@@ -129,7 +126,6 @@ function App() {
   };
 
   const getCustomerLastOrder = async () => {
-    console.log("get last order");
     const res: data = await fetchData(
       "/api/orders/items/active/user_id",
       "POST",
@@ -152,7 +148,6 @@ function App() {
   };
 
   const getVendorActiveOrder = async () => {
-    console.log("get vendor order");
     const res: data = await fetchData(
       "/api/orders/items/active/vendor_id",
       "POST",
@@ -250,9 +245,23 @@ function App() {
     }
   };
 
+  // useEff to control instance of sockets received from server to 2
+  // was 6-8 times before useEff
+  useEffect(() => {
+    socket.on("orderStatusUpdate", (user_id) => {
+      if (userId === user_id) {
+        getCustomerLastOrder();
+        // activate snackbar for notifications
+        setSnackPack((prev) => [
+          ...prev,
+          { message: "test", key: new Date().getTime() },
+        ]);
+      }
+    });
+  }, [socket]);
+
   useEffect(() => {
     // for customer
-    // userId && getUserInfo();
     role === "CUSTOMER" && getCartItems();
 
     // for customer
@@ -297,6 +306,10 @@ function App() {
           imageUrl,
           setImageUrl,
           displayImage,
+          userInfo,
+          getUserInfo,
+          snackPack,
+          setSnackPack,
         }}
       >
         <Routes>

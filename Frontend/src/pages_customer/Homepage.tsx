@@ -19,6 +19,7 @@ import { Props, data } from "../interfaces";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import OrderToaster from "../components/OrderToaster";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const Homepage: React.FC = () => {
   const fetchData = useFetch();
@@ -67,7 +68,6 @@ const Homepage: React.FC = () => {
 
   // endpoint
   const getCategories = async () => {
-    console.log("get categories");
     const res: data = await fetchData(
       "/api/categories",
       undefined,
@@ -87,7 +87,6 @@ const Homepage: React.FC = () => {
   };
 
   const getAllVendors = async () => {
-    console.log("get all vendors");
     const res: data = await fetchData(
       "/auth/accounts/vendor",
       undefined,
@@ -260,6 +259,7 @@ const Homepage: React.FC = () => {
               </Grid>
             ))}
           </Grid>
+          <ConsecutiveSnackbars />
         </Box>
       </Box>
 

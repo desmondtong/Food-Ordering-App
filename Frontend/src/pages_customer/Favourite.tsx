@@ -8,6 +8,7 @@ import TopBar from "../components/TopBar";
 
 // import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const Favourite: React.FC = () => {
   // const fetchData = useFetch();
@@ -28,13 +29,7 @@ const Favourite: React.FC = () => {
               <>{console.log("not yet")}</>
             ) : (
               <>
-                <Grid
-                  item
-                  xs={12}
-                  container
-                  justifyContent="center"
-                  mt="8rem"
-                >
+                <Grid item xs={12} container justifyContent="center" mt="8rem">
                   <CardMedia
                     component="img"
                     sx={{
@@ -71,6 +66,7 @@ const Favourite: React.FC = () => {
               </>
             )}
           </Grid>
+          <ConsecutiveSnackbars />
         </Box>
       </Box>
 

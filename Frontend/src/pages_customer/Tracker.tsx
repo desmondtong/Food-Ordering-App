@@ -25,6 +25,7 @@ import { Props, TrackerToaster, data } from "../interfaces";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
+import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
 const Tracker: React.FC = () => {
   const userCtx = useContext(UserContext);
@@ -122,13 +123,13 @@ const Tracker: React.FC = () => {
         alignItems="center"
         height="100vh"
         className="tracker"
-        // sx={{
-        //   backgroundImage:
-        //     "url(../tracker-bg.png),linear-gradient(var(--orange),var(--blue))",
-        //   backgroundRepeat: "no-repeat",
-        //   backgroundSize: "cover",
-        //   backgroundPosition: "center",
-        // }}
+        sx={{
+          backgroundImage:
+            "url(../tracker-bg.png),linear-gradient(var(--orange),var(--blue))",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
         <IconButton
           sx={{ bgcolor: "var(--white)", m: "2rem" }}
@@ -283,9 +284,10 @@ const Tracker: React.FC = () => {
             </Grid>
           </Grid>
         </Paper>
+        <ConsecutiveSnackbars />
       </Stack>
 
-      {/* add item modal */}
+      {/* rating review modal */}
       <Dialog open={openReview} fullWidth maxWidth="sm">
         <DialogTitle variant="h6" fontWeight="bold" textAlign="center">
           Rate our service

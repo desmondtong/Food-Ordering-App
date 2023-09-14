@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import pool from "../db/db";
+import { io } from "../../server";
 
 // orders
 const createOrder = async (req: Request, res: Response) => {
@@ -33,10 +34,12 @@ const updateOrder = async (req: Request, res: Response) => {
       req.body;
 
     if ("status" in req.body) {
-      await pool.query("UPDATE orders SET status = $1 WHERE uuid = $2", [
-        status,
-        req.params.order_id,
-      ]);
+      const updateStatus = await pool.query(
+        "UPDATE orders SET status = $1 WHERE uuid = $2 RETURNING user_id",
+        [status, req.params.order_id]
+      );
+
+      io.emit("orderStatusUpdate", updateStatus.rows[0].user_id);
     }
     if ("rating" in req.body) {
       try {
@@ -69,7 +72,7 @@ const updateOrder = async (req: Request, res: Response) => {
         await pool.query("COMMIT");
       } catch (error: any) {
         await pool.query("ROLLBACK");
-        
+
         console.error(error.message);
         res
           .status(500)

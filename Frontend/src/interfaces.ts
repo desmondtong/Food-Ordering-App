@@ -43,6 +43,15 @@ export interface UserContextType {
   imageUrl: string;
   setImageUrl: React.Dispatch<React.SetStateAction<string>>;
   displayImage: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
+
+  userInfo: Props;
+  getUserInfo: () => Promise<void>;
+
+  // snackbar
+  snackPack: readonly SnackbarMessage[];
+  setSnackPack: React.Dispatch<
+    React.SetStateAction<readonly SnackbarMessage[]>
+  >;
 }
 
 export interface data {
@@ -133,6 +142,7 @@ export interface Props {
   vendorInfo?: Props;
 
   postal_code?: string;
+  contact?: string;
 }
 
 export type OrderInfo = Props[][];
@@ -196,4 +206,9 @@ export interface TrackerToaster {
     width?: number[];
     variant?: variant[];
   };
+}
+
+export interface SnackbarMessage {
+  message: string;
+  key: number;
 }
