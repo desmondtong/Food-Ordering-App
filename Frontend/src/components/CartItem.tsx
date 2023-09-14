@@ -148,6 +148,7 @@ const CartItem: React.FC<Props> = (props) => {
               <Button
                 variant="contained"
                 onClick={() => handleUpdateQuantity(false)}
+                color="warning"
               >
                 -
               </Button>
@@ -158,6 +159,7 @@ const CartItem: React.FC<Props> = (props) => {
               <Button
                 variant="contained"
                 onClick={() => handleUpdateQuantity()}
+                color="warning"
               >
                 +
               </Button>

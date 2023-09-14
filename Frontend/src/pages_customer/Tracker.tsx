@@ -346,6 +346,7 @@ const Tracker: React.FC = () => {
                 fullWidth
                 variant="contained"
                 onClick={updateOrderRatingReviews}
+                color="warning"
               >
                 Submit
               </Button>

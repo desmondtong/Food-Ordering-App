@@ -133,7 +133,7 @@ const RestaurantDetails: React.FC = () => {
         //filter orders only with rating or review
         const orderInfo = res.data;
         const filteredOrderInfo = orderInfo.filter(
-          (item: any) => item[0].rating || item[0].review
+          (item: any) => item?.[0]?.rating || item?.[0]?.review
         );
         setReviewInfo(filteredOrderInfo);
       }
@@ -193,6 +193,7 @@ const RestaurantDetails: React.FC = () => {
                   variant="contained"
                   size="small"
                   onClick={() => setDisplayInfo(false)}
+                  color="warning"
                 >
                   Back
                 </Button>
@@ -201,6 +202,7 @@ const RestaurantDetails: React.FC = () => {
                   variant="contained"
                   size="small"
                   onClick={handleDisplayInfo}
+                  color="warning"
                 >
                   Review & Info
                 </Button>

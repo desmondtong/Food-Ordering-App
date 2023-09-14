@@ -169,6 +169,7 @@ const CheckOut: React.FC = () => {
                 fullWidth
                 onClick={createOrder}
                 disabled={userCtx?.haveActiveOrder}
+                color="warning"
               >
                 Place Order
               </Button>

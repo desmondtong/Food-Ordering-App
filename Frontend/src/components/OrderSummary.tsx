@@ -114,6 +114,7 @@ const OrderSummary: React.FC<Props> = (props) => {
                   variant="contained"
                   onClick={() => navigate(`/cart/${params.item}/checkout`)}
                   disabled={userCtx?.haveActiveOrder}
+                  color="warning"
                 >
                   Checkout
                 </Button>

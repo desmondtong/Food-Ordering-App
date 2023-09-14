@@ -33,7 +33,6 @@ import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 
-
 const Menu: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
@@ -203,6 +202,7 @@ const Menu: React.FC = () => {
                 variant="contained"
                 size="small"
                 onClick={() => setOpenAdd(true)}
+                color="warning"
               >
                 + Add Item
               </Button>
@@ -228,7 +228,7 @@ const Menu: React.FC = () => {
               </Grid>
             ))}
           </Grid>
-          <ConsecutiveSnackbars/>
+          <ConsecutiveSnackbars />
         </Box>
       </Box>
 
@@ -307,7 +307,12 @@ const Menu: React.FC = () => {
         <DialogActions>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Button fullWidth variant="contained" onClick={handleAddItem}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleAddItem}
+                color="warning"
+              >
                 Add Item
               </Button>
             </Grid>
@@ -319,6 +324,7 @@ const Menu: React.FC = () => {
                   setOpenAdd(false);
                   userCtx?.setImageUrl("");
                 }}
+                color="warning"
               >
                 Cancel
               </Button>
@@ -406,7 +412,12 @@ const Menu: React.FC = () => {
         <DialogActions>
           <Grid container spacing={1}>
             <Grid item xs={12}>
-              <Button fullWidth variant="contained" onClick={handleAddCat}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleAddCat}
+                color="warning"
+              >
                 Add Item
               </Button>
             </Grid>

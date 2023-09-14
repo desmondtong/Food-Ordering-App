@@ -385,6 +385,7 @@ const ItemCard: React.FC<Props> = (props) => {
                 fullWidth
                 variant="contained"
                 onClick={() => handleUpdate(false)}
+                color="warning"
               >
                 Save Changes
               </Button>
@@ -397,13 +398,19 @@ const ItemCard: React.FC<Props> = (props) => {
                   setOpenUpdate(false);
                   userCtx?.setImageUrl("");
                 }}
+                color="warning"
               >
                 Cancel
               </Button>
             </Grid>
             <Grid item xs={12} height="2rem"></Grid>
             <Grid item xs={12}>
-              <Button fullWidth variant="contained" onClick={handleDelete}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleDelete}
+                color="error"
+              >
                 Delete Item
               </Button>
             </Grid>
@@ -497,7 +504,12 @@ const ItemCard: React.FC<Props> = (props) => {
               </IconButton>
             </Grid>
             <Grid item xs={9}>
-              <Button fullWidth variant="contained" onClick={handleAddToCart}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleAddToCart}
+                color="warning"
+              >
                 Add To Cart
               </Button>
             </Grid>

@@ -137,9 +137,14 @@ const NavBar: React.FC = () => {
                       horizontal: "right",
                     }}
                   >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemIcon sx={{ color: "var(--orange)" }}>
+                      {item.icon}
+                    </ListItemIcon>
                   </StyledBadge>
-                  <ListItemText primary={item.item} />
+                  <ListItemText
+                    primary={item.item}
+                    sx={{ color: "var(--orange)" }}
+                  />
                 </ListItemButton>
               </ListItem>
             </NavLink>
@@ -167,11 +172,13 @@ const NavBar: React.FC = () => {
                       horizontal: "right",
                     }}
                   >
-                    <ListItemIcon>{item.icon}</ListItemIcon>
+                    <ListItemIcon sx={{ color: "var(--orange)" }}>
+                      {item.icon}
+                    </ListItemIcon>
                   </StyledBadge>
                   <ListItemText
                     primary={item.item}
-                    sx={{ color: "var(--darkgrey-text)" }}
+                    sx={{ color: "var(--orange)" }}
                   />
                 </ListItemButton>
               </ListItem>
@@ -184,9 +191,9 @@ const NavBar: React.FC = () => {
         <ListItem key={"Logout"} onClick={userCtx?.handleLogout}>
           <ListItemButton>
             <ListItemIcon>
-              <LogoutIcon />
+              <LogoutIcon sx={{ color: "var(--orange)" }} />
             </ListItemIcon>
-            <ListItemText primary={"Logout"} />
+            <ListItemText primary={"Logout"} sx={{ color: "var(--orange)" }} />
           </ListItemButton>
         </ListItem>
       </List>
