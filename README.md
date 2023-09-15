@@ -9,6 +9,10 @@ With an intuitive interface and a vast selection of culinary options, Burps offe
 This is a final fullstack web application as part of General Assembly's Software Engineering Immersive. 
 
 ---
+## Data Modelling
+<img width="1512" alt="image" src="https://github.com/desmondtong/Food-Ordering-App/assets/107420497/6df445b1-06ef-4a93-b9ea-6b4b0cf18951">
+
+---
 ## Feature Highlights
 <img width="1511" alt="image" src="https://github.com/desmondtong/Project-4/assets/107420497/b6a96702-7da1-4340-9f7f-4951c13afee2">
 
