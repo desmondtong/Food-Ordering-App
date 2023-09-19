@@ -74,7 +74,6 @@ This is a final fullstack web application as part of General Assembly's Software
 
 ### Others
 - Socket.io
-- Design system: Material 3
 - Data modelling: Draw.io
 
 ---
