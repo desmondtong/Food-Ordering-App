@@ -29,7 +29,6 @@ const Homepage: React.FC = () => {
   const [vendors, setVendors] = useState<Props[]>([]);
   const [displayVendors, setDisplayVendors] = useState<Props[]>([]);
   const [isSearching, setIsSearching] = useState<Boolean>(false);
-  const [favourite, setFavourite] = useState<Props[]>([]);
 
   // function
   const handleSearch = (
