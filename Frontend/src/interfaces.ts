@@ -143,6 +143,9 @@ export interface Props {
 
   postal_code?: string;
   contact?: string;
+
+  // favourite page
+  favourite?: boolean;
 }
 
 export type OrderInfo = Props[][];

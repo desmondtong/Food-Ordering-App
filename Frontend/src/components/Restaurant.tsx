@@ -17,7 +17,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 const Restaurant: React.FC<Props> = (props) => {
   const navigate = useNavigate();
 
-  const [favorite, setFavorite] = useState<Boolean>(false);
+  const [favourite, setFavourite] = useState<Boolean>(props.favourite || false);
 
   return (
     <Card sx={{ borderRadius: "0.5rem" }} elevation={10}>
@@ -35,15 +35,15 @@ const Restaurant: React.FC<Props> = (props) => {
           image="./WESTERN.jpg" // to add to row to vendor_details table
         ></CardMedia>
 
-        {/* favorite button */}
+        {/* favourite button */}
         <IconButton
           className="love-icon"
           size="small"
           style={{ backgroundColor: "var(--white)" }}
           sx={{ m: "1rem" }}
-          onClick={() => setFavorite(!favorite)}
+          onClick={() => setFavourite(!favourite)}
         >
-          {favorite ? (
+          {favourite ? (
             <FavoriteIcon fontSize="small" sx={{ color: "red" }}></FavoriteIcon>
           ) : (
             <FavoriteBorderIcon

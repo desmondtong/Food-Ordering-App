@@ -29,6 +29,7 @@ const Homepage: React.FC = () => {
   const [vendors, setVendors] = useState<Props[]>([]);
   const [displayVendors, setDisplayVendors] = useState<Props[]>([]);
   const [isSearching, setIsSearching] = useState<Boolean>(false);
+  const [favourite, setFavourite] = useState<Props[]>([]);
 
   // function
   const handleSearch = (
@@ -91,8 +92,37 @@ const Homepage: React.FC = () => {
     );
 
     if (res.ok) {
-      setVendors(res.data);
-      setDisplayVendors(res.data);
+      getFavourites(res.data);
+      // setVendors(res.data);
+      // setDisplayVendors(res.data);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const getFavourites = async (vendorArr: Props[]) => {
+    const res: data = await fetchData(
+      "/auth/favourite",
+      "POST",
+      {
+        user_id: userCtx?.userId,
+      },
+      userCtx?.accessToken
+    );
+
+    const vendorIdArr = res.data.reduce((acc: string[], item: any) => {
+      acc.push(item.uuid);
+      return acc;
+    }, []);
+
+    // add additional key to vendor object its user's favourite
+    for (const vendor of vendorArr) {
+      if (vendorIdArr.includes(vendor.uuid)) vendor["favourite"] = true;
+    }
+
+    if (res.ok) {
+      setVendors(vendorArr);
+      setDisplayVendors(vendorArr);
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -196,9 +226,7 @@ const Homepage: React.FC = () => {
                     key={idx}
                     onClick={(e) => handleSearch(e, false)}
                   >
-                    <Cuisine
-                      category={category}
-                    ></Cuisine>
+                    <Cuisine category={category}></Cuisine>
                   </Grid>
                 ))}
               </>
@@ -233,6 +261,7 @@ const Homepage: React.FC = () => {
                   address={item.address}
                   rating={item.rating}
                   uuid={item.uuid}
+                  favourite={item.favourite}
                 ></Restaurant>
               </Grid>
             ))}

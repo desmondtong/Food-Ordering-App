@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
@@ -6,12 +6,40 @@ import { Typography, Box, Grid, CardMedia, Button } from "@mui/material";
 import OrderToaster from "../components/OrderToaster";
 import TopBar from "../components/TopBar";
 
+import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
+import { Props, data } from "../interfaces";
+import Restaurant from "../components/Restaurant";
 
 const Favourite: React.FC = () => {
+  const fetchData = useFetch();
   const userCtx = useContext(UserContext);
   const navigate = useNavigate();
+
+  const [favourite, setFavourite] = useState<Props[]>([]);
+
+  // endpoint
+  const getFavourites = async () => {
+    const res: data = await fetchData(
+      "/auth/favourite",
+      "POST",
+      {
+        user_id: userCtx?.userId,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setFavourite(res.data);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  useEffect(() => {
+    getFavourites();
+  }, []);
 
   return (
     <>
@@ -22,9 +50,21 @@ const Favourite: React.FC = () => {
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
           <TopBar></TopBar>
-          <Grid container columnSpacing={8}>
-            {userCtx?.cartItemInfo.orders?.length != 0 ? (
-              <>{console.log("not yet")}</>
+          <Grid container mt="1.5rem" alignItems="center" spacing={4}>
+            {favourite.length != 0 ? (
+              <>
+                {favourite.map((item, idx) => (
+                  <Grid item xs={3} key={idx}>
+                    <Restaurant
+                      name={item.store_name}
+                      address={item.address}
+                      rating={item.rating}
+                      uuid={item.uuid}
+                      favourite={true}
+                    ></Restaurant>
+                  </Grid>
+                ))}
+              </>
             ) : (
               <>
                 <Grid item xs={12} container justifyContent="center" mt="8rem">
@@ -57,6 +97,7 @@ const Favourite: React.FC = () => {
                     variant="outlined"
                     size="large"
                     onClick={() => navigate("/")}
+                    color="warning"
                   >
                     Browse Now
                   </Button>

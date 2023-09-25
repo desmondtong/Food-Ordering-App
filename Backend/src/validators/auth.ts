@@ -101,6 +101,18 @@ const validateUpdateOperatings = [
     .isTime({ hourFormat: "hour24" }),
 ];
 
+const validateAddFavourite = [
+  body("user_id", "user id is required")
+    .notEmpty()
+    .isString()
+    .isLength({ min: 36, max: 36 }),
+  body("fav_vendor_id", "fav vendor id is required")
+    .optional()
+    .notEmpty()
+    .isString()
+    .isLength({ min: 36, max: 36 }),
+];
+
 export {
   validateIdInParam,
   validateRegistrationData,
@@ -108,4 +120,5 @@ export {
   validateRefreshToken,
   validateUpdateProfile,
   validateUpdateOperatings,
+  validateAddFavourite,
 };

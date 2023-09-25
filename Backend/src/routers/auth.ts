@@ -8,6 +8,7 @@ import {
   validateRegistrationData,
   validateUpdateProfile,
   validateUpdateOperatings,
+  validateAddFavourite,
 } from "../validators/auth";
 import { auth, authVendor } from "../middleware/auth";
 import { validation as checkValid } from "../middleware/checkValid";
@@ -21,6 +22,9 @@ import {
   deleteAccount,
   updateVendorOperatings,
   getAllVendor,
+  getAllFavourite,
+  addFavourite,
+  delFavourite,
 } from "../controllers/auth";
 
 router.get("/accounts", auth, getAllAccount);
@@ -59,6 +63,22 @@ router.patch(
   validateUpdateOperatings,
   checkValid,
   updateVendorOperatings
+);
+
+router.post(
+  "/favourite",
+  auth,
+  validateAddFavourite,
+  checkValid,
+  getAllFavourite
+);
+router.put("/favourite", auth, validateAddFavourite, checkValid, addFavourite);
+router.delete(
+  "/favourite",
+  auth,
+  validateAddFavourite,
+  checkValid,
+  delFavourite
 );
 
 export default router;

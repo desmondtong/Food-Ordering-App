@@ -444,7 +444,98 @@ const updateVendorOperatings = async (req: Request, res: Response) => {
   }
 };
 
-// const updateUserAddress (multiple address)
+// customer favourite
+const getAllFavourite = async (req: Request, res: Response) => {
+  try {
+    const {
+      user_id,
+    }: {
+      user_id: String;
+    } = req.body;
+
+    const allFav = await pool.query(
+      "SELECT * FROM user_favourite WHERE user_id = $1 AND is_deleted = FALSE",
+      [user_id]
+    );
+    const vendorArr = allFav.rows.reduce((acc: String[], item) => {
+      acc.push(item.fav_vendor_id);
+      return acc;
+    }, []);
+
+    // looping to get
+    let allVendorInfo: any = [];
+    for (const id of vendorArr) {
+      const vendorInfo = await pool.query(
+        "SELECT * FROM users JOIN addresses ON uuid = id JOIN vendor_details ON uuid = vendor_id WHERE uuid = $1",
+        [id]
+      );
+      allVendorInfo.push(vendorInfo.rows[0]);
+    }
+
+    res.json(allVendorInfo);
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: error.message });
+  }
+};
+
+const addFavourite = async (req: Request, res: Response) => {
+  try {
+    const {
+      user_id,
+      fav_vendor_id,
+    }: {
+      user_id: String;
+      fav_vendor_id: String;
+    } = req.body;
+
+    // check if fav_vendor already exist
+    const checkFav = await pool.query(
+      "SELECT * FROM user_favourite WHERE user_id = $1 AND fav_vendor_id = $2",
+      [user_id, fav_vendor_id]
+    );
+
+    // if exist then change is_deleted to FALSE; else add
+    if (checkFav.rows.length) {
+      await pool.query(
+        "UPDATE user_favourite SET is_deleted = FALSE WHERE user_id = $1 AND fav_vendor_id = $2",
+        [user_id, fav_vendor_id]
+      );
+    } else {
+      await pool.query(
+        "INSERT INTO user_favourite (user_id, fav_vendor_id) VALUES ($1, $2)",
+        [user_id, fav_vendor_id]
+      );
+    }
+
+    res.json({ msg: "added to favourite" });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: error.message });
+  }
+};
+
+const delFavourite = async (req: Request, res: Response) => {
+  try {
+    const {
+      user_id,
+      fav_vendor_id,
+    }: {
+      user_id: String;
+      fav_vendor_id: String;
+    } = req.body;
+
+    await pool.query(
+      "UPDATE user_favourite SET is_deleted = TRUE WHERE user_id = $1 AND fav_vendor_id = $2",
+      [user_id, fav_vendor_id]
+    );
+
+    res.json({ msg: "deleted from favourite" });
+  } catch (error: any) {
+    console.log(error.message);
+    res.json({ status: "error", msg: error.message });
+  }
+};
 
 export {
   register,
@@ -456,4 +547,7 @@ export {
   deleteAccount,
   updateVendorOperatings,
   getAllVendor,
+  getAllFavourite,
+  addFavourite,
+  delFavourite,
 };
