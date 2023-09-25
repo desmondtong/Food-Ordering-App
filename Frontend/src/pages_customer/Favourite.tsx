@@ -61,6 +61,7 @@ const Favourite: React.FC = () => {
                       rating={item.rating}
                       uuid={item.uuid}
                       favourite={true}
+                      getFavourites={getFavourites}
                     ></Restaurant>
                   </Grid>
                 ))}

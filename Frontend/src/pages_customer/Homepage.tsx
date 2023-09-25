@@ -92,8 +92,6 @@ const Homepage: React.FC = () => {
 
     if (res.ok) {
       getFavourites(res.data);
-      // setVendors(res.data);
-      // setDisplayVendors(res.data);
     } else {
       alert(JSON.stringify(res.data));
     }

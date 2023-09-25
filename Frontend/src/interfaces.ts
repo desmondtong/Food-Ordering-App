@@ -146,6 +146,7 @@ export interface Props {
 
   // favourite page
   favourite?: boolean;
+  getFavourites?: () => Promise<void>;
 }
 
 export type OrderInfo = Props[][];

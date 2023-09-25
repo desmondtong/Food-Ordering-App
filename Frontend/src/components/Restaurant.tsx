@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+
+import useFetch from "../hooks/useFetch";
+import UserContext from "../context/user";
+import { Props, data } from "../interfaces";
 
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -7,7 +11,6 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Grid, IconButton, Paper } from "@mui/material";
-import { Props } from "../interfaces";
 
 import StarIcon from "@mui/icons-material/Star";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
@@ -15,9 +18,58 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const Restaurant: React.FC<Props> = (props) => {
+  const fetchData = useFetch();
+  const userCtx = useContext(UserContext);
   const navigate = useNavigate();
 
   const [favourite, setFavourite] = useState<Boolean>(props.favourite || false);
+
+  // function
+  const handleFav = () => {
+    if (favourite) {
+      delFavourite();
+    } else {
+      addFavourite();
+    }
+  };
+
+  // endpoint
+  const addFavourite = async () => {
+    const res: data = await fetchData(
+      "/auth/favourite",
+      "PUT",
+      {
+        user_id: userCtx?.userId,
+        fav_vendor_id: props.uuid,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setFavourite(true);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  const delFavourite = async () => {
+    const res: data = await fetchData(
+      "/auth/favourite",
+      "DELETE",
+      {
+        user_id: userCtx?.userId,
+        fav_vendor_id: props.uuid,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      setFavourite(false);
+      props.getFavourites?.();
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
 
   return (
     <Card sx={{ borderRadius: "0.5rem" }} elevation={10}>
@@ -41,7 +93,8 @@ const Restaurant: React.FC<Props> = (props) => {
           size="small"
           style={{ backgroundColor: "var(--white)" }}
           sx={{ m: "1rem" }}
-          onClick={() => setFavourite(!favourite)}
+          // onClick={() => setFavourite(!favourite)}
+          onClick={handleFav}
         >
           {favourite ? (
             <FavoriteIcon fontSize="small" sx={{ color: "red" }}></FavoriteIcon>
