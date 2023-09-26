@@ -69,7 +69,7 @@ const History: React.FC = () => {
                     <Typography variant="body1">Past Order</Typography>
                   </TableCell>
                   <TableCell width="20%" align="center">
-                    <Typography variant="body1">Order No & Date</Typography>
+                    <Typography variant="body1">Order ID & Date</Typography>
                   </TableCell>
                   <TableCell width="20%" align="center">
                     <Typography variant="body1">Cost</Typography>
@@ -108,7 +108,7 @@ const History: React.FC = () => {
                     <TableCell align="center">
                       <Stack direction="column">
                         <Typography variant="body2" color="var(--orange)">
-                          Order no : {row.order_id?.split("-")[4].toUpperCase()}
+                          Order ID : #{row.order_id?.split("-")[4].toUpperCase()}
                         </Typography>
                         <Typography variant="body2" fontWeight="light">
                           {new Date(row.date!).toDateString().slice(4)},{" "}
@@ -117,7 +117,7 @@ const History: React.FC = () => {
                       </Stack>
                     </TableCell>
                     <TableCell align="center">
-                      <Typography variant="body2">{`$ ${row.total_price}`}</Typography>
+                      <Typography variant="body2">{`S$ ${row.total_price}`}</Typography>
                     </TableCell>
                     <TableCell align="center">
                       <Typography

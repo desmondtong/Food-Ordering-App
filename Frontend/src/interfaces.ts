@@ -147,6 +147,11 @@ export interface Props {
   // favourite page
   favourite?: boolean;
   getFavourites?: () => Promise<void>;
+
+  // history
+  first_name?: string;
+  last_name?: string;
+  email?: string;
 }
 
 export type OrderInfo = Props[][];
