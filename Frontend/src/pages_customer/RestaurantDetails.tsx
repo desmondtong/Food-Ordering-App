@@ -97,8 +97,13 @@ const RestaurantDetails: React.FC = () => {
       userCtx?.accessToken
     );
 
+    const orderIdArr = res.data.reduce((acc: string[], item: any) => {
+      acc.push(item.order_id);
+      return acc;
+    }, []);
+
     if (res.ok) {
-      getOrderByOrderId(res.data.order_id);
+      getOrderByOrderId(orderIdArr);
     } else {
       alert(JSON.stringify(res.data));
     }
