@@ -141,7 +141,14 @@ const getItemsOrdersByOrderId = async (req: Request, res: Response) => {
     let orderInfoArr = [];
     for (const order_id of order_ids) {
       const getByOrderId = await pool.query(
-        "SELECT orders.user_id, user_details.first_name AS customer_name, orders.vendor_id, order_id, status, rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, image_url FROM orders JOIN items_orders ON orders.uuid = order_id JOIN items ON item_id = items.uuid JOIN user_details ON orders.user_id = user_details.user_id WHERE orders.uuid = $1",
+        `SELECT orders.user_id, user_details.first_name AS customer_name, orders.vendor_id, store_name, order_id, status, orders.rating, total_price, review, date, time, item_id, name, items_orders.item_price, quantity_ordered, user_note, items.image_url, vendor_details.image_url AS vendor_image_url, address 
+        FROM orders 
+        JOIN items_orders ON orders.uuid = order_id 
+        JOIN items ON item_id = items.uuid 
+        JOIN user_details ON orders.user_id = user_details.user_id
+        JOIN vendor_details ON orders.vendor_id = vendor_details.vendor_id
+        JOIN addresses ON id = orders.vendor_id 
+        WHERE orders.uuid = $1`,
         [order_id]
       );
 
@@ -170,16 +177,6 @@ const getItemsOrdersByVendorId = async (req: Request, res: Response) => {
       ORDER BY date DESC, time DESC`,
       [vendor_id, "COMPLETED", "CANCELLED"]
     );
-
-    // const getByVendorId = await pool.query(
-    //   "SELECT uuid FROM orders WHERE vendor_id = $1",
-    //   [vendor_id]
-    // );
-
-    // const order_id = getByVendorId.rows.reduce((acc, item) => {
-    //   acc.push(item.uuid);
-    //   return acc;
-    // }, []);
 
     res.status(201).json(getByVendorId.rows);
   } catch (error: any) {

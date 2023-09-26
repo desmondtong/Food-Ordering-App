@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 import {
@@ -26,6 +27,7 @@ import TopBar from "../components/TopBar";
 const History: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [historyOrders, setHistoryOrders] = useState<Props[]>([]);
 
@@ -85,7 +87,7 @@ const History: React.FC = () => {
                   <TableRow
                     hover
                     key={idx}
-                    onClick={() => console.log(row.order_id)}
+                    onClick={() => navigate(`details/${row.order_id}`)}
                   >
                     <TableCell>
                       <Stack
@@ -108,7 +110,8 @@ const History: React.FC = () => {
                     <TableCell align="center">
                       <Stack direction="column">
                         <Typography variant="body2" color="var(--orange)">
-                          Order ID : #{row.order_id?.split("-")[4].toUpperCase()}
+                          Order ID : #
+                          {row.order_id?.split("-")[4].toUpperCase()}
                         </Typography>
                         <Typography variant="body2" fontWeight="light">
                           {new Date(row.date!).toDateString().slice(4)},{" "}

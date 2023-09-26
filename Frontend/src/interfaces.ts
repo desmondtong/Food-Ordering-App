@@ -152,6 +152,7 @@ export interface Props {
   first_name?: string;
   last_name?: string;
   email?: string;
+  vendor_image_url?: string;
 }
 
 export type OrderInfo = Props[][];
