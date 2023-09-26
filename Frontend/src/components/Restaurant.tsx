@@ -84,7 +84,7 @@ const Restaurant: React.FC<Props> = (props) => {
             p: "0.7rem",
           }}
           style={{ borderRadius: "1rem" }}
-          image="./WESTERN.jpg" // to add to row to vendor_details table
+          image={props.image_url || "./WESTERN.jpg"} // to add to row to vendor_details table
         ></CardMedia>
 
         {/* favourite button */}

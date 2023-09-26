@@ -154,7 +154,7 @@ const RestaurantDetails: React.FC = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
-                  image="../public/WESTERN.jpg"
+                  image={vendorInfo.image_url || "../public/WESTERN.jpg"}
                 />
               </Card>
             </Grid>

@@ -186,7 +186,6 @@ function App() {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("userId");
     localStorage.removeItem("role");
-    // localStorage.removeItem("userInfo");
 
     localStorage.removeItem("customerClaims");
     localStorage.removeItem("vendorClaims");
@@ -195,10 +194,10 @@ function App() {
     setRefreshToken("");
     setRole("");
     setUserId("");
-    // setUserInfo({});
 
     setCustomerClaims({});
     setVendorClaims({});
+    setHaveActiveOrder(false);
 
     if (role === "CUSTOMER") {
       navigate("/");

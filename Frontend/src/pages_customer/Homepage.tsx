@@ -259,6 +259,7 @@ const Homepage: React.FC = () => {
                   rating={item.rating}
                   uuid={item.uuid}
                   favourite={item.favourite}
+                  image_url={item.image_url}
                 ></Restaurant>
               </Grid>
             ))}
