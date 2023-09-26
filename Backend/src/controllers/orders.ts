@@ -179,19 +179,21 @@ const getItemsOrdersByUserId = async (req: Request, res: Response) => {
   try {
     const user_id: String = req.body.user_id;
     const getByUserId = await pool.query(
-      "SELECT * FROM orders WHERE user_id = $1",
-      [user_id]
+      `WITH PastOrder AS (
+        SELECT uuid FROM orders WHERE user_id = $1 AND (status = $2 OR status = $3)
+      )
+      SELECT orders.uuid as order_id, orders.vendor_id, status, total_price, date, time, store_name, image_url
+      FROM PastOrder 
+      JOIN orders ON orders.uuid = PastOrder.uuid
+      JOIN vendor_details ON vendor_details.vendor_id = orders.vendor_id
+      ORDER BY date DESC, time DESC`,
+      [user_id, "COMPLETED", "CANCELLED"]
     );
 
-    const order_id = getByUserId.rows.reduce((acc, item) => {
-      acc.push(item.uuid);
-      return acc;
-    }, []);
-
-    res.status(201).json({ order_id });
+    res.status(201).json(getByUserId.rows);
   } catch (error: any) {
     console.log(error.message);
-    res.json({ status: "error", msg: "Get items_orders failed" });
+    res.json({ status: "error", msg: "Get all user orders failed" });
   }
 };
 

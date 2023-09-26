@@ -106,7 +106,7 @@ export interface Props {
 
   // restaurant card component
   address?: String;
-  store_name?: String;
+  store_name?: string;
   displayVendors?: Props[];
 
   // top bar component
@@ -116,14 +116,14 @@ export interface Props {
 
   // cart item component
   orders?: Props[];
-  total_price?: String;
+  total_price?: string;
   cart_id?: String;
   getCartItems?: () => Promise<void>;
   user_note?: String;
   quantity_ordered?: String;
 
   // order accordian component
-  order_id?: String;
+  order_id?: string;
   orderInfo?: Props[];
   status?: keyof statuses;
   date?: string;
