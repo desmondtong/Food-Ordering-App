@@ -217,7 +217,7 @@ const HistoryDetail: React.FC = () => {
         </Box>
       </Box>
 
-      <OrderToaster></OrderToaster>
+      {userCtx?.role === "CUSTOMER" && <OrderToaster></OrderToaster>}
     </>
   );
 };

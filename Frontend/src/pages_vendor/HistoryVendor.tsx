@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 import {
@@ -23,6 +24,7 @@ import SearchBar from "../components/SearchBar";
 const HistoryVendor: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [historyOrders, setHistoryOrders] = useState<Props[]>([]);
   const [displayHistoryOrders, setDisplayHistoryOrders] = useState<Props[]>([]);
@@ -79,7 +81,9 @@ const HistoryVendor: React.FC = () => {
         >
           <TopBar></TopBar>
 
-          <SearchBar handleSearch={handleSearch}>Search by Order ID or email</SearchBar>
+          <SearchBar handleSearch={handleSearch}>
+            Search by Order ID or email
+          </SearchBar>
 
           <TableContainer component={Paper} elevation={0} sx={{ mt: "1.5rem" }}>
             <Table sx={{ minWidth: 650 }}>
@@ -114,7 +118,8 @@ const HistoryVendor: React.FC = () => {
                   <TableRow
                     hover
                     key={idx}
-                    onClick={() => console.log(row.order_id)}
+                    // onClick={() => console.log(row.order_id)}
+                    onClick={() => navigate(`details/${row.order_id}`)}
                   >
                     <TableCell>
                       <Typography variant="body1" color="var(--orange)">

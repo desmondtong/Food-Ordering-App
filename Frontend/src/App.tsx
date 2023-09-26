@@ -325,6 +325,10 @@ function App() {
               <Route path="/menu" element={<Menu />}></Route>
 
               <Route path="/history" element={<HistoryVendor />}></Route>
+              <Route
+                path="history/details/:item"
+                element={<HistoryDetail />}
+              ></Route>
 
               <Route path="/alert" element={<Alert />}></Route>
 
