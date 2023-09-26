@@ -225,6 +225,26 @@ const Login: React.FC = () => {
                     Sign Up
                   </Link>
                 </Typography>
+                <Typography
+                  variant="body1"
+                  fontSize="0.8rem"
+                  textAlign="center"
+                >
+                  {pathName === "/login/vendor"
+                ? "Not a vendor?"
+                : "Are you a vendor?"}
+                  <Link
+                    href={
+                      pathName === "/login/vendor"
+                        ? "/"
+                        : "/login/vendor"
+                    }
+                    variant="body2"
+                    ml="0.3rem"
+                  >
+                    Login here
+                  </Link>
+                </Typography>
               </Box>
             </Grid>
 
