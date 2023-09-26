@@ -4,7 +4,7 @@
 
 Burps is a user-friendly food ordering application that simplifies the process of discovering, selecting, and ordering delicious meals from a wide range of local restaurants. 
 
-With an intuitive interface and a vast selection of culinary options, Burps offers users the convenience of browsing diverse menus, customizing orders, and tracking deliveries in real-time.
+With an intuitive interface and a vast selection of culinary options, Burps offers users the convenience of browsing diverse menus, customizing orders, and tracking deliveries in real-time. Currently, Burps have a customer site and vendor portal.
 
 This is a final fullstack web application as part of General Assembly's Software Engineering Immersive. 
 
