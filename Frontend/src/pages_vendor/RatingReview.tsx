@@ -1,16 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 
-import {
-  Stack,
-  Box,
-  FormControl,
-  InputLabel,
-  Typography,
-  OutlinedInput,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
+import { Stack, Box } from "@mui/material";
 import OrderAccordian from "../components/OrderAccordian";
 import TopBar from "../components/TopBar";
 
@@ -18,8 +9,8 @@ import useFetch from "../hooks/useFetch";
 import UserContext from "../context/user";
 import { Props, data } from "../interfaces";
 
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
+import SearchBar from "../components/SearchBar";
 
 const RatingReview: React.FC = () => {
   const fetchData = useFetch();
@@ -101,35 +92,7 @@ const RatingReview: React.FC = () => {
         >
           <TopBar></TopBar>
 
-          <FormControl
-            fullWidth
-            variant="outlined"
-            onChange={handleSearch}
-            sx={{
-              boxShadow: 3,
-              borderRadius: "2rem",
-              bgcolor: "var(--lightgrey)",
-              mt: "1.5rem",
-            }}
-            className="search-bar"
-          >
-            <InputLabel htmlFor="outlined-adornment" sx={{ ml: "0.5rem" }}>
-              <Typography>Search</Typography>
-            </InputLabel>
-            <OutlinedInput
-              id="outlined-adornment"
-              type="text"
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton edge="end" disabled sx={{ mr: "0.1rem" }}>
-                    <SearchOutlinedIcon className="icon-orange" />
-                  </IconButton>
-                </InputAdornment>
-              }
-              label="Search"
-              sx={{ borderRadius: "2rem" }}
-            />
-          </FormControl>
+          <SearchBar handleSearch={handleSearch}>Search by Order ID</SearchBar>
 
           <Stack my="2rem" spacing={3}>
             {displayOrderInfo?.map((item, idx) => (

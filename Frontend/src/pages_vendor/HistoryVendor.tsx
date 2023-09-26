@@ -18,12 +18,33 @@ import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 import UserContext from "../context/user";
 import useFetch from "../hooks/useFetch";
 import { Props, data } from "../interfaces";
+import SearchBar from "../components/SearchBar";
 
 const HistoryVendor: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
 
   const [historyOrders, setHistoryOrders] = useState<Props[]>([]);
+  const [displayHistoryOrders, setDisplayHistoryOrders] = useState<Props[]>([]);
+
+  // function
+  const handleSearch = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    let filtered, input: HTMLInputElement;
+    input = e.target as HTMLInputElement;
+
+    filtered = historyOrders.filter((item) => {
+      const lowerCaseTitle = item.order_id?.toLowerCase();
+      const lowerCaseEmail = item.email?.toLowerCase();
+
+      const lowerCaseInput = input.value.toLowerCase();
+      return (
+        lowerCaseTitle?.includes(lowerCaseInput) ||
+        lowerCaseEmail?.includes(lowerCaseInput)
+      );
+    });
+
+    setDisplayHistoryOrders(filtered);
+  };
 
   // endpoint
   const getAllOrders = async () => {
@@ -38,6 +59,7 @@ const HistoryVendor: React.FC = () => {
 
     if (res.ok) {
       setHistoryOrders(res.data);
+      setDisplayHistoryOrders(res.data);
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -56,6 +78,8 @@ const HistoryVendor: React.FC = () => {
           sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
         >
           <TopBar></TopBar>
+
+          <SearchBar handleSearch={handleSearch}>Search by Order ID or email</SearchBar>
 
           <TableContainer component={Paper} elevation={0} sx={{ mt: "1.5rem" }}>
             <Table sx={{ minWidth: 650 }}>
@@ -86,7 +110,7 @@ const HistoryVendor: React.FC = () => {
               </TableHead>
 
               <TableBody>
-                {historyOrders.map((row, idx) => (
+                {displayHistoryOrders.map((row, idx) => (
                   <TableRow
                     hover
                     key={idx}
