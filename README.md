@@ -137,7 +137,6 @@ Check out the [Figma](https://www.figma.com/file/cxrzwdPGh25mIMrTZ5zpox/Project-
 
 - Add chatbox to ease communication between customer and vendor
 - Add dashboard to vendor portal to populate sales analytics
-- Display all order histories for both customer and vendor 
 - Utilize OneMap API to estimate distance time for order deliveries
 - Incorporate payment method using Stripe
 
