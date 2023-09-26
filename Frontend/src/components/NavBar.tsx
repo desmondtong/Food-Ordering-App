@@ -161,7 +161,11 @@ const NavBar: React.FC = () => {
               key={idx}
             >
               <ListItem>
-                <ListItemButton>
+                <ListItemButton
+                  sx={{
+                    borderRadius: "0.5rem",
+                  }}
+                >
                   <StyledBadge
                     badgeContent={
                       item.item === "Alert" ? userCtx.orderInfo?.length : 0

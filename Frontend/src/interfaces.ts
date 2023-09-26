@@ -166,7 +166,7 @@ export interface statuses {
 }
 
 export interface navBarType {
-  item: String;
+  item: string;
   link: To;
   icon: JSX.Element;
 }
