@@ -84,15 +84,18 @@ const HistoryDetail: React.FC = () => {
             sx={{ borderRadius: "1rem", backgroundColor: "var(--lightgrey)" }}
             elevation={2}
           >
-            <CardMedia
-              component="img"
-              sx={{
-                aspectRatio: 3,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-              image={image_url || "../../public/WESTERN.jpg"}
-            />
+            {userCtx?.role === "CUSTOMER" && (
+              <CardMedia
+                component="img"
+                sx={{
+                  aspectRatio: 3,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+                image={image_url || "../../public/WESTERN.jpg"}
+              />
+            )}
+            
             <CardContent>
               <Typography variant="h5" gutterBottom>
                 Order ID #{formattedOrderId}

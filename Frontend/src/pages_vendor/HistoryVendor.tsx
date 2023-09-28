@@ -118,7 +118,6 @@ const HistoryVendor: React.FC = () => {
                   <TableRow
                     hover
                     key={idx}
-                    // onClick={() => console.log(row.order_id)}
                     onClick={() => navigate(`details/${row.order_id}`)}
                   >
                     <TableCell>

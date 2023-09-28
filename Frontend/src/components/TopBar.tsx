@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import {
   IconButton,
   Grid,
@@ -39,10 +39,62 @@ const TopBar: React.FC<Props> = (props) => {
   const [locationEl, setLocationEl] = useState<null | HTMLElement>(null);
   const [vendorProfile, setVendorProfile] = useState<boolean>(false);
   const [categories, setCategories] = useState<string[]>([]);
+  const [category, setCategory] = useState<String>(
+    userCtx?.vendorClaims.category
+  );
+
+  const storeNameRef = useRef<HTMLInputElement>();
+  const descriptionRef = useRef<HTMLInputElement>();
+  const addressRef = useRef<HTMLInputElement>();
+  const postalCodeRef = useRef<HTMLInputElement>();
+  const contactRef = useRef<HTMLInputElement>();
 
   const todayDate = new Date().toDateString();
 
   // endpoint
+  const handleUpdateProfile = async () => {
+    const res: data = await fetchData(
+      `/auth/update/profile/${userCtx?.userId}`,
+      "PATCH",
+      {
+        contact: contactRef.current?.value,
+        address: addressRef.current?.value,
+        postal_code: postalCodeRef.current?.value,
+        category,
+        store_name: storeNameRef.current?.value,
+        description: descriptionRef.current?.value,
+        image_url: userCtx?.imageUrl || userCtx?.userInfo.image_url,
+      },
+      userCtx?.accessToken
+    );
+
+    if (res.ok) {
+      userCtx?.setVendorClaims({
+        contact: contactRef.current?.value,
+        address: addressRef.current?.value,
+        postal_code: postalCodeRef.current?.value,
+        category,
+        store_name: storeNameRef.current?.value,
+        description: descriptionRef.current?.value,
+      });
+      localStorage.setItem(
+        "vendorClaims",
+        JSON.stringify({
+          contact: contactRef.current?.value,
+          address: addressRef.current?.value,
+          postal_code: postalCodeRef.current?.value,
+          category,
+          store_name: storeNameRef.current?.value,
+          description: descriptionRef.current?.value,
+        })
+      );
+
+      setVendorProfile(false);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
   const getCategories = async () => {
     const res: data = await fetchData("/api/categories", "GET");
 
@@ -193,7 +245,7 @@ const TopBar: React.FC<Props> = (props) => {
         scroll="body"
       >
         <DialogTitle sx={{ p: 0 }} className="pic-display">
-          <Typography variant="h5" my="1rem" ml="1rem">
+          <Typography my="1rem" ml="1rem" fontSize="24px">
             Business Profile
           </Typography>
           <CardMedia
@@ -229,7 +281,7 @@ const TopBar: React.FC<Props> = (props) => {
             type="text"
             fullWidth
             defaultValue={userCtx?.vendorClaims.store_name}
-            // inputRef={storeNameRef}
+            inputRef={storeNameRef}
           />
           <TextField
             autoFocus
@@ -243,7 +295,7 @@ const TopBar: React.FC<Props> = (props) => {
             rows={3}
             fullWidth
             defaultValue={userCtx?.vendorClaims.description}
-            // inputRef={descriptionRef}
+            inputRef={descriptionRef}
           />
           <TextField
             required
@@ -253,8 +305,8 @@ const TopBar: React.FC<Props> = (props) => {
             label="Category"
             type="text"
             fullWidth
-            value={userCtx?.vendorClaims.category}
-            // onChange={(e) => setCategory(e.target.value)}
+            defaultValue={userCtx?.vendorClaims.category}
+            onChange={(e) => setCategory(e.target.value)}
           >
             {categories?.map((item, idx) => (
               <MenuItem key={idx} value={item}>
@@ -270,7 +322,7 @@ const TopBar: React.FC<Props> = (props) => {
             type="text"
             fullWidth
             defaultValue={userCtx?.vendorClaims.address}
-            // inputRef={addressRef}
+            inputRef={addressRef}
           />
           <TextField
             required
@@ -280,7 +332,7 @@ const TopBar: React.FC<Props> = (props) => {
             type="text"
             fullWidth
             defaultValue={userCtx?.vendorClaims.postal_code}
-            // inputRef={postalCodeRef}
+            inputRef={postalCodeRef}
           />
           <TextField
             autoFocus
@@ -291,12 +343,8 @@ const TopBar: React.FC<Props> = (props) => {
             type="text"
             fullWidth
             defaultValue={userCtx?.vendorClaims.contact}
-            // inputRef={contactRef}
+            inputRef={contactRef}
           />
-
-          <Typography variant="h5" mt="1.5rem">
-            Opening Times
-          </Typography>
           <Grid container alignItems="center"></Grid>
         </DialogContent>
         <DialogActions sx={{ p: "1.5rem" }}>
@@ -305,7 +353,7 @@ const TopBar: React.FC<Props> = (props) => {
               <Button
                 fullWidth
                 variant="contained"
-                // onClick={() => handleUpdate(false)}
+                onClick={handleUpdateProfile}
               >
                 Save Changes
               </Button>
