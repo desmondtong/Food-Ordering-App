@@ -4,7 +4,7 @@
 
 Burps is a user-friendly food ordering application that simplifies the process of discovering, selecting, and ordering delicious meals from a wide range of local restaurants. 
 
-With an intuitive interface and a vast selection of culinary options, Burps offers users the convenience of browsing diverse menus, customizing orders, and tracking deliveries in real-time.
+With an intuitive interface and a vast selection of culinary options, Burps offers users the convenience of browsing diverse menus, customizing orders, and tracking deliveries in real-time. Currently, Burps have a customer site and vendor portal.
 
 This is a final fullstack web application as part of General Assembly's Software Engineering Immersive. 
 
@@ -137,7 +137,6 @@ Check out the [Figma](https://www.figma.com/file/cxrzwdPGh25mIMrTZ5zpox/Project-
 
 - Add chatbox to ease communication between customer and vendor
 - Add dashboard to vendor portal to populate sales analytics
-- Display all order histories for both customer and vendor 
 - Utilize OneMap API to estimate distance time for order deliveries
 - Incorporate payment method using Stripe
 
