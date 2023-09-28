@@ -92,7 +92,7 @@ const HistoryDetail: React.FC = () => {
                   backgroundSize: "cover",
                   backgroundPosition: "center",
                 }}
-                image={image_url || "../../public/WESTERN.jpg"}
+                image={image_url}
               />
             )}
             
