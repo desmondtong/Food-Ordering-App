@@ -26,6 +26,8 @@ import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
+import HowToRegOutlinedIcon from "@mui/icons-material/HowToRegOutlined";
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 
 const drawerWidth = 280;
 
@@ -192,14 +194,44 @@ const NavBar: React.FC = () => {
       )}
 
       <List>
-        <ListItem key={"Logout"} onClick={userCtx?.handleLogout}>
-          <ListItemButton>
-            <ListItemIcon>
-              <LogoutIcon sx={{ color: "var(--orange)" }} />
-            </ListItemIcon>
-            <ListItemText primary={"Logout"} sx={{ color: "var(--orange)" }} />
-          </ListItemButton>
-        </ListItem>
+        {userCtx?.accessToken ? (
+          <ListItem key={"Logout"} onClick={userCtx?.handleLogout}>
+            <ListItemButton>
+              <ListItemIcon>
+                <LogoutIcon sx={{ color: "var(--orange)" }} />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Logout"}
+                sx={{ color: "var(--orange)" }}
+              />
+            </ListItemButton>
+          </ListItem>
+        ) : (
+          <>
+            <ListItem key={"Login"} onClick={() => navigate("/login")}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <LoginOutlinedIcon sx={{ color: "var(--orange)" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Login"}
+                  sx={{ color: "var(--orange)" }}
+                />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key={"Sign Up"} onClick={() => navigate("/registration")}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <HowToRegOutlinedIcon sx={{ color: "var(--orange)" }} />
+                </ListItemIcon>
+                <ListItemText
+                  primary={"Sign Up"}
+                  sx={{ color: "var(--orange)" }}
+                />
+              </ListItemButton>
+            </ListItem>
+          </>
+        )}
       </List>
     </Drawer>
   );

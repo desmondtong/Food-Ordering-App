@@ -223,25 +223,29 @@ const ItemCard: React.FC<Props> = (props) => {
             </Tooltip>
           </>
         ) : (
-          <Tooltip title={props.availability ? "Add To Cart" : ""}>
-            <IconButton
-              className="add-btn"
-              size="small"
-              sx={{ m: "0.6rem", boxShadow: 3 }}
-              style={{
-                backgroundColor: props.availability
-                  ? "var(--white)"
-                  : "var(--lightgrey)",
-              }}
-              onClick={props.availability ? handleOpenAdd : undefined}
-            >
-              <AddIcon
-                fontSize="small"
-                sx={{ p: "0.1rem" }}
-                className="icon-orange"
-              />
-            </IconButton>
-          </Tooltip>
+          <>
+            {userCtx?.accessToken && (
+              <Tooltip title={props.availability ? "Add To Cart" : ""}>
+                <IconButton
+                  className="add-btn"
+                  size="small"
+                  sx={{ m: "0.6rem", boxShadow: 3 }}
+                  style={{
+                    backgroundColor: props.availability
+                      ? "var(--white)"
+                      : "var(--lightgrey)",
+                  }}
+                  onClick={props.availability ? handleOpenAdd : undefined}
+                >
+                  <AddIcon
+                    fontSize="small"
+                    sx={{ p: "0.1rem" }}
+                    className="icon-orange"
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+          </>
         )}
         {!props.availability && (
           <Paper

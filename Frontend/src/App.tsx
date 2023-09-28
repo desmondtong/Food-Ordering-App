@@ -200,7 +200,7 @@ function App() {
     setHaveActiveOrder(false);
 
     if (role === "CUSTOMER") {
-      navigate("/");
+      navigate("/login");
     } else {
       navigate("/login/vendor");
     }
@@ -288,16 +288,15 @@ function App() {
       >
         <Routes>
           {/* customer pages */}
-          {!accessToken && <Route path="/" element={<Login />}></Route>}
+          {/* {!accessToken && <Route path="/" element={<Login />}></Route>} */}
+          {!accessToken && <Route path="/" element={<Homepage />}></Route>}
+          <Route path="/login" element={<Login />}></Route>
           <Route path="/registration" element={<Registration />}></Route>
+          <Route path="/details/:item" element={<RestaurantDetails />}></Route>
 
           {role === "CUSTOMER" && (
             <>
               <Route path="/" element={<Homepage />}></Route>
-              <Route
-                path="/details/:item"
-                element={<RestaurantDetails />}
-              ></Route>
 
               <Route path="/cart/:item" element={<Cart />}></Route>
               <Route path="/cart/:item/checkout" element={<CheckOut />}></Route>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 
 import {
@@ -24,6 +25,7 @@ import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
 const Homepage: React.FC = () => {
   const fetchData = useFetch();
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [categories, setCategories] = useState<String[]>([]);
   const [vendors, setVendors] = useState<Props[]>([]);
@@ -68,12 +70,7 @@ const Homepage: React.FC = () => {
 
   // endpoint
   const getCategories = async () => {
-    const res: data = await fetchData(
-      "/api/categories",
-      undefined,
-      undefined,
-      userCtx?.accessToken
-    );
+    const res: data = await fetchData("/api/categories");
 
     if (res.ok) {
       setCategories(res.data);
@@ -83,15 +80,15 @@ const Homepage: React.FC = () => {
   };
 
   const getAllVendors = async () => {
-    const res: data = await fetchData(
-      "/auth/accounts/vendor",
-      undefined,
-      undefined,
-      userCtx?.accessToken
-    );
+    const res: data = await fetchData("/auth/accounts/vendor");
 
     if (res.ok) {
-      getFavourites(res.data);
+      if (userCtx?.accessToken) {
+        getFavourites(res.data);
+      } else {
+        setVendors(res.data);
+        setDisplayVendors(res.data);
+      }
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -165,7 +162,7 @@ const Homepage: React.FC = () => {
                         textShadow: "0.5rem 0.5rem 0.5rem var(--darkgrey-text)",
                       }}
                     >
-                      Happy Mooncake Festival from{" "}
+                      Happy Mooncake Festival from
                       <span style={{ color: "var(--orange)" }}>Burps</span>
                     </Typography>
                     <Typography
@@ -196,7 +193,9 @@ const Homepage: React.FC = () => {
                     elevation={5}
                   >
                     <Typography variant="h4" mb="0.5rem">
-                      Best food for you
+                      {userCtx?.accessToken
+                        ? "Best food for you"
+                        : "List your restaurant with us today!"}
                     </Typography>
                     <Typography
                       variant="body1"
@@ -204,10 +203,18 @@ const Homepage: React.FC = () => {
                       color="text.secondary"
                       mb="1.5rem"
                     >
-                      Best food for you
+                      {userCtx?.accessToken && "Best food for you"}
                     </Typography>
-                    <Button variant="contained" size="large" color="warning">
-                      Explore More
+                    <Button
+                      variant="contained"
+                      size="large"
+                      color="warning"
+                      onClick={() =>
+                        !userCtx?.accessToken &&
+                        navigate("/registration/vendor")
+                      }
+                    >
+                      {userCtx?.accessToken ? "Explore More" : "Get Started"}
                     </Button>
                   </Paper>
                 </Grid>

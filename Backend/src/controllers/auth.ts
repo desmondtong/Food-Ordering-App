@@ -19,7 +19,10 @@ const getAllAccount = async (req: Request, res: Response) => {
 const getAllVendor = async (req: Request, res: Response) => {
   try {
     const allAcc = await pool.query(
-      "SELECT * FROM users JOIN addresses ON uuid = id JOIN vendor_details ON uuid = vendor_id"
+      `SELECT uuid, role, email, contact, is_deleted, addresses.*, vendor_details.* 
+      FROM users 
+      JOIN addresses ON uuid = id 
+      JOIN vendor_details ON uuid = vendor_id`
     );
 
     res.json(allAcc.rows);
@@ -45,7 +48,7 @@ const getAccountById = async (req: Request, res: Response) => {
       );
     } else if (role.rows[0].role === "VENDOR") {
       userAcc = await pool.query(
-        "SELECT * FROM users JOIN addresses ON uuid = id JOIN vendor_details ON uuid = vendor_id WHERE uuid = $1",
+        "SELECT uuid, role, email, contact, is_deleted, addresses.*, vendor_details.*  FROM users JOIN addresses ON uuid = id JOIN vendor_details ON uuid = vendor_id WHERE uuid = $1",
         [req.params.id]
       );
     }

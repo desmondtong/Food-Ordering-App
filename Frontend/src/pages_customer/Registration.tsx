@@ -392,7 +392,7 @@ const Registration: React.FC = () => {
                     href={
                       pathName === "/registration/vendor"
                         ? "/login/vendor"
-                        : "/"
+                        : "/login"
                     }
                     variant="body2"
                     ml="0.3rem"

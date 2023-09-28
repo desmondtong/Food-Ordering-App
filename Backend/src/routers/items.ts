@@ -21,7 +21,6 @@ import {
 
 router.get(
   "/items/categories/:vendor_id",
-  auth,
   validateIdInParam,
   checkValid,
   getCategoriesByVendor
@@ -37,13 +36,19 @@ router.put(
 
 router.get(
   "/items/:vendor_id",
-  auth,
   validateIdInParam,
   checkValid,
   getAllItemByVendor
 );
-router.put("/items/:vendor_id", authVendor, validateAddItem, checkValid, addItem);
-router.post( // this endpoint not used
+router.put(
+  "/items/:vendor_id",
+  authVendor,
+  validateAddItem,
+  checkValid,
+  addItem
+);
+router.post(
+  // this endpoint not used
   "/items/:item_id",
   auth,
   validateIdInParam,

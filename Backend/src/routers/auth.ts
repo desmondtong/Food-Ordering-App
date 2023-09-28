@@ -28,10 +28,9 @@ import {
 } from "../controllers/auth";
 
 router.get("/accounts", auth, getAllAccount);
-router.get("/accounts/vendor", auth, getAllVendor);
+router.get("/accounts/vendor", getAllVendor);
 router.get(
   "/accounts/:id",
-  auth,
   validateIdInParam,
   checkValid,
   getAccountById

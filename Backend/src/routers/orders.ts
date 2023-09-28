@@ -49,14 +49,14 @@ router.put(
 );
 router.post(
   "/orders/items/order_id",
-  auth,
+  // auth,
   validateGetItemByOrderId,
   checkValid,
   getItemsOrdersByOrderId
 );
 router.post(
   "/orders/items/vendor_id",
-  auth,
+  // auth,
   validateGetItemById,
   checkValid,
   getItemsOrdersByVendorId

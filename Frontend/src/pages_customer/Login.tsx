@@ -61,7 +61,7 @@ const Login: React.FC = () => {
 
       // check if user login using the correct login portal
       if (
-        (role === "CUSTOMER" && pathName === "/") ||
+        (role === "CUSTOMER" && pathName === "/login") ||
         ((role === "VENDOR" || role === "ADMIN") &&
           pathName === "/login/vendor")
       ) {
@@ -244,7 +244,7 @@ const Login: React.FC = () => {
                     ? "Not a vendor?"
                     : "Are you a vendor?"}
                   <Link
-                    href={pathName === "/login/vendor" ? "/" : "/login/vendor"}
+                    href={pathName === "/login/vendor" ? "/login" : "/login/vendor"}
                     variant="body2"
                     ml="0.3rem"
                   >

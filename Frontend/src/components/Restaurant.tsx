@@ -87,24 +87,29 @@ const Restaurant: React.FC<Props> = (props) => {
           image={props.image_url || "./WESTERN.jpg"} // to add to row to vendor_details table
         ></CardMedia>
 
-        {/* favourite button */}
-        <IconButton
-          className="love-icon"
-          size="small"
-          style={{ backgroundColor: "var(--white)" }}
-          sx={{ m: "1rem" }}
-          // onClick={() => setFavourite(!favourite)}
-          onClick={handleFav}
-        >
-          {favourite ? (
-            <FavoriteIcon fontSize="small" sx={{ color: "red" }}></FavoriteIcon>
-          ) : (
-            <FavoriteBorderIcon
-              fontSize="small"
-              sx={{ color: "var(--orange)" }}
-            ></FavoriteBorderIcon>
-          )}
-        </IconButton>
+        {/* favourite button, only render when user is login */}
+        {userCtx?.accessToken && (
+          <IconButton
+            className="love-icon"
+            size="small"
+            style={{ backgroundColor: "var(--white)" }}
+            sx={{ m: "1rem" }}
+            // onClick={() => setFavourite(!favourite)}
+            onClick={handleFav}
+          >
+            {favourite ? (
+              <FavoriteIcon
+                fontSize="small"
+                sx={{ color: "red" }}
+              ></FavoriteIcon>
+            ) : (
+              <FavoriteBorderIcon
+                fontSize="small"
+                sx={{ color: "var(--orange)" }}
+              ></FavoriteBorderIcon>
+            )}
+          </IconButton>
+        )}
 
         {/* time estimation tag */}
         <Paper
@@ -188,6 +193,7 @@ const Restaurant: React.FC<Props> = (props) => {
               fullWidth
               sx={{ height: "2rem" }}
               onClick={() => navigate(`/details/${props.uuid}`)}
+              color="warning"
             >
               Visit
             </Button>

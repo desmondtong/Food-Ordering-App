@@ -147,7 +147,11 @@ const TopBar: React.FC<Props> = (props) => {
             <Typography variant="h5">
               {userCtx?.vendorClaims?.store_name}
             </Typography>
-            <Typography variant="body2" fontWeight="light" color="text.secondary">
+            <Typography
+              variant="body2"
+              fontWeight="light"
+              color="text.secondary"
+            >
               {todayDate}
             </Typography>
           </Grid>
@@ -208,14 +212,18 @@ const TopBar: React.FC<Props> = (props) => {
                 sx={{ ml: "0.5rem" }}
               />
             </Tooltip>
-            <Tooltip title="Profile">
-              <Chip
-                icon={<FaceIcon />}
-                label={userCtx?.customerClaims.name?.split(" ")[0]}
-                onClick={(e) => setAnchorEl(e.currentTarget)}
-                sx={{ ml: "0.5rem" }}
-              />
-            </Tooltip>
+
+            {/* only render profile icon when user login */}
+            {userCtx?.accessToken && (
+              <Tooltip title="Profile">
+                <Chip
+                  icon={<FaceIcon />}
+                  label={userCtx?.customerClaims?.name?.split(" ")[0]}
+                  onClick={(e) => setAnchorEl(e.currentTarget)}
+                  sx={{ ml: "0.5rem" }}
+                />
+              </Tooltip>
+            )}
           </Grid>
         </Grid>
       )}
