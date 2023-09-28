@@ -159,7 +159,7 @@ const RestaurantDetails: React.FC = () => {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
-                  image={vendorInfo.image_url || "../public/WESTERN.jpg"}
+                  image={vendorInfo?.image_url}
                 />
               </Card>
             </Grid>
@@ -207,6 +207,15 @@ const RestaurantDetails: React.FC = () => {
             <Grid item xs={12}>
               <Typography variant="body2" fontWeight="light">
                 {vendorInfo.category}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography
+                variant="body2"
+                fontWeight="light"
+                color="text.secondary"
+              >
+                {vendorInfo.description}
               </Typography>
             </Grid>
           </Grid>
