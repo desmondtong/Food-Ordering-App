@@ -81,12 +81,14 @@ const Login: React.FC = () => {
           userCtx?.setCustomerClaims({
             cart_id: decoded.cart_id,
             name: `${decoded.first_name} ${decoded.last_name}`,
+            contact: decoded.contact,
           });
           localStorage.setItem(
             "customerClaims",
             JSON.stringify({
               cart_id: decoded.cart_id,
               name: `${decoded.first_name} ${decoded.last_name}`,
+              contact: decoded.contact,
             })
           );
         } else if (role === "VENDOR") {
@@ -95,6 +97,8 @@ const Login: React.FC = () => {
             postal_code: decoded.postal_code,
             store_name: decoded.store_name,
             category: decoded.category,
+            contact: decoded.contact,
+            description: decoded.description,
           });
           localStorage.setItem(
             "vendorClaims",
@@ -103,6 +107,8 @@ const Login: React.FC = () => {
               postal_code: decoded.postal_code,
               store_name: decoded.store_name,
               category: decoded.category,
+              contact: decoded.contact,
+              description: decoded.description,
             })
           );
         }
@@ -231,14 +237,10 @@ const Login: React.FC = () => {
                   textAlign="center"
                 >
                   {pathName === "/login/vendor"
-                ? "Not a vendor?"
-                : "Are you a vendor?"}
+                    ? "Not a vendor?"
+                    : "Are you a vendor?"}
                   <Link
-                    href={
-                      pathName === "/login/vendor"
-                        ? "/"
-                        : "/login/vendor"
-                    }
+                    href={pathName === "/login/vendor" ? "/" : "/login/vendor"}
                     variant="body2"
                     ml="0.3rem"
                   >

@@ -168,10 +168,13 @@ const login = async (req: Request, res: Response) => {
       postal_code?: String;
       store_name?: String;
       category?: String;
+      contact?: Number;
+      description?: String;
     } = {
       email: auth.rows[0].email,
       id: auth.rows[0].uuid,
       role: auth.rows[0].role,
+      contact: auth.rows[0].contact,
     };
 
     // to add additional claims based on role
@@ -192,7 +195,7 @@ const login = async (req: Request, res: Response) => {
     } else if (auth.rows[0].role === "VENDOR") {
       const vendorAddnClaims = await pool.query(
         `SELECT address, postal_code, 
-          store_name, category 
+          store_name, category, description 
           FROM addresses 
           JOIN vendor_details ON vendor_id = id 
           WHERE id = $1
@@ -204,6 +207,7 @@ const login = async (req: Request, res: Response) => {
       claims.postal_code = vendorAddnClaims.rows[0].postal_code;
       claims.store_name = vendorAddnClaims.rows[0].store_name;
       claims.category = vendorAddnClaims.rows[0].category;
+      claims.description = vendorAddnClaims.rows[0].description;
     }
 
     const access = jwt.sign(claims, String(process.env.ACCESS_SECRET), {

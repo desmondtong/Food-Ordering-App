@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   IconButton,
   Grid,
@@ -27,16 +27,35 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 import UserContext from "../context/user";
-import { Props } from "../interfaces";
+import useFetch from "../hooks/useFetch";
+import { Props, data } from "../interfaces";
 import { VisuallyHiddenInput } from "../customStyles";
 
 const TopBar: React.FC<Props> = (props) => {
+  const fetchData = useFetch();
   const userCtx = useContext(UserContext);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [locationEl, setLocationEl] = useState<null | HTMLElement>(null);
   const [vendorProfile, setVendorProfile] = useState<boolean>(false);
+  const [categories, setCategories] = useState<string[]>([]);
 
   const todayDate = new Date().toDateString();
+
+  // endpoint
+  const getCategories = async () => {
+    const res: data = await fetchData("/api/categories", "GET");
+
+    if (res.ok) {
+      setCategories(res.data);
+    } else {
+      alert(JSON.stringify(res.data));
+    }
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
   return (
     <>
       {userCtx?.role === "VENDOR" ? (
@@ -209,7 +228,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Store Name"
             type="text"
             fullWidth
-            defaultValue={userCtx?.userInfo.store_name}
+            defaultValue={userCtx?.vendorClaims.store_name}
             // inputRef={storeNameRef}
           />
           <TextField
@@ -223,7 +242,7 @@ const TopBar: React.FC<Props> = (props) => {
             multiline
             rows={3}
             fullWidth
-            defaultValue={userCtx?.userInfo.description}
+            defaultValue={userCtx?.vendorClaims.description}
             // inputRef={descriptionRef}
           />
           <TextField
@@ -234,10 +253,10 @@ const TopBar: React.FC<Props> = (props) => {
             label="Category"
             type="text"
             fullWidth
-            value={userCtx?.userInfo.category}
+            value={userCtx?.vendorClaims.category}
             // onChange={(e) => setCategory(e.target.value)}
           >
-            {props.categories?.map((item, idx) => (
+            {categories?.map((item, idx) => (
               <MenuItem key={idx} value={item}>
                 {item}
               </MenuItem>
@@ -250,7 +269,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Address"
             type="text"
             fullWidth
-            defaultValue={userCtx?.userInfo.address}
+            defaultValue={userCtx?.vendorClaims.address}
             // inputRef={addressRef}
           />
           <TextField
@@ -260,7 +279,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Postal Code"
             type="text"
             fullWidth
-            defaultValue={userCtx?.userInfo.postal_code}
+            defaultValue={userCtx?.vendorClaims.postal_code}
             // inputRef={postalCodeRef}
           />
           <TextField
@@ -271,16 +290,14 @@ const TopBar: React.FC<Props> = (props) => {
             label="Contact Number"
             type="text"
             fullWidth
-            defaultValue={userCtx?.userInfo.contact}
+            defaultValue={userCtx?.vendorClaims.contact}
             // inputRef={contactRef}
           />
 
           <Typography variant="h5" mt="1.5rem">
             Opening Times
           </Typography>
-          <Grid container alignItems="center">
-
-          </Grid>
+          <Grid container alignItems="center"></Grid>
         </DialogContent>
         <DialogActions sx={{ p: "1.5rem" }}>
           <Grid container spacing={1}>
