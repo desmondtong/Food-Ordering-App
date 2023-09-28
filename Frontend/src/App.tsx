@@ -210,8 +210,8 @@ function App() {
   // was 6-8 times before useEff
   useEffect(() => {
     socket.on("orderStatusUpdate", (user_id) => {
-      console.log("CUSTOMER SOCKET");
       if (userId === user_id) {
+        console.log("CUSTOMER SOCKET");
         getCustomerLastOrder();
         // activate snackbar for notifications
         setSnackPack((prev) => [
@@ -222,8 +222,8 @@ function App() {
     });
 
     socket.on("newOrder", (vendor_id) => {
-      console.log("VENDOR SOCKET");
       if (userId === vendor_id) {
+        console.log("VENDOR SOCKET");
         getVendorActiveOrder();
         // activate snackbar for notifications
         setSnackPack((prev) => [

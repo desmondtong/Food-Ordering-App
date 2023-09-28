@@ -53,7 +53,7 @@ const addCategory = async (req: Request, res: Response) => {
 const getAllItemByVendor = async (req: Request, res: Response) => {
   try {
     const getAllItem = await pool.query(
-      "SELECT * FROM items JOIN item_categories ON uuid = item_id WHERE vendor_id = $1 AND is_deleted = FALSE",
+      "SELECT * FROM items JOIN item_categories ON uuid = item_id WHERE vendor_id = $1 AND is_deleted = FALSE ORDER BY name",
       [req.params.vendor_id]
     );
 

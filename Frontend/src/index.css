@@ -43,7 +43,7 @@
 .add-btn {
   position: absolute !important;
   bottom: 0 !important;
-  left: 0 !important;
+  right: 0 !important;
 }
 
 .delete-btn {

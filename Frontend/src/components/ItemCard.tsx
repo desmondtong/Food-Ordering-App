@@ -171,14 +171,14 @@ const ItemCard: React.FC<Props> = (props) => {
       >
         <Box sx={{ display: "flex", flexDirection: "column", flexGrow: "1" }}>
           <CardContent sx={{ flex: "1 0 auto" }}>
-            <Typography variant="body1" fontWeight="medium">
+            <Typography variant="body1" fontWeight="medium" gutterBottom>
               {props.name}
             </Typography>
             <Typography
               variant="body2"
               color="text.secondary"
               fontWeight="light"
-              height="2.7rem"
+              height="4.5rem"
             >
               {props.description}
             </Typography>

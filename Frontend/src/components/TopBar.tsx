@@ -121,6 +121,7 @@ const TopBar: React.FC<Props> = (props) => {
 
       setVendorProfile(false);
       setCustomerProfile(false);
+      userCtx?.setImageUrl("");
     } else {
       alert(JSON.stringify(res.data));
     }
