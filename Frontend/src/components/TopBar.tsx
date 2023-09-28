@@ -147,7 +147,7 @@ const TopBar: React.FC<Props> = (props) => {
             <Typography variant="h5">
               {userCtx?.vendorClaims?.store_name}
             </Typography>
-            <Typography variant="body2" fontWeight="light">
+            <Typography variant="body2" fontWeight="light" color="text.secondary">
               {todayDate}
             </Typography>
           </Grid>

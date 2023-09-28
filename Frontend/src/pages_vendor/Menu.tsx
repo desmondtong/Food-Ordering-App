@@ -32,6 +32,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ConsecutiveSnackbars from "../components/ConsecutiveSnackbars";
+import SearchBar from "../components/SearchBar";
 
 const Menu: React.FC = () => {
   const fetchData = useFetch();
@@ -65,6 +66,20 @@ const Menu: React.FC = () => {
       );
       setDisplayItem(filtered);
     }
+  };
+
+  const handleSearch = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    let filtered, input: HTMLInputElement;
+    input = e.target as HTMLInputElement;
+
+    filtered = items.filter((item) => {
+      const lowerCaseName = item.name?.toLowerCase();
+
+      const lowerCaseInput = input.value.toLowerCase();
+      return lowerCaseName?.includes(lowerCaseInput);
+    });
+
+    setDisplayItem(filtered);
   };
 
   // endpoint
@@ -151,7 +166,6 @@ const Menu: React.FC = () => {
   useEffect(() => {
     getCategories();
     getItems();
-    console.log("menu UE");
   }, [update]);
 
   return (
@@ -197,6 +211,8 @@ const Menu: React.FC = () => {
               </Button>
             </Grid>
           </Grid>
+
+          <SearchBar handleSearch={handleSearch}>Search by Item Name</SearchBar>
 
           {/* listing */}
           <Grid container mt="0.1rem" alignItems="center" spacing={4}>

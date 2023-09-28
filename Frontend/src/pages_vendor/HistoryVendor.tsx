@@ -82,7 +82,7 @@ const HistoryVendor: React.FC = () => {
           <TopBar></TopBar>
 
           <SearchBar handleSearch={handleSearch}>
-            Search by Order ID or email
+            Search by Order ID or Email
           </SearchBar>
 
           <TableContainer component={Paper} elevation={0} sx={{ mt: "1.5rem" }}>
