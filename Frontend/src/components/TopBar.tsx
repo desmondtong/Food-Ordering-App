@@ -40,7 +40,7 @@ const TopBar: React.FC<Props> = (props) => {
   const [vendorProfile, setVendorProfile] = useState<boolean>(false);
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<String>(
-    userCtx?.vendorClaims.category
+    userCtx?.vendorClaims?.category
   );
 
   const storeNameRef = useRef<HTMLInputElement>();
@@ -114,7 +114,7 @@ const TopBar: React.FC<Props> = (props) => {
         <Grid container alignItems="center">
           <Grid item sx={{ flexGrow: 1 }}>
             <Typography variant="h5">
-              {userCtx?.vendorClaims.store_name}
+              {userCtx?.vendorClaims?.store_name}
             </Typography>
             <Typography variant="body2" fontWeight="light">
               {todayDate}
@@ -280,7 +280,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Store Name"
             type="text"
             fullWidth
-            defaultValue={userCtx?.vendorClaims.store_name}
+            defaultValue={userCtx?.vendorClaims?.store_name}
             inputRef={storeNameRef}
           />
           <TextField
@@ -294,7 +294,7 @@ const TopBar: React.FC<Props> = (props) => {
             multiline
             rows={3}
             fullWidth
-            defaultValue={userCtx?.vendorClaims.description}
+            defaultValue={userCtx?.vendorClaims?.description}
             inputRef={descriptionRef}
           />
           <TextField
@@ -305,7 +305,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Category"
             type="text"
             fullWidth
-            defaultValue={userCtx?.vendorClaims.category}
+            defaultValue={userCtx?.vendorClaims?.category}
             onChange={(e) => setCategory(e.target.value)}
           >
             {categories?.map((item, idx) => (
@@ -321,7 +321,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Address"
             type="text"
             fullWidth
-            defaultValue={userCtx?.vendorClaims.address}
+            defaultValue={userCtx?.vendorClaims?.address}
             inputRef={addressRef}
           />
           <TextField
@@ -331,7 +331,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Postal Code"
             type="text"
             fullWidth
-            defaultValue={userCtx?.vendorClaims.postal_code}
+            defaultValue={userCtx?.vendorClaims?.postal_code}
             inputRef={postalCodeRef}
           />
           <TextField
@@ -342,7 +342,7 @@ const TopBar: React.FC<Props> = (props) => {
             label="Contact Number"
             type="text"
             fullWidth
-            defaultValue={userCtx?.vendorClaims.contact}
+            defaultValue={userCtx?.vendorClaims?.contact}
             inputRef={contactRef}
           />
           <Grid container alignItems="center"></Grid>
