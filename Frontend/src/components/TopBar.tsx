@@ -38,6 +38,8 @@ const TopBar: React.FC<Props> = (props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [locationEl, setLocationEl] = useState<null | HTMLElement>(null);
   const [vendorProfile, setVendorProfile] = useState<boolean>(false);
+  const [customerProfile, setCustomerProfile] = useState<boolean>(false);
+
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<String>(
     userCtx?.vendorClaims?.category
@@ -48,48 +50,77 @@ const TopBar: React.FC<Props> = (props) => {
   const addressRef = useRef<HTMLInputElement>();
   const postalCodeRef = useRef<HTMLInputElement>();
   const contactRef = useRef<HTMLInputElement>();
+  const firstNameRef = useRef<HTMLInputElement>();
+  const lastNameRef = useRef<HTMLInputElement>();
 
   const todayDate = new Date().toDateString();
 
   // endpoint
   const handleUpdateProfile = async () => {
+    const body: Props = {
+      contact: contactRef.current?.value,
+    };
+
+    if (userCtx?.role === "CUSTOMER") {
+      body["first_name"] = firstNameRef.current?.value;
+      body["last_name"] = lastNameRef.current?.value;
+    } else {
+      body["category"] = category;
+      body["address"] = addressRef.current?.value;
+      body["store_name"] = storeNameRef.current?.value;
+      body["description"] = descriptionRef.current?.value;
+      body["image_url"] = userCtx?.imageUrl || userCtx?.userInfo.image_url;
+      body["postal_code"] = postalCodeRef.current?.value;
+    }
+
     const res: data = await fetchData(
       `/auth/update/profile/${userCtx?.userId}`,
       "PATCH",
-      {
-        contact: contactRef.current?.value,
-        address: addressRef.current?.value,
-        postal_code: postalCodeRef.current?.value,
-        category,
-        store_name: storeNameRef.current?.value,
-        description: descriptionRef.current?.value,
-        image_url: userCtx?.imageUrl || userCtx?.userInfo.image_url,
-      },
+      body,
       userCtx?.accessToken
     );
 
     if (res.ok) {
-      userCtx?.setVendorClaims({
-        contact: contactRef.current?.value,
-        address: addressRef.current?.value,
-        postal_code: postalCodeRef.current?.value,
-        category,
-        store_name: storeNameRef.current?.value,
-        description: descriptionRef.current?.value,
-      });
-      localStorage.setItem(
-        "vendorClaims",
-        JSON.stringify({
+      if (userCtx?.role === "CUSTOMER") {
+        userCtx?.setCustomerClaims({
+          cart_id: userCtx?.customerClaims.cart_id,
+          name: `${firstNameRef.current?.value} ${lastNameRef.current?.value}`,
+          contact: contactRef.current?.value,
+          email: userCtx?.customerClaims.email,
+        });
+        localStorage.setItem(
+          "customerClaims",
+          JSON.stringify({
+            cart_id: userCtx?.customerClaims.cart_id,
+            name: `${firstNameRef.current?.value} ${lastNameRef.current?.value}`,
+            contact: contactRef.current?.value,
+            email: userCtx?.customerClaims.email,
+          })
+        );
+      } else {
+        userCtx?.setVendorClaims({
           contact: contactRef.current?.value,
           address: addressRef.current?.value,
           postal_code: postalCodeRef.current?.value,
           category,
           store_name: storeNameRef.current?.value,
           description: descriptionRef.current?.value,
-        })
-      );
+        });
+        localStorage.setItem(
+          "vendorClaims",
+          JSON.stringify({
+            contact: contactRef.current?.value,
+            address: addressRef.current?.value,
+            postal_code: postalCodeRef.current?.value,
+            category,
+            store_name: storeNameRef.current?.value,
+            description: descriptionRef.current?.value,
+          })
+        );
+      }
 
       setVendorProfile(false);
+      setCustomerProfile(false);
     } else {
       alert(JSON.stringify(res.data));
     }
@@ -210,6 +241,7 @@ const TopBar: React.FC<Props> = (props) => {
           onClick={() => {
             setAnchorEl(null);
             setVendorProfile(true);
+            setCustomerProfile(true);
             userCtx?.getUserInfo();
           }}
         >
@@ -345,6 +377,15 @@ const TopBar: React.FC<Props> = (props) => {
             defaultValue={userCtx?.vendorClaims?.contact}
             inputRef={contactRef}
           />
+          <TextField
+            disabled
+            margin="normal"
+            id="email"
+            label="Email Address"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.vendorClaims?.email}
+          />
           <Grid container alignItems="center"></Grid>
         </DialogContent>
         <DialogActions sx={{ p: "1.5rem" }}>
@@ -354,6 +395,7 @@ const TopBar: React.FC<Props> = (props) => {
                 fullWidth
                 variant="contained"
                 onClick={handleUpdateProfile}
+                color="warning"
               >
                 Save Changes
               </Button>
@@ -366,6 +408,92 @@ const TopBar: React.FC<Props> = (props) => {
                   setVendorProfile(false);
                   userCtx?.setImageUrl("");
                 }}
+                color="warning"
+              >
+                Cancel
+              </Button>
+            </Grid>
+          </Grid>
+        </DialogActions>
+      </Dialog>
+
+      {/* customer profile setting popup */}
+      <Dialog
+        open={userCtx?.role === "CUSTOMER" && customerProfile}
+        onClose={() => setCustomerProfile(false)}
+        scroll="body"
+      >
+        <DialogTitle sx={{ p: 0 }} className="pic-display">
+          <Typography my="1rem" ml="1rem" fontSize="24px">
+            My Profile
+          </Typography>
+        </DialogTitle>
+
+        <DialogContent>
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="firstname"
+            label="First Name"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.customerClaims?.name?.split(" ")[0]}
+            inputRef={firstNameRef}
+          />
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="lastname"
+            label="Last Name"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.customerClaims?.name?.split(" ")[1]}
+            inputRef={lastNameRef}
+          />
+          <TextField
+            disabled
+            margin="normal"
+            id="email"
+            label="Email Address"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.customerClaims?.email}
+          />
+          <TextField
+            autoFocus
+            required
+            margin="normal"
+            id="contact"
+            label="Contact Number"
+            type="text"
+            fullWidth
+            defaultValue={userCtx?.customerClaims?.contact}
+            inputRef={contactRef}
+          />
+          <Grid container alignItems="center"></Grid>
+        </DialogContent>
+        <DialogActions sx={{ p: "1.5rem" }}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="contained"
+                onClick={handleUpdateProfile}
+                color="warning"
+              >
+                Save Changes
+              </Button>
+            </Grid>
+            <Grid item xs={12}>
+              <Button
+                fullWidth
+                variant="outlined"
+                onClick={() => {
+                  setCustomerProfile(false);
+                }}
+                color="warning"
               >
                 Cancel
               </Button>

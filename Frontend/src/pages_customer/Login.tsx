@@ -82,6 +82,7 @@ const Login: React.FC = () => {
             cart_id: decoded.cart_id,
             name: `${decoded.first_name} ${decoded.last_name}`,
             contact: decoded.contact,
+            email: decoded.email,
           });
           localStorage.setItem(
             "customerClaims",
@@ -89,6 +90,7 @@ const Login: React.FC = () => {
               cart_id: decoded.cart_id,
               name: `${decoded.first_name} ${decoded.last_name}`,
               contact: decoded.contact,
+              email: decoded.email,
             })
           );
         } else if (role === "VENDOR") {
@@ -99,6 +101,7 @@ const Login: React.FC = () => {
             category: decoded.category,
             contact: decoded.contact,
             description: decoded.description,
+            email: decoded.email,
           });
           localStorage.setItem(
             "vendorClaims",
@@ -109,6 +112,7 @@ const Login: React.FC = () => {
               category: decoded.category,
               contact: decoded.contact,
               description: decoded.description,
+              email: decoded.email,
             })
           );
         }
