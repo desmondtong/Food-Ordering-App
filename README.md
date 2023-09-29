@@ -6,6 +6,8 @@ Burps is a user-friendly food ordering application that simplifies the process o
 
 With an intuitive interface and a vast selection of culinary options, Burps offers users the convenience of browsing diverse menus, customizing orders, and tracking deliveries in real-time. Currently, Burps have a customer site and vendor portal.
 
+Feel free to explore the demo site [here](https://burps.netlify.app)!
+
 This is a final fullstack web application as part of General Assembly's Software Engineering Immersive. 
 
 ---
@@ -217,6 +219,15 @@ Check out the [Figma](https://www.figma.com/file/cxrzwdPGh25mIMrTZ5zpox/Project-
 
 - [How to Make the Browser Go Back to the Previous Page Using JavaScript](https://www.geeksforgeeks.org/how-to-make-browser-to-go-back-to-previous-page-using-javascript)
 
+**Deployment:**
+
+- [How to Create and Connect to a PostgreSQL Database With Render and pgAdmin](https://medium.com/geekculture/how-to-create-and-connect-to-a-postgresql-database-with-render-and-pgadmin-577b326fd19d)
+
+- [SSL/TLS required](https://community.render.com/t/ssl-tls-required/1022)
+
+- [SSL for PostgreSQL Connection NodeJS](https://stackoverflow.com/questions/22301722/ssl-for-postgresql-connection-nodejs)
+
+- [Deploying a TypeScript Express Application to Render](https://technotrampoline.com/articles/deploying-a-typescript-express-application-to-render/)
 
 ---
 ## Credits
