@@ -11,6 +11,7 @@
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
 -- Sequence and defined type
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE SEQUENCE IF NOT EXISTS addresses_address_id_seq;
 
 -- Table Definition
